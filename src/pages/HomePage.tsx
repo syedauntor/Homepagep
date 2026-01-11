@@ -18,13 +18,13 @@ export function HomePage() {
         .from('blog_posts')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(4);
+        .limit(8);
 
       const { data: popular } = await supabase
         .from('blog_posts')
         .select('*')
         .order('views', { ascending: false })
-        .limit(3);
+        .limit(6);
 
       if (latest) setLatestPosts(latest);
       if (popular) setPopularPosts(popular);
