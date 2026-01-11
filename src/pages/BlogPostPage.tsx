@@ -259,7 +259,7 @@ export function BlogPostPage() {
               </div>
 
               <div className="border-t-2 border-gray-100 pt-8 mt-8">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center justify-between gap-4 mb-4">
                   {previousPost ? (
                     <Link
                       to={`/blog/${previousPost.id}`}
@@ -272,7 +272,7 @@ export function BlogPostPage() {
                     <div></div>
                   )}
 
-                  {nextPost ? (
+                  {nextPost && (
                     <Link
                       to={`/blog/${nextPost.id}`}
                       className="flex items-center gap-2 text-pink-600 hover:text-pink-700 font-semibold transition group"
@@ -280,16 +280,68 @@ export function BlogPostPage() {
                       <span>Next Post</span>
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
                     </Link>
-                  ) : (
-                    <div></div>
                   )}
                 </div>
-              </div>
 
-              {relatedPosts.length > 0 && (
-                <div className="border-t-2 border-gray-100 pt-8 mt-8">
+                <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {relatedPosts.map((relatedPost) => (
+                    {previousPost && (
+                      <Link
+                        to={`/blog/${previousPost.id}`}
+                        className="group"
+                      >
+                        <div className="rounded-xl overflow-hidden shadow-lg mb-4">
+                          {previousPost.image_url ? (
+                            <img
+                              src={previousPost.image_url}
+                              alt={previousPost.title}
+                              className="w-full h-40 object-cover group-hover:scale-110 transition duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-40 bg-gradient-to-br from-pink-200 to-purple-300 flex items-center justify-center">
+                              <BookOpen className="w-10 h-10 text-white opacity-60" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2 text-xs text-purple-600 mb-2">
+                          <Calendar className="w-4 h-4" />
+                          <span className="font-medium">{formatDate(previousPost.created_at)}</span>
+                        </div>
+                        <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2">
+                          {previousPost.title}
+                        </h4>
+                      </Link>
+                    )}
+
+                    {nextPost && (
+                      <Link
+                        to={`/blog/${nextPost.id}`}
+                        className="group"
+                      >
+                        <div className="rounded-xl overflow-hidden shadow-lg mb-4">
+                          {nextPost.image_url ? (
+                            <img
+                              src={nextPost.image_url}
+                              alt={nextPost.title}
+                              className="w-full h-40 object-cover group-hover:scale-110 transition duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-40 bg-gradient-to-br from-pink-200 to-purple-300 flex items-center justify-center">
+                              <BookOpen className="w-10 h-10 text-white opacity-60" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2 text-xs text-purple-600 mb-2">
+                          <Calendar className="w-4 h-4" />
+                          <span className="font-medium">{formatDate(nextPost.created_at)}</span>
+                        </div>
+                        <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2">
+                          {nextPost.title}
+                        </h4>
+                      </Link>
+                    )}
+
+                    {relatedPosts.slice(0, nextPost && previousPost ? 1 : 2).map((relatedPost) => (
                       <Link
                         key={relatedPost.id}
                         to={`/blog/${relatedPost.id}`}
@@ -300,26 +352,26 @@ export function BlogPostPage() {
                             <img
                               src={relatedPost.image_url}
                               alt={relatedPost.title}
-                              className="w-full h-48 object-cover group-hover:scale-110 transition duration-500"
+                              className="w-full h-40 object-cover group-hover:scale-110 transition duration-500"
                             />
                           ) : (
-                            <div className="w-full h-48 bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
-                              <BookOpen className="w-12 h-12 text-white opacity-60" />
+                            <div className="w-full h-40 bg-gradient-to-br from-pink-200 to-purple-300 flex items-center justify-center">
+                              <BookOpen className="w-10 h-10 text-white opacity-60" />
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center space-x-2 text-xs text-emerald-600 mb-2">
+                        <div className="flex items-center space-x-2 text-xs text-purple-600 mb-2">
                           <Calendar className="w-4 h-4" />
                           <span className="font-medium">{formatDate(relatedPost.created_at)}</span>
                         </div>
-                        <h4 className="text-base font-bold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2">
+                        <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2">
                           {relatedPost.title}
                         </h4>
                       </Link>
                     ))}
                   </div>
                 </div>
-              )}
+              </div>
 
               <div className="border-t-2 border-gray-100 pt-8 mt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">0 Comments:</h3>
