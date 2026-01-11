@@ -178,54 +178,56 @@ export function BlogPostPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            {post.image_url && (
-              <div className="rounded-3xl overflow-hidden shadow-xl border-4 border-white">
-                <img
-                  src={post.image_url}
-                  alt={post.title}
-                  className="w-full h-auto"
-                />
-              </div>
-            )}
-
-            <article className="bg-white rounded-3xl shadow-lg p-8 md:p-12">
-              <div className="prose prose-lg max-w-none">
-                <p className="text-xl text-gray-700 leading-relaxed mb-8 font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-emerald-600 first-letter:mr-1 first-letter:float-left">
-                  {post.excerpt}
-                </p>
-
-                <div className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
-                  {post.content}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+              {post.image_url && (
+                <div className="rounded-2xl overflow-hidden shadow-lg mb-8">
+                  <img
+                    src={post.image_url}
+                    alt={post.title}
+                    className="w-full h-auto"
+                  />
                 </div>
-              </div>
-            </article>
+              )}
 
-            <div className="bg-white rounded-3xl shadow-lg p-8 md:p-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-6">Writer</h3>
-              <div className="flex items-start space-x-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <User className="w-12 h-12 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-2xl font-bold text-gray-900 mb-2">{post.author}</h4>
-                  <p className="text-emerald-600 font-semibold mb-4">Content Writer</p>
-                  <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-                    A passionate writer creating engaging content and sharing valuable insights with readers around the world.
+              <article className="mb-12">
+                <div className="prose prose-lg max-w-none">
+                  <p className="text-xl text-gray-700 leading-relaxed mb-8 font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-emerald-600 first-letter:mr-1 first-letter:float-left">
+                    {post.excerpt}
                   </p>
-                  <div className="flex items-center space-x-4">
-                    <a href="#" className="text-blue-600 hover:text-blue-700 transition transform hover:scale-110">
-                      <Facebook className="w-6 h-6" />
-                    </a>
-                    <a href="#" className="text-sky-500 hover:text-sky-600 transition transform hover:scale-110">
-                      <Twitter className="w-6 h-6" />
-                    </a>
-                    <a href="#" className="text-pink-600 hover:text-pink-700 transition transform hover:scale-110">
-                      <Instagram className="w-6 h-6" />
-                    </a>
-                    <a href="#" className="text-blue-700 hover:text-blue-800 transition transform hover:scale-110">
-                      <Linkedin className="w-6 h-6" />
-                    </a>
+
+                  <div className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
+                    {post.content}
+                  </div>
+                </div>
+              </article>
+
+              <div className="border-t-2 border-gray-100 pt-8">
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">Writer</h3>
+                <div className="flex items-start space-x-6">
+                  <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <User className="w-12 h-12 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-gray-900 mb-2">{post.author}</h4>
+                    <p className="text-emerald-600 font-semibold mb-4">Content Writer</p>
+                    <p className="text-gray-600 leading-relaxed mb-6 text-lg">
+                      A passionate writer creating engaging content and sharing valuable insights with readers around the world.
+                    </p>
+                    <div className="flex items-center space-x-4">
+                      <a href="#" className="text-blue-600 hover:text-blue-700 transition transform hover:scale-110">
+                        <Facebook className="w-6 h-6" />
+                      </a>
+                      <a href="#" className="text-sky-500 hover:text-sky-600 transition transform hover:scale-110">
+                        <Twitter className="w-6 h-6" />
+                      </a>
+                      <a href="#" className="text-pink-600 hover:text-pink-700 transition transform hover:scale-110">
+                        <Instagram className="w-6 h-6" />
+                      </a>
+                      <a href="#" className="text-blue-700 hover:text-blue-800 transition transform hover:scale-110">
+                        <Linkedin className="w-6 h-6" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -234,20 +236,20 @@ export function BlogPostPage() {
 
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
-              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl shadow-lg p-6">
+              <div className="bg-white rounded-3xl shadow-xl p-6">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Search here"
-                    className="w-full pl-5 pr-12 py-4 rounded-full border-2 border-emerald-200 focus:border-emerald-500 focus:outline-none text-gray-700 shadow-sm"
+                    className="w-full pl-5 pr-12 py-4 rounded-full border-2 border-gray-200 focus:border-emerald-500 focus:outline-none text-gray-700 shadow-sm bg-gray-50"
                   />
-                  <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-full font-semibold transition shadow-md">
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-full font-semibold transition shadow-md">
                     <Search className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl shadow-lg p-6">
+              <div className="bg-white rounded-3xl shadow-xl p-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
                   Recent Articles
                 </h3>
@@ -287,7 +289,7 @@ export function BlogPostPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl shadow-lg p-6">
+              <div className="bg-white rounded-3xl shadow-xl p-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
                   Popular Articles
                 </h3>
