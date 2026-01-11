@@ -1,4 +1,4 @@
-import { Users, Sparkles, GraduationCap, Palette, Download, ArrowRight, Mail, BookOpen, Grid, Gift, TrendingUp, Clock, Eye, Calendar, Baby, Scissors, Music, TreePine } from 'lucide-react';
+import { Users, Sparkles, GraduationCap, Palette, Download, ArrowRight, Mail, BookOpen, Grid, Gift, TrendingUp, Clock, Eye, Calendar, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, BlogPost } from '../lib/supabase';
@@ -236,6 +236,40 @@ export function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Amazing Team</h2>
+            <p className="text-xl text-gray-600">Passionate educators and designers creating amazing resources</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "Sarah Johnson", role: "Graphic Designer", gradient: "from-emerald-400 to-teal-500" },
+              { name: "Michael Chen", role: "Content Creator", gradient: "from-blue-400 to-cyan-500" },
+              { name: "Emily Davis", role: "Education Specialist", gradient: "from-pink-400 to-rose-500" }
+            ].map((member, index) => (
+              <div key={index} className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition group">
+                <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-br ${member.gradient} mb-6 group-hover:scale-110 transition`}></div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                <p className="text-gray-600 mb-6">{member.role}</p>
+                <div className="flex justify-center space-x-4">
+                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-emerald-600 hover:text-white transition group">
+                    <Facebook className="w-5 h-5" />
+                  </button>
+                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-emerald-600 hover:text-white transition">
+                    <Instagram className="w-5 h-5" />
+                  </button>
+                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-emerald-600 hover:text-white transition">
+                    <Linkedin className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
             <span className="text-emerald-600 font-semibold text-sm tracking-wider uppercase">Most Popular</span>
             <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">Explore Our Most Read Blog Posts</h2>
             <p className="text-xl text-gray-600">
@@ -297,6 +331,83 @@ export function HomePage() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-emerald-600 font-semibold text-sm tracking-wider uppercase">Explore by Category</span>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">Popular Blog Categories</h2>
+            <p className="text-xl text-gray-600">
+              Find exactly what you're looking for in our organized collections
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Coloring Pages",
+                count: "250+ Posts",
+                gradient: "from-pink-500 to-rose-500",
+                icon: Palette,
+                description: "Beautiful coloring pages for all ages"
+              },
+              {
+                name: "Activity Books",
+                count: "180+ Posts",
+                gradient: "from-emerald-500 to-teal-500",
+                icon: BookOpen,
+                description: "Complete activity books to download"
+              },
+              {
+                name: "Puzzles & Games",
+                count: "150+ Posts",
+                gradient: "from-blue-500 to-cyan-500",
+                icon: Grid,
+                description: "Fun puzzles and brain teasers"
+              },
+              {
+                name: "Educational Resources",
+                count: "200+ Posts",
+                gradient: "from-amber-500 to-orange-500",
+                icon: GraduationCap,
+                description: "Learning materials for students"
+              },
+              {
+                name: "Seasonal & Holidays",
+                count: "120+ Posts",
+                gradient: "from-orange-500 to-red-500",
+                icon: Gift,
+                description: "Holiday-themed activities"
+              },
+              {
+                name: "Trending Now",
+                count: "85+ Posts",
+                gradient: "from-red-500 to-pink-500",
+                icon: TrendingUp,
+                description: "Most popular this month"
+              }
+            ].map((category, index) => {
+              const IconComponent = category.icon;
+              return (
+                <div key={index} className="bg-white rounded-2xl p-6 hover:shadow-2xl transition group cursor-pointer relative overflow-hidden">
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${category.gradient} rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition`}></div>
+                  <div className="relative">
+                    <div className={`w-14 h-14 bg-gradient-to-br ${category.gradient} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition`}>
+                      <IconComponent className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{category.name}</h3>
+                    <p className="text-gray-600 text-sm mb-3">{category.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-600 font-semibold text-sm">{category.count}</span>
+                      <ArrowRight className="w-5 h-5 text-emerald-600 group-hover:translate-x-1 transition" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
