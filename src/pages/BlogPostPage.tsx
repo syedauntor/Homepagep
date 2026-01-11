@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search } from 'lucide-react';
+import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
 
 export function BlogPostPage() {
@@ -9,7 +9,10 @@ export function BlogPostPage() {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
   const [popularPosts, setPopularPosts] = useState<BlogPost[]>([]);
+  const [previousPost, setPreviousPost] = useState<BlogPost | null>(null);
+  const [nextPost, setNextPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
+  const [commentForm, setCommentForm] = useState({ name: '', email: '', message: '' });
 
   useEffect(() => {
     if (id) {
@@ -33,6 +36,7 @@ export function BlogPostPage() {
         setPost(data);
         await incrementViews(data.id);
         await fetchRelatedPosts(data.id);
+        await fetchPreviousNextPosts(data.created_at);
       }
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -54,6 +58,27 @@ export function BlogPostPage() {
       .limit(3);
 
     if (data) setRelatedPosts(data);
+  }
+
+  async function fetchPreviousNextPosts(currentPostDate: string) {
+    const { data: previous } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .lt('created_at', currentPostDate)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const { data: next } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .gt('created_at', currentPostDate)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (previous) setPreviousPost(previous);
+    if (next) setNextPost(next);
   }
 
   async function fetchSidebarPosts() {
@@ -83,6 +108,12 @@ export function BlogPostPage() {
     const wordCount = content.split(/\s+/).length;
     const minutes = Math.ceil(wordCount / wordsPerMinute);
     return `${minutes} min read`;
+  }
+
+  function handleCommentSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    console.log('Comment submitted:', commentForm);
+    setCommentForm({ name: '', email: '', message: '' });
   }
 
   if (loading) {
@@ -224,6 +255,121 @@ export function BlogPostPage() {
                       </a>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div className="border-t-2 border-gray-100 pt-8 mt-8">
+                <div className="flex items-center justify-between gap-4">
+                  {previousPost ? (
+                    <Link
+                      to={`/blog/${previousPost.id}`}
+                      className="flex items-center gap-2 text-pink-600 hover:text-pink-700 font-semibold transition group"
+                    >
+                      <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition" />
+                      <span>Previous Post</span>
+                    </Link>
+                  ) : (
+                    <div></div>
+                  )}
+
+                  {nextPost ? (
+                    <Link
+                      to={`/blog/${nextPost.id}`}
+                      className="flex items-center gap-2 text-pink-600 hover:text-pink-700 font-semibold transition group"
+                    >
+                      <span>Next Post</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
+                    </Link>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              </div>
+
+              {relatedPosts.length > 0 && (
+                <div className="border-t-2 border-gray-100 pt-8 mt-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {relatedPosts.map((relatedPost) => (
+                      <Link
+                        key={relatedPost.id}
+                        to={`/blog/${relatedPost.id}`}
+                        className="group"
+                      >
+                        <div className="rounded-xl overflow-hidden shadow-lg mb-4">
+                          {relatedPost.image_url ? (
+                            <img
+                              src={relatedPost.image_url}
+                              alt={relatedPost.title}
+                              className="w-full h-48 object-cover group-hover:scale-110 transition duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-48 bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
+                              <BookOpen className="w-12 h-12 text-white opacity-60" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2 text-xs text-emerald-600 mb-2">
+                          <Calendar className="w-4 h-4" />
+                          <span className="font-medium">{formatDate(relatedPost.created_at)}</span>
+                        </div>
+                        <h4 className="text-base font-bold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2">
+                          {relatedPost.title}
+                        </h4>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="border-t-2 border-gray-100 pt-8 mt-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">0 Comments:</h3>
+
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8">
+                  <h4 className="text-xl font-bold text-gray-900 mb-6">Leave your Comment</h4>
+                  <form onSubmit={handleCommentSubmit}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                        <input
+                          type="text"
+                          placeholder="Your name"
+                          value={commentForm.name}
+                          onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
+                          className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                        <input
+                          type="email"
+                          placeholder="Your email"
+                          value={commentForm.email}
+                          onChange={(e) => setCommentForm({ ...commentForm, email: e.target.value })}
+                          className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:outline-none"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-6">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                      <textarea
+                        placeholder="Write your message"
+                        value={commentForm.message}
+                        onChange={(e) => setCommentForm({ ...commentForm, message: e.target.value })}
+                        rows={5}
+                        className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:outline-none resize-none"
+                        required
+                      ></textarea>
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold py-4 rounded-full transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                      <span>Submit Comment</span>
+                      <Send className="w-5 h-5" />
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
