@@ -6,6 +6,7 @@ import { BlogPostPage } from './pages/BlogPostPage';
 import { AllBlogPostsPage } from './pages/AllBlogPostsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
+import CategoryPage from './pages/CategoryPage';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/blog" element={<AllBlogPostsPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
+            <Route path="/category" element={<CategoryPage />} />
+            <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
