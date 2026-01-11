@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, Eye, ArrowLeft, Clock, User, Share2, BookOpen, ArrowRight } from 'lucide-react';
+import { Calendar, Eye, Clock, User, BookOpen, ArrowRight, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
+  const [popularPosts, setPopularPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
       fetchPost();
+      fetchSidebarPosts();
       window.scrollTo(0, 0);
     }
   }, [id]);
@@ -53,6 +56,23 @@ export function BlogPostPage() {
     if (data) setRelatedPosts(data);
   }
 
+  async function fetchSidebarPosts() {
+    const { data: recent } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    const { data: popular } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('views', { ascending: false })
+      .limit(3);
+
+    if (recent) setRecentPosts(recent);
+    if (popular) setPopularPosts(popular);
+  }
+
   function formatDate(dateString: string) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -87,117 +107,237 @@ export function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            to="/blog"
-            className="inline-flex items-center space-x-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-8 group"
-          >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition" />
-            <span>Back to Blog</span>
-          </Link>
-
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white py-12 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-6 text-gray-600">
-            <div className="flex items-center space-x-2">
-              <User className="w-5 h-5 text-emerald-600" />
-              <span className="font-medium">{post.author}</span>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                <User className="w-6 h-6 text-emerald-600" />
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">{post.author}</p>
+                <p className="text-sm text-gray-500">{formatDate(post.created_at)}</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-5 h-5 text-emerald-600" />
-              <span>{formatDate(post.created_at)}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-5 h-5 text-emerald-600" />
-              <span>{calculateReadTime(post.content)}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Eye className="w-5 h-5 text-emerald-600" />
-              <span>{post.views.toLocaleString()} views</span>
+
+            <div className="flex items-center space-x-3">
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition"
+              >
+                <Facebook className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-blue-700 hover:bg-blue-800 rounded-full flex items-center justify-center transition"
+              >
+                <Linkedin className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${window.location.href}&text=${post.title}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center transition"
+              >
+                <Twitter className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href={`https://www.instagram.com/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-90 rounded-full flex items-center justify-center transition"
+              >
+                <Instagram className="w-5 h-5 text-white" />
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      {post.image_url && (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
-          <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src={post.image_url}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            {post.image_url && (
+              <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
+                <img
+                  src={post.image_url}
+                  alt={post.title}
+                  className="w-full h-auto"
+                />
+              </div>
+            )}
 
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="prose prose-lg max-w-none">
-          <p className="text-xl text-gray-700 leading-relaxed mb-8 font-medium">
-            {post.excerpt}
-          </p>
+            <article className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+              <div className="prose prose-lg max-w-none">
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  {post.excerpt}
+                </p>
 
-          <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-            {post.content}
-          </div>
-        </div>
+                <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {post.content}
+                </div>
+              </div>
+            </article>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <button className="inline-flex items-center space-x-2 text-emerald-600 hover:text-emerald-700 font-semibold">
-            <Share2 className="w-5 h-5" />
-            <span>Share this post</span>
-          </button>
-        </div>
-      </article>
+            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Writer</h3>
+              <div className="flex items-start space-x-4">
+                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-10 h-10 text-emerald-600" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-xl font-bold text-gray-900 mb-1">{post.author}</h4>
+                  <p className="text-emerald-600 font-medium mb-3">Content Writer</p>
+                  <p className="text-gray-600 leading-relaxed mb-4">
+                    A passionate writer creating engaging content and sharing valuable insights with readers around the world.
+                  </p>
+                  <div className="flex items-center space-x-3">
+                    <a href="#" className="text-blue-600 hover:text-blue-700 transition">
+                      <Facebook className="w-5 h-5" />
+                    </a>
+                    <a href="#" className="text-sky-500 hover:text-sky-600 transition">
+                      <Twitter className="w-5 h-5" />
+                    </a>
+                    <a href="#" className="text-pink-600 hover:text-pink-700 transition">
+                      <Instagram className="w-5 h-5" />
+                    </a>
+                    <a href="#" className="text-blue-700 hover:text-blue-800 transition">
+                      <Linkedin className="w-5 h-5" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-      {relatedPosts.length > 0 && (
-        <section className="bg-gray-50 py-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Posts</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {relatedPosts.map((relatedPost) => (
-                <Link
-                  key={relatedPost.id}
-                  to={`/blog/${relatedPost.id}`}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
-                >
-                  <div className="h-48 overflow-hidden">
-                    {relatedPost.image_url ? (
-                      <img
-                        src={relatedPost.image_url}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                      />
-                    ) : (
-                      <div className="h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-white opacity-50" />
+            {relatedPosts.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-lg p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Related Articles</h3>
+                <div className="space-y-6">
+                  {relatedPosts.map((relatedPost) => (
+                    <Link
+                      key={relatedPost.id}
+                      to={`/blog/${relatedPost.id}`}
+                      className="flex items-start space-x-4 group"
+                    >
+                      <div className="w-32 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                        {relatedPost.image_url ? (
+                          <img
+                            src={relatedPost.image_url}
+                            alt={relatedPost.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
+                            <BookOpen className="w-8 h-8 text-white opacity-50" />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
-                      <Calendar className="w-4 h-4" />
-                      <span>{formatDate(relatedPost.created_at)}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition line-clamp-2">
-                      {relatedPost.title}
-                    </h3>
-                    <p className="text-gray-600 line-clamp-2 mb-4">{relatedPost.excerpt}</p>
-                    <span className="text-emerald-600 font-semibold flex items-center space-x-2 group-hover:space-x-3 transition-all">
-                      <span>Read More</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 text-xs text-gray-500 mb-2">
+                          <Calendar className="w-3 h-3" />
+                          <span>{formatDate(relatedPost.created_at)}</span>
+                        </div>
+                        <h4 className="font-bold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2">
+                          {relatedPost.title}
+                        </h4>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="lg:col-span-1">
+            <div className="sticky top-8 space-y-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Articles</h3>
+                <div className="space-y-5">
+                  {recentPosts.map((recentPost) => (
+                    <Link
+                      key={recentPost.id}
+                      to={`/blog/${recentPost.id}`}
+                      className="block group"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                          {recentPost.image_url ? (
+                            <img
+                              src={recentPost.image_url}
+                              alt={recentPost.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
+                              <BookOpen className="w-6 h-6 text-white opacity-50" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-1 text-xs text-gray-500 mb-1">
+                            <Calendar className="w-3 h-3" />
+                            <span>{formatDate(recentPost.created_at)}</span>
+                          </div>
+                          <h4 className="text-sm font-semibold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2">
+                            {recentPost.title}
+                          </h4>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Popular Articles</h3>
+                <div className="space-y-5">
+                  {popularPosts.map((popularPost) => (
+                    <Link
+                      key={popularPost.id}
+                      to={`/blog/${popularPost.id}`}
+                      className="block group"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                          {popularPost.image_url ? (
+                            <img
+                              src={popularPost.image_url}
+                              alt={popularPost.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
+                              <BookOpen className="w-6 h-6 text-white opacity-50" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-1 text-xs text-gray-500 mb-1">
+                            <Eye className="w-3 h-3" />
+                            <span>{popularPost.views.toLocaleString()} views</span>
+                          </div>
+                          <h4 className="text-sm font-semibold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2">
+                            {popularPost.title}
+                          </h4>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
