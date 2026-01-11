@@ -108,77 +108,75 @@ export function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <nav className="flex items-center space-x-2 text-sm mb-8">
-            <Link to="/" className="text-emerald-600 hover:text-emerald-700 flex items-center">
-              <Home className="w-4 h-4" />
-            </Link>
-            <ChevronRight className="w-4 h-4 text-gray-400" />
-            <Link to="/blog" className="text-emerald-600 hover:text-emerald-700">
-              Blog
-            </Link>
-            <ChevronRight className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-600 truncate max-w-md">{post.title}</span>
-          </nav>
-
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight">
-            {post.title}
-          </h1>
-
-          <div className="flex items-center justify-between flex-wrap gap-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                <User className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <p className="font-bold text-gray-900 text-lg">{post.author}</p>
-                <p className="text-sm text-gray-500">{formatDate(post.created_at)}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <span className="text-gray-700 font-semibold mr-2">Share:</span>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition shadow-sm"
-              >
-                <Facebook className="w-5 h-5 text-white fill-current" />
-              </a>
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-blue-700 hover:bg-blue-800 rounded-lg flex items-center justify-center transition shadow-sm"
-              >
-                <Linkedin className="w-5 h-5 text-white fill-current" />
-              </a>
-              <a
-                href={`https://twitter.com/intent/tweet?url=${window.location.href}&text=${post.title}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-sky-500 hover:bg-sky-600 rounded-lg flex items-center justify-center transition shadow-sm"
-              >
-                <Twitter className="w-5 h-5 text-white fill-current" />
-              </a>
-              <a
-                href={`https://www.instagram.com/`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-90 rounded-lg flex items-center justify-center transition shadow-sm"
-              >
-                <Instagram className="w-5 h-5 text-white" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '20px', paddingBottom: '48px' }}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 mb-8">
+              <nav className="flex items-center space-x-2 text-sm mb-6">
+                <Link to="/" className="text-emerald-600 hover:text-emerald-700 flex items-center">
+                  <Home className="w-4 h-4" />
+                </Link>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+                <Link to="/blog" className="text-emerald-600 hover:text-emerald-700">
+                  Blog
+                </Link>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+                <span className="text-gray-600 truncate max-w-md">{post.title}</span>
+              </nav>
+
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                {post.title}
+              </h1>
+
+              <div className="flex items-center justify-between flex-wrap gap-6 mb-8 pb-6 border-b-2 border-gray-100">
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                    <User className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 text-lg">{post.author}</p>
+                    <p className="text-sm text-gray-500">{formatDate(post.created_at)}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-gray-700 font-semibold mr-2">Share:</span>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition shadow-sm"
+                  >
+                    <Facebook className="w-5 h-5 text-white fill-current" />
+                  </a>
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-blue-700 hover:bg-blue-800 rounded-lg flex items-center justify-center transition shadow-sm"
+                  >
+                    <Linkedin className="w-5 h-5 text-white fill-current" />
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${window.location.href}&text=${post.title}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-sky-500 hover:bg-sky-600 rounded-lg flex items-center justify-center transition shadow-sm"
+                  >
+                    <Twitter className="w-5 h-5 text-white fill-current" />
+                  </a>
+                  <a
+                    href={`https://www.instagram.com/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 hover:opacity-90 rounded-lg flex items-center justify-center transition shadow-sm"
+                  >
+                    <Instagram className="w-5 h-5 text-white" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
               {post.image_url && (
                 <div className="rounded-2xl overflow-hidden shadow-lg mb-8">
