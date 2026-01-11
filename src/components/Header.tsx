@@ -16,7 +16,7 @@ export function Header() {
 
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-emerald-600 transition">Home</Link>
-            <Link to="/blog" className="text-gray-700 hover:text-emerald-600 transition">Blog</Link>
+            <Link to="/category" className="text-gray-700 hover:text-emerald-600 transition">Blog</Link>
             <Link to="/about" className="text-gray-700 hover:text-emerald-600 transition">About</Link>
             <Link to="/contact" className="text-gray-700 hover:text-emerald-600 transition">Contact</Link>
           </div>
@@ -43,7 +43,7 @@ export function Header() {
               Home
             </Link>
             <Link
-              to="/blog"
+              to="/category"
               className="block text-gray-700 hover:text-emerald-600 transition"
               onClick={() => setMobileMenuOpen(false)}
             >
