@@ -42,10 +42,10 @@ export function HomePage() {
 
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-pink-400 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-rose-400 rounded-full blur-3xl"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-orange-400 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-400 rounded-full blur-3xl"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -56,29 +56,29 @@ export function HomePage() {
                 <span className="text-sm font-medium text-gray-700">Spark Creativity & Fun</span>
               </div>
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                Free Downloadable <span className="text-pink-600">Activity Books</span>
+                Free Downloadable <span className="text-orange-500">Activity Books</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Welcome to our website where you can download tons of free printable activity books, coloring pages, puzzles, and more for kids and adults!
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-pink-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-pink-700 transition shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 group">
+                <button className="bg-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 group">
                   <span>Explore Resources</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
                 </button>
-                <button className="bg-white text-pink-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition shadow-md border-2 border-pink-600">
+                <button className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition shadow-md border-2 border-orange-500">
                   View Generators
                 </button>
               </div>
               <div className="mt-12 flex items-center space-x-3">
                 <div className="flex -space-x-2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 border-2 border-white"></div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-purple-500 border-2 border-white"></div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 border-2 border-white"></div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 border-2 border-white"></div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 border-2 border-white"></div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 border-2 border-white"></div>
                 </div>
                 <div>
                   <div className="flex items-center space-x-1">
-                    <Users className="w-5 h-5 text-pink-600" />
+                    <Users className="w-5 h-5 text-orange-500" />
                     <span className="font-bold text-2xl text-gray-900">1.5M+</span>
                   </div>
                   <p className="text-sm text-gray-600">Happy Users</p>
@@ -132,8 +132,8 @@ export function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-pink-50 to-rose-50 p-8 rounded-2xl hover:shadow-xl transition group">
-              <div className="w-16 h-16 bg-pink-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+            <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-8 rounded-2xl hover:shadow-xl transition group">
+              <div className="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Created by Educators</h3>
@@ -143,7 +143,7 @@ export function HomePage() {
             </div>
 
             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl hover:shadow-xl transition group">
-              <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+              <div className="w-16 h-16 bg-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
                 <Palette className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Variety for Every Learner</h3>
@@ -152,8 +152,8 @@ export function HomePage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl hover:shadow-xl transition group">
-              <div className="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl hover:shadow-xl transition group">
+              <div className="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
                 <Download className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Free and Accessible</h3>
@@ -168,7 +168,7 @@ export function HomePage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-pink-600 font-semibold text-sm tracking-wider uppercase">Fresh Content</span>
+            <span className="text-orange-500 font-semibold text-sm tracking-wider uppercase">Fresh Content</span>
             <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">Latest Blog Posts</h2>
             <p className="text-xl text-gray-600">
               Discover our newest resources and creative ideas for learning and fun
@@ -177,7 +177,7 @@ export function HomePage() {
 
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -191,7 +191,7 @@ export function HomePage() {
                         className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                       />
                     ) : (
-                      <div className="h-full bg-gradient-to-br from-pink-200 to-rose-300 flex items-center justify-center">
+                      <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
                         <BookOpen className="w-12 h-12 text-white opacity-50" />
                       </div>
                     )}
@@ -207,13 +207,13 @@ export function HomePage() {
                         <span>{post.views}</span>
                       </div>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-pink-600 transition line-clamp-2">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition line-clamp-2">
                       {post.title}
                     </h3>
                     <p className="text-sm text-gray-600 mb-3 line-clamp-2">{post.excerpt}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">By {post.author}</span>
-                      <span className="text-pink-600 font-semibold text-sm flex items-center space-x-1 group-hover:space-x-2 transition-all">
+                      <span className="text-orange-500 font-semibold text-sm flex items-center space-x-1 group-hover:space-x-2 transition-all">
                         <span>Read</span>
                         <ArrowRight className="w-4 h-4" />
                       </span>
@@ -225,7 +225,7 @@ export function HomePage() {
           )}
 
           <div className="text-center mt-12">
-            <Link to="/category" className="bg-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-pink-700 transition shadow-lg inline-flex items-center space-x-2">
+            <Link to="/category" className="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg inline-flex items-center space-x-2">
               <span>View All Posts</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
@@ -242,22 +242,22 @@ export function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { name: "Sarah Johnson", role: "Graphic Designer", gradient: "from-pink-400 to-rose-500" },
-              { name: "Michael Chen", role: "Content Creator", gradient: "from-rose-400 to-purple-500" },
-              { name: "Emily Davis", role: "Education Specialist", gradient: "from-purple-400 to-pink-500" }
+              { name: "Sarah Johnson", role: "Graphic Designer", gradient: "from-orange-400 to-amber-500" },
+              { name: "Michael Chen", role: "Content Creator", gradient: "from-blue-400 to-cyan-500" },
+              { name: "Emily Davis", role: "Education Specialist", gradient: "from-green-400 to-emerald-500" }
             ].map((member, index) => (
               <div key={index} className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition group">
                 <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-br ${member.gradient} mb-6 group-hover:scale-110 transition`}></div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
                 <p className="text-gray-600 mb-6">{member.role}</p>
                 <div className="flex justify-center space-x-4">
-                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-pink-600 hover:text-white transition group">
+                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white transition group">
                     <Facebook className="w-5 h-5" />
                   </button>
-                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-pink-600 hover:text-white transition">
+                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
                     <Instagram className="w-5 h-5" />
                   </button>
-                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-pink-600 hover:text-white transition">
+                  <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
                     <Linkedin className="w-5 h-5" />
                   </button>
                 </div>
@@ -270,7 +270,7 @@ export function HomePage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-pink-600 font-semibold text-sm tracking-wider uppercase">Most Popular</span>
+            <span className="text-orange-500 font-semibold text-sm tracking-wider uppercase">Most Popular</span>
             <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">Explore Our Most Read Blog Posts</h2>
             <p className="text-xl text-gray-600">
               Challenge your mind and have a blast with our most sought-after content.
@@ -279,14 +279,14 @@ export function HomePage() {
 
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-8">
               {popularPosts.map((post, index) => (
                 <Link key={post.id} to={`/blog/${post.id}`} className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition relative">
                   <div className="absolute top-4 left-4 z-10">
-                    <div className="bg-pink-600 text-white px-3 py-1 rounded-full flex items-center space-x-1 shadow-lg">
+                    <div className="bg-orange-500 text-white px-3 py-1 rounded-full flex items-center space-x-1 shadow-lg">
                       <TrendingUp className="w-4 h-4" />
                       <span className="text-sm font-bold">#{index + 1}</span>
                     </div>
@@ -299,7 +299,7 @@ export function HomePage() {
                         className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                       />
                     ) : (
-                      <div className="h-full bg-gradient-to-br from-pink-200 to-rose-300 flex items-center justify-center">
+                      <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
                         <BookOpen className="w-16 h-16 text-white opacity-50" />
                       </div>
                     )}
@@ -310,18 +310,18 @@ export function HomePage() {
                         <Calendar className="w-4 h-4" />
                         <span>{formatDate(post.created_at)}</span>
                       </div>
-                      <div className="flex items-center space-x-1 text-pink-600 font-semibold">
+                      <div className="flex items-center space-x-1 text-orange-500 font-semibold">
                         <Eye className="w-4 h-4" />
                         <span>{post.views.toLocaleString()} views</span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-pink-600 transition line-clamp-2">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-500 transition line-clamp-2">
                       {post.title}
                     </h3>
                     <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-500">By {post.author}</span>
-                      <span className="text-pink-600 font-semibold flex items-center space-x-2 group-hover:space-x-3 transition-all">
+                      <span className="text-orange-500 font-semibold flex items-center space-x-2 group-hover:space-x-3 transition-all">
                         <span>Read More</span>
                         <ArrowRight className="w-4 h-4" />
                       </span>
@@ -337,7 +337,7 @@ export function HomePage() {
       <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-pink-600 font-semibold text-sm tracking-wider uppercase">Explore by Category</span>
+            <span className="text-orange-500 font-semibold text-sm tracking-wider uppercase">Explore by Category</span>
             <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">Popular Blog Categories</h2>
             <p className="text-xl text-gray-600">
               Find exactly what you're looking for in our organized collections
@@ -349,14 +349,14 @@ export function HomePage() {
               {
                 name: "Coloring Pages",
                 count: "250+ Posts",
-                gradient: "from-pink-500 to-rose-500",
+                gradient: "from-red-500 to-orange-500",
                 icon: Palette,
                 description: "Beautiful coloring pages for all ages"
               },
               {
                 name: "Activity Books",
                 count: "180+ Posts",
-                gradient: "from-rose-500 to-purple-500",
+                gradient: "from-orange-500 to-amber-500",
                 icon: BookOpen,
                 description: "Complete activity books to download"
               },
@@ -370,21 +370,21 @@ export function HomePage() {
               {
                 name: "Educational Resources",
                 count: "200+ Posts",
-                gradient: "from-amber-500 to-orange-500",
+                gradient: "from-green-500 to-emerald-500",
                 icon: GraduationCap,
                 description: "Learning materials for students"
               },
               {
                 name: "Seasonal & Holidays",
                 count: "120+ Posts",
-                gradient: "from-orange-500 to-red-500",
+                gradient: "from-purple-500 to-pink-500",
                 icon: Gift,
                 description: "Holiday-themed activities"
               },
               {
                 name: "Trending Now",
                 count: "85+ Posts",
-                gradient: "from-purple-500 to-pink-500",
+                gradient: "from-yellow-500 to-orange-500",
                 icon: TrendingUp,
                 description: "Most popular this month"
               }
@@ -400,8 +400,8 @@ export function HomePage() {
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{category.name}</h3>
                     <p className="text-gray-600 text-sm mb-3">{category.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-pink-600 font-semibold text-sm">{category.count}</span>
-                      <ArrowRight className="w-5 h-5 text-pink-600 group-hover:translate-x-1 transition" />
+                      <span className="text-orange-500 font-semibold text-sm">{category.count}</span>
+                      <ArrowRight className="w-5 h-5 text-orange-500 group-hover:translate-x-1 transition" />
                     </div>
                   </div>
                 </div>
@@ -411,7 +411,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-pink-600 to-rose-600 relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-orange-500 to-amber-500 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-10 right-10 w-80 h-80 bg-white rounded-full blur-3xl"></div>
@@ -419,14 +419,14 @@ export function HomePage() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <h2 className="text-4xl font-bold text-white mb-6">Subscribe for Daily Updates</h2>
-          <p className="text-xl text-pink-50 mb-8">Get the latest activity books and resources delivered to your inbox</p>
+          <p className="text-xl text-orange-50 mb-8">Get the latest activity books and resources delivered to your inbox</p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
             <input
               type="email"
               placeholder="Enter your email address"
-              className="flex-1 px-6 py-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-pink-300"
+              className="flex-1 px-6 py-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-orange-300"
             />
-            <button className="bg-white text-pink-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg flex items-center justify-center space-x-2">
+            <button className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg flex items-center justify-center space-x-2">
               <span>Subscribe</span>
               <Mail className="w-5 h-5" />
             </button>

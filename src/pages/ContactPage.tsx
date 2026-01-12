@@ -46,7 +46,7 @@ export function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 py-20">
+      <section className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">Get In Touch</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -64,11 +64,11 @@ export function ContactPage() {
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">Send Us a Message</h2>
 
                 {status === 'success' && (
-                  <div className="mb-6 bg-pink-50 border border-pink-200 rounded-lg p-4 flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-pink-600 mt-0.5 flex-shrink-0" />
+                  <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-pink-900">Message sent successfully!</h3>
-                      <p className="text-pink-700 text-sm">We'll get back to you within 24-48 hours.</p>
+                      <h3 className="font-semibold text-green-900">Message sent successfully!</h3>
+                      <p className="text-green-700 text-sm">We'll get back to you within 24-48 hours.</p>
                     </div>
                   </div>
                 )}
@@ -96,7 +96,7 @@ export function ContactPage() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         placeholder="John Doe"
                       />
                     </div>
@@ -112,7 +112,7 @@ export function ContactPage() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -153,7 +153,7 @@ export function ContactPage() {
                   <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="w-full bg-pink-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-pink-700 transition shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {status === 'loading' ? (
                       <>
@@ -172,11 +172,11 @@ export function ContactPage() {
             </div>
 
             <div className="space-y-8">
-              <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl p-8">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h3>
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -187,7 +187,7 @@ export function ContactPage() {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Phone className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -198,7 +198,7 @@ export function ContactPage() {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -228,12 +228,12 @@ export function ContactPage() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8">
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">FAQ</h3>
                 <p className="text-gray-600 mb-4">
                   Looking for quick answers? Check out our frequently asked questions section for immediate help.
                 </p>
-                <button className="text-pink-600 font-semibold hover:text-pink-700 transition">
+                <button className="text-orange-500 font-semibold hover:text-orange-600 transition">
                   Visit FAQ Page →
                 </button>
               </div>
