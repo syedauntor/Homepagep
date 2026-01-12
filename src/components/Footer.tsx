@@ -20,6 +20,7 @@ export function Footer() {
             <h3 className="text-white font-bold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li><Link to="/" className="hover:text-orange-500 transition">Home</Link></li>
+              <li><Link to="/generators" className="hover:text-orange-500 transition">Generators</Link></li>
               <li><Link to="/category" className="hover:text-orange-500 transition">Blog</Link></li>
               <li><Link to="/about" className="hover:text-orange-500 transition">About</Link></li>
               <li><Link to="/contact" className="hover:text-orange-500 transition">Contact</Link></li>
@@ -27,12 +28,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Services</h3>
+            <h3 className="text-white font-bold text-lg mb-4">Generator Categories</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-orange-500 transition">Coloring Pages</a></li>
-              <li><a href="#" className="hover:text-orange-500 transition">Activity Books</a></li>
-              <li><a href="#" className="hover:text-orange-500 transition">Puzzles</a></li>
-              <li><a href="#" className="hover:text-orange-500 transition">Generators</a></li>
+              <li><Link to="/generators" className="hover:text-orange-500 transition">All Generators</Link></li>
+              <li><Link to="/generators#math" className="hover:text-orange-500 transition">Math Generators</Link></li>
+              <li><Link to="/generators#tracing" className="hover:text-orange-500 transition">Tracing Practice</Link></li>
+              <li><Link to="/generators#activities" className="hover:text-orange-500 transition">Activity Generators</Link></li>
             </ul>
           </div>
 
