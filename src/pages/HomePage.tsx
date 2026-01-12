@@ -1,4 +1,4 @@
-import { Users, Sparkles, GraduationCap, Palette, Download, ArrowRight, Mail, BookOpen, Grid, Gift, TrendingUp, Clock, Eye, Calendar, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Sparkles, GraduationCap, Palette, Download, ArrowRight, Mail, BookOpen, Grid, Gift, TrendingUp, Clock, Eye, Calendar, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase, BlogPost } from '../lib/supabase';
@@ -69,20 +69,6 @@ export function HomePage() {
                 <button className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition shadow-md border-2 border-orange-500">
                   View Generators
                 </button>
-              </div>
-              <div className="mt-12 flex items-center space-x-3">
-                <div className="flex -space-x-2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 border-2 border-white"></div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 border-2 border-white"></div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 border-2 border-white"></div>
-                </div>
-                <div>
-                  <div className="flex items-center space-x-1">
-                    <Users className="w-5 h-5 text-orange-500" />
-                    <span className="font-bold text-2xl text-gray-900">1.5M+</span>
-                  </div>
-                  <p className="text-sm text-gray-600">Happy Users</p>
-                </div>
               </div>
             </div>
 
