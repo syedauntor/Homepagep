@@ -213,15 +213,17 @@ export function AdditionGenerator() {
                                 {showProblemNumber && (
                                   <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
                                 )}
-                                <div className="border-2 border-gray-200 rounded p-3 inline-block">
-                                  <div className="text-xl">{problem.num1}</div>
-                                  <div className="text-xl border-t-2 border-gray-300 mt-2 pt-2">
+                                <div className="border-2 border-gray-200 rounded px-4 py-3 inline-block min-w-[80px]">
+                                  <div className="text-xl mb-1">{problem.num1}</div>
+                                  <div className="text-xl border-t-2 border-gray-900 pt-1">
                                     + {problem.num2}
                                   </div>
-                                  {showAnswers && (
-                                    <div className="text-xl font-bold text-orange-500 border-t-2 border-gray-400 mt-2 pt-2">
+                                  {showAnswers ? (
+                                    <div className="text-xl font-bold text-orange-500 border-t-2 border-gray-900 mt-1 pt-1">
                                       {problem.answer}
                                     </div>
+                                  ) : (
+                                    <div className="border-t-2 border-gray-900 mt-1 pt-3"></div>
                                   )}
                                 </div>
                               </div>
