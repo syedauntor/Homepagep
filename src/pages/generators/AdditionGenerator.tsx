@@ -199,7 +199,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-2' : 'grid-cols-4 gap-2.5'}`}>
+                      <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-4' : 'grid-cols-4 gap-y-4 gap-x-2'}`}>
                         {problems.map((problem, index) => (
                           <div key={index} className="text-center">
                             {orientation === 'horizontal' ? (
@@ -220,9 +220,9 @@ export function AdditionGenerator() {
                             ) : (
                               <div className="inline-block text-right">
                                 {showProblemNumber && (
-                                  <div className="text-left text-gray-400 text-sm mb-0.5">{index + 1}.</div>
+                                  <div className="text-left text-gray-400 text-sm mb-1">{index + 1}.</div>
                                 )}
-                                <div className="border-2 border-gray-200 rounded px-3 py-2 inline-block min-w-[70px]">
+                                <div className="inline-block min-w-[70px]">
                                   <div className="text-lg">{problem.num1}</div>
                                   <div className="text-lg">
                                     + {problem.num2}
