@@ -168,18 +168,20 @@ export function AdditionGenerator() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Worksheet Preview</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="p-8 pb-4">
+              <h2 className="text-2xl font-bold text-gray-900">Worksheet Preview</h2>
+            </div>
 
             {problems.length === 0 ? (
-              <div className="flex items-center justify-center h-96 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <div className="flex items-center justify-center h-96 bg-gray-50 border-2 border-dashed border-gray-300 mx-8 mb-8 rounded-lg">
                 <p className="text-gray-500 text-lg">Click Generate to create worksheet</p>
               </div>
             ) : (
               <div>
-                <div className="preview-container bg-gray-100 rounded-lg p-4 mb-4 flex items-center justify-center" style={{ minHeight: '600px' }}>
+                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-auto" style={{ minHeight: '700px', maxHeight: '800px' }}>
                   <div className="preview-scale">
-                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-lg">
+                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl">
                       <div className="text-center mb-8">
                         <h3 className="text-3xl font-bold text-gray-900">{title}</h3>
                         <div className="flex justify-between mt-6 text-base text-gray-600 px-4">
@@ -236,30 +238,33 @@ export function AdditionGenerator() {
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <button
-                    onClick={downloadWorksheet}
-                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-semibold shadow-md"
-                  >
-                    <Download className="w-5 h-5" />
-                    <span>Download Worksheet</span>
-                  </button>
+                <div className="p-8 pt-4">
 
-                  <button
-                    onClick={() => setShowAnswers(!showAnswers)}
-                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition font-semibold"
-                  >
-                    <Eye className="w-5 h-5" />
-                    <span>{showAnswers ? 'Hide' : 'Show'} Answers</span>
-                  </button>
+                  <div className="space-y-3">
+                    <button
+                      onClick={downloadWorksheet}
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-semibold shadow-md"
+                    >
+                      <Download className="w-5 h-5" />
+                      <span>Download Worksheet</span>
+                    </button>
 
-                  <button
-                    onClick={handlePrint}
-                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition font-semibold"
-                  >
-                    <Printer className="w-5 h-5" />
-                    <span>Print</span>
-                  </button>
+                    <button
+                      onClick={() => setShowAnswers(!showAnswers)}
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition font-semibold"
+                    >
+                      <Eye className="w-5 h-5" />
+                      <span>{showAnswers ? 'Hide' : 'Show'} Answers</span>
+                    </button>
+
+                    <button
+                      onClick={handlePrint}
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-lg hover:bg-orange-50 transition font-semibold"
+                    >
+                      <Printer className="w-5 h-5" />
+                      <span>Print</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -276,8 +281,12 @@ export function AdditionGenerator() {
         }
 
         .preview-scale {
-          transform: scale(0.45);
+          transform: scale(0.55);
           transform-origin: center center;
+        }
+
+        .preview-container {
+          padding: 20px;
         }
 
         @media print {
