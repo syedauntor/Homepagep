@@ -11,7 +11,7 @@ export function AdditionGenerator() {
   const [title, setTitle] = useState('Addition Generator');
   const [difficulty, setDifficulty] = useState<'simple' | 'medium' | 'hard'>('simple');
   const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
-  const [numProblems, setNumProblems] = useState(32);
+  const [numProblems, setNumProblems] = useState(20);
   const [showProblemNumber, setShowProblemNumber] = useState(true);
   const [showAnswers, setShowAnswers] = useState(false);
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -53,7 +53,7 @@ export function AdditionGenerator() {
     setTitle('Addition Generator');
     setDifficulty('simple');
     setOrientation('horizontal');
-    setNumProblems(32);
+    setNumProblems(20);
     setShowProblemNumber(true);
     setProblems([]);
   };
@@ -113,7 +113,13 @@ export function AdditionGenerator() {
                   </label>
                   <select
                     value={orientation}
-                    onChange={(e) => setOrientation(e.target.value as any)}
+                    onChange={(e) => {
+                      const newOrientation = e.target.value as 'horizontal' | 'vertical';
+                      setOrientation(newOrientation);
+                      if (newOrientation === 'vertical' && numProblems > 20) {
+                        setNumProblems(20);
+                      }
+                    }}
                     className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none transition"
                   >
                     <option value="horizontal">Horizontal</option>
@@ -124,14 +130,17 @@ export function AdditionGenerator() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Number of Problems
+                  Number of Problems {orientation === 'vertical' && <span className="text-orange-500">(Max 20 for vertical)</span>}
                 </label>
                 <input
                   type="number"
                   min="1"
-                  max="50"
+                  max={orientation === 'vertical' ? 20 : 50}
                   value={numProblems}
-                  onChange={(e) => setNumProblems(Number(e.target.value))}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setNumProblems(orientation === 'vertical' ? Math.min(value, 20) : value);
+                  }}
                   className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none transition"
                 />
               </div>
