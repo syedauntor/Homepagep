@@ -177,58 +177,62 @@ export function AdditionGenerator() {
               </div>
             ) : (
               <div>
-                <div ref={worksheetRef} className="bg-white border-2 border-gray-200 rounded-lg p-6 mb-4 max-h-[500px] overflow-y-auto">
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-                    <div className="flex justify-between mt-4 text-sm text-gray-600">
-                      <span>Name: __________________</span>
-                      <span>Date: __________________</span>
-                    </div>
-                  </div>
-
-                  <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
-                    {problems.map((problem, index) => (
-                      <div key={index} className="text-center">
-                        {orientation === 'horizontal' ? (
-                          <div className="flex items-center justify-center space-x-2 text-lg">
-                            {showProblemNumber && (
-                              <span className="text-gray-400 text-sm">{index + 1}.</span>
-                            )}
-                            <span>{problem.num1}</span>
-                            <span>+</span>
-                            <span>{problem.num2}</span>
-                            <span>=</span>
-                            {showAnswers ? (
-                              <span className="font-bold text-orange-500">{problem.answer}</span>
-                            ) : (
-                              <span className="inline-block w-16 border-b-2 border-gray-300"></span>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="inline-block text-right">
-                            {showProblemNumber && (
-                              <div className="text-left text-gray-400 text-sm mb-1">{index + 1}.</div>
-                            )}
-                            <div className="border-2 border-gray-200 rounded p-2 inline-block">
-                              <div className="text-lg">{problem.num1}</div>
-                              <div className="text-lg border-t-2 border-gray-300 mt-1 pt-1">
-                                + {problem.num2}
-                              </div>
-                              {showAnswers && (
-                                <div className="text-lg font-bold text-orange-500 border-t-2 border-gray-400 mt-1 pt-1">
-                                  {problem.answer}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
+                <div className="preview-container bg-gray-100 rounded-lg p-4 mb-4 flex items-center justify-center" style={{ minHeight: '600px' }}>
+                  <div className="preview-scale">
+                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-lg">
+                      <div className="text-center mb-8">
+                        <h3 className="text-3xl font-bold text-gray-900">{title}</h3>
+                        <div className="flex justify-between mt-6 text-base text-gray-600 px-4">
+                          <span>Name: _________________________</span>
+                          <span>Date: _________________________</span>
+                        </div>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="mt-8 text-center text-xs text-gray-500">
-                    <p>Find more educational worksheets at PrintAndUse.com</p>
-                    <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
+                      <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2' : 'grid-cols-4'} gap-6 px-8`}>
+                        {problems.map((problem, index) => (
+                          <div key={index} className="text-center">
+                            {orientation === 'horizontal' ? (
+                              <div className="flex items-center justify-center space-x-3 text-xl">
+                                {showProblemNumber && (
+                                  <span className="text-gray-400 text-base">{index + 1}.</span>
+                                )}
+                                <span>{problem.num1}</span>
+                                <span>+</span>
+                                <span>{problem.num2}</span>
+                                <span>=</span>
+                                {showAnswers ? (
+                                  <span className="font-bold text-orange-500">{problem.answer}</span>
+                                ) : (
+                                  <span className="inline-block w-20 border-b-2 border-gray-300"></span>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="inline-block text-right">
+                                {showProblemNumber && (
+                                  <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
+                                )}
+                                <div className="border-2 border-gray-200 rounded p-3 inline-block">
+                                  <div className="text-xl">{problem.num1}</div>
+                                  <div className="text-xl border-t-2 border-gray-300 mt-2 pt-2">
+                                    + {problem.num2}
+                                  </div>
+                                  {showAnswers && (
+                                    <div className="text-xl font-bold text-orange-500 border-t-2 border-gray-400 mt-2 pt-2">
+                                      {problem.answer}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-12 text-center text-sm text-gray-500">
+                        <p>Find more educational worksheets at PrintAndUse.com</p>
+                        <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -264,18 +268,51 @@ export function AdditionGenerator() {
       </div>
 
       <style>{`
+        .worksheet-content {
+          width: 210mm;
+          min-height: 297mm;
+          padding: 20mm;
+          box-sizing: border-box;
+        }
+
+        .preview-scale {
+          transform: scale(0.45);
+          transform-origin: center center;
+        }
+
         @media print {
+          @page {
+            size: A4;
+            margin: 0;
+          }
+
           body * {
             visibility: hidden;
           }
-          .print-content, .print-content * {
+
+          .worksheet-content,
+          .worksheet-content * {
             visibility: visible;
           }
-          .print-content {
+
+          .worksheet-content {
             position: absolute;
             left: 0;
             top: 0;
-            width: 100%;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            box-shadow: none !important;
+          }
+
+          .preview-scale {
+            transform: none !important;
+          }
+
+          .preview-container {
+            background: white !important;
+            padding: 0 !important;
+            box-shadow: none !important;
           }
         }
       `}</style>
