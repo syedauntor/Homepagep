@@ -125,7 +125,8 @@ export function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Your Trusted Partner in Engaging Education</h2>
+            <span className="text-orange-500 font-semibold text-sm tracking-wider uppercase">About Us</span>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 mt-2">Your Trusted Partner in Engaging Education</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               We believe that every child deserves access to fun, engaging, and effective learning resources.
             </p>
