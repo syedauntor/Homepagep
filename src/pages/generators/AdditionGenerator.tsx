@@ -199,8 +199,8 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center flex-1 px-12 py-10">
-                        <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-12 gap-x-24' : 'grid-cols-4 gap-y-12 gap-x-14'}`}>
+                      <div className="flex items-center justify-center flex-1 px-16 py-14">
+                        <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-16 gap-x-32' : 'grid-cols-4 gap-y-16 gap-x-20'}`}>
                           {problems.map((problem, index) => (
                             <div key={index} className="text-center">
                               {orientation === 'horizontal' ? (
