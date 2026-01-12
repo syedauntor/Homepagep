@@ -286,7 +286,7 @@ export function AdditionGenerator() {
         }
 
         .preview-container {
-          padding: 15px;
+          padding: 15px 10px;
           position: relative;
         }
 
