@@ -190,16 +190,16 @@ export function AdditionGenerator() {
               <div>
                 <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '900px' }}>
                   <div className="preview-scale">
-                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col min-h-[1056px]">
-                      <div className="text-center mb-8">
+                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col">
+                      <div className="text-center mb-6">
                         <h3 className="text-3xl font-bold text-gray-900">{title}</h3>
-                        <div className="flex justify-between mt-6 text-base text-gray-600 px-4">
+                        <div className="flex justify-between mt-4 text-base text-gray-600 px-4">
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
                         </div>
                       </div>
 
-                      <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2' : 'grid-cols-4'} gap-6 px-8`}>
+                      <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2' : 'grid-cols-4'} gap-5 px-8`}>
                         {problems.map((problem, index) => (
                           <div key={index} className="text-center">
                             {orientation === 'horizontal' ? (
@@ -241,7 +241,7 @@ export function AdditionGenerator() {
                         ))}
                       </div>
 
-                      <div className="mt-auto pt-12 pb-8 text-center text-sm text-gray-500">
+                      <div className="mt-auto pt-8 pb-4 text-center text-sm text-gray-500">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
@@ -286,8 +286,8 @@ export function AdditionGenerator() {
       <style>{`
         .worksheet-content {
           width: 210mm;
-          min-height: 297mm;
-          padding: 20mm;
+          max-height: 297mm;
+          padding: 15mm;
           box-sizing: border-box;
         }
 
@@ -321,8 +321,9 @@ export function AdditionGenerator() {
             left: 0;
             top: 0;
             width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
+            max-height: 297mm;
+            height: 297mm;
+            padding: 15mm;
             box-shadow: none !important;
           }
 
