@@ -97,11 +97,11 @@ export default function CategoryPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '20px', paddingBottom: '48px' }}>
         <nav className="flex items-center space-x-2 text-sm mb-8">
-          <Link to="/" className="text-blue-600 hover:text-blue-700 flex items-center">
+          <Link to="/" className="text-orange-600 hover:text-orange-700 flex items-center">
             Home
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-400" />
-          <Link to="/category" className="text-blue-600 hover:text-blue-700">
+          <Link to="/category" className="text-orange-600 hover:text-orange-700">
             Blog
           </Link>
         </nav>
@@ -119,7 +119,7 @@ export default function CategoryPage() {
               to="/category"
               className={`px-8 py-3 rounded-full font-semibold transition text-base ${
                 !slug
-                  ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md'
+                  ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -131,7 +131,7 @@ export default function CategoryPage() {
                 to={`/category/${category.slug}`}
                 className={`px-8 py-3 rounded-full font-semibold transition text-base ${
                   slug === category.slug
-                    ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -143,7 +143,7 @@ export default function CategoryPage() {
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-20">
@@ -159,7 +159,7 @@ export default function CategoryPage() {
                 className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300"
               >
                 <div className="relative">
-                  <div className="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-blue-500 via-pink-500 to-purple-500"></div>
+                  <div className="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500"></div>
                   {post.image_url ? (
                     <img
                       src={post.image_url}
@@ -167,8 +167,8 @@ export default function CategoryPage() {
                       className="w-full h-64 object-cover group-hover:scale-105 transition duration-500"
                     />
                   ) : (
-                    <div className="w-full h-64 bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center">
-                      <BookOpen className="w-16 h-16 text-pink-300" />
+                    <div className="w-full h-64 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center">
+                      <BookOpen className="w-16 h-16 text-orange-300" />
                     </div>
                   )}
                 </div>
@@ -176,7 +176,7 @@ export default function CategoryPage() {
                 <div className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full flex items-center justify-center">
                         <User className="w-4 h-4 text-white" />
                       </div>
                       <span className="text-sm text-gray-600">{post.author}</span>
@@ -187,7 +187,7 @@ export default function CategoryPage() {
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-pink-600 mb-3 group-hover:text-pink-700 transition line-clamp-2">
+                  <h3 className="text-xl font-bold text-orange-600 mb-3 group-hover:text-orange-700 transition line-clamp-2">
                     {post.title}
                   </h3>
 
@@ -195,7 +195,7 @@ export default function CategoryPage() {
 
                   {post.categories && (
                     <div className="flex flex-wrap gap-2">
-                      <span className="px-4 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-semibold">
+                      <span className="px-4 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">
                         {post.categories.name}
                       </span>
                     </div>
