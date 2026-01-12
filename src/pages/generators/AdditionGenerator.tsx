@@ -214,8 +214,8 @@ export function AdditionGenerator() {
                                   <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
                                 )}
                                 <div className="border-2 border-gray-200 rounded px-4 py-3 inline-block min-w-[80px]">
-                                  <div className="text-xl mb-1">{problem.num1}</div>
-                                  <div className="text-xl border-t-2 border-gray-900 pt-1">
+                                  <div className="text-xl">{problem.num1}</div>
+                                  <div className="text-xl">
                                     + {problem.num2}
                                   </div>
                                   {showAnswers ? (
