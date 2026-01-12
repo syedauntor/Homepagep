@@ -1,4 +1,4 @@
-import { Users, Target, Heart, Award, Facebook, Instagram, Linkedin, Sparkles, GraduationCap, Palette, Download } from 'lucide-react';
+import { Target, Heart, Award, Facebook, Instagram, Linkedin, Sparkles, GraduationCap, Palette, Download } from 'lucide-react';
 
 export function AboutPage() {
   const teamMembers = [
@@ -23,7 +23,6 @@ export function AboutPage() {
   ];
 
   const stats = [
-    { number: "1.5M+", label: "Happy Users", icon: Users },
     { number: "5,000+", label: "Free Resources", icon: Download },
     { number: "150+", label: "Countries Reached", icon: Target },
     { number: "98%", label: "Satisfaction Rate", icon: Heart }
@@ -71,7 +70,7 @@ export function AboutPage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
