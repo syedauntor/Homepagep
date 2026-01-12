@@ -199,14 +199,14 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center flex-1">
+                      <div className="flex items-center justify-center flex-1 p-5">
                         <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-6 gap-x-12' : 'grid-cols-4 gap-y-6 gap-x-6'}`}>
                           {problems.map((problem, index) => (
                             <div key={index} className="text-center">
                               {orientation === 'horizontal' ? (
-                                <div className="flex items-center justify-center space-x-2 text-base">
+                                <div className="flex items-center justify-center space-x-3 text-xl">
                                   {showProblemNumber && (
-                                    <span className="text-gray-400 text-sm">{index + 1}.</span>
+                                    <span className="text-gray-400 text-base">{index + 1}.</span>
                                   )}
                                   <span>{problem.num1}</span>
                                   <span>+</span>
@@ -215,25 +215,25 @@ export function AdditionGenerator() {
                                   {showAnswers ? (
                                     <span className="font-bold text-orange-500">{problem.answer}</span>
                                   ) : (
-                                    <span className="inline-block w-16 border-b-2 border-gray-300"></span>
+                                    <span className="inline-block w-20 border-b-2 border-gray-300"></span>
                                   )}
                                 </div>
                               ) : (
                                 <div className="inline-block text-right">
                                   {showProblemNumber && (
-                                    <div className="text-left text-gray-400 text-sm mb-1">{index + 1}.</div>
+                                    <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
                                   )}
-                                  <div className="inline-block min-w-[70px]">
-                                    <div className="text-lg">{problem.num1}</div>
-                                    <div className="text-lg">
+                                  <div className="inline-block min-w-[90px]">
+                                    <div className="text-2xl">{problem.num1}</div>
+                                    <div className="text-2xl">
                                       + {problem.num2}
                                     </div>
                                     {showAnswers ? (
-                                      <div className="text-lg font-bold text-orange-500 border-t-2 border-gray-900 mt-0.5 pt-0.5">
+                                      <div className="text-2xl font-bold text-orange-500 border-t-2 border-gray-900 mt-1 pt-1">
                                         {problem.answer}
                                       </div>
                                     ) : (
-                                      <div className="border-t-2 border-gray-900 mt-0.5 pt-2"></div>
+                                      <div className="border-t-2 border-gray-900 mt-1 pt-2"></div>
                                     )}
                                   </div>
                                 </div>
