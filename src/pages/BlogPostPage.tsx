@@ -119,7 +119,7 @@ export function BlogPostPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
       </div>
     );
   }
@@ -129,7 +129,7 @@ export function BlogPostPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Post Not Found</h2>
-          <Link to="/blog" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+          <Link to="/category" className="text-pink-600 hover:text-pink-700 font-semibold">
             Return to Blog
           </Link>
         </div>
@@ -144,11 +144,11 @@ export function BlogPostPage() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
               <nav className="flex items-center space-x-2 text-sm mb-6">
-                <Link to="/" className="text-emerald-600 hover:text-emerald-700 flex items-center">
+                <Link to="/" className="text-pink-600 hover:text-pink-700 flex items-center">
                   <Home className="w-4 h-4" />
                 </Link>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
-                <Link to="/blog" className="text-emerald-600 hover:text-emerald-700">
+                <Link to="/category" className="text-pink-600 hover:text-pink-700">
                   Blog
                 </Link>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -161,7 +161,7 @@ export function BlogPostPage() {
 
               <div className="flex items-center justify-between flex-wrap gap-6 mb-8 pb-8 border-b-2 border-gray-100">
                 <div className="flex items-center space-x-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                  <div className="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                     <User className="w-7 h-7 text-white" />
                   </div>
                   <div>
@@ -238,7 +238,7 @@ export function BlogPostPage() {
 
               <article className="mb-12">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-xl text-gray-700 leading-relaxed mb-8 font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-emerald-600 first-letter:mr-1 first-letter:float-left">
+                  <p className="text-xl text-gray-700 leading-relaxed mb-8 font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-pink-600 first-letter:mr-1 first-letter:float-left">
                     {post.excerpt}
                   </p>
 
@@ -251,12 +251,12 @@ export function BlogPostPage() {
               <div className="border-t-2 border-gray-100 pt-8">
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">Writer</h3>
                 <div className="flex items-start space-x-6">
-                  <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-24 h-24 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                     <User className="w-12 h-12 text-white" />
                   </div>
                   <div className="flex-1">
                     <h4 className="text-2xl font-bold text-gray-900 mb-2">{post.author}</h4>
-                    <p className="text-emerald-600 font-semibold mb-4">Content Writer</p>
+                    <p className="text-pink-600 font-semibold mb-4">Content Writer</p>
                     <p className="text-gray-600 leading-relaxed mb-6 text-lg">
                       A passionate writer creating engaging content and sharing valuable insights with readers around the world.
                     </p>
@@ -407,7 +407,7 @@ export function BlogPostPage() {
                           placeholder="Your name"
                           value={commentForm.name}
                           onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
-                          className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:outline-none"
+                          className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-pink-500 focus:outline-none"
                           required
                         />
                       </div>
@@ -418,7 +418,7 @@ export function BlogPostPage() {
                           placeholder="Your email"
                           value={commentForm.email}
                           onChange={(e) => setCommentForm({ ...commentForm, email: e.target.value })}
-                          className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:outline-none"
+                          className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-pink-500 focus:outline-none"
                           required
                         />
                       </div>
@@ -430,7 +430,7 @@ export function BlogPostPage() {
                         value={commentForm.message}
                         onChange={(e) => setCommentForm({ ...commentForm, message: e.target.value })}
                         rows={5}
-                        className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:outline-none resize-none"
+                        className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-pink-500 focus:outline-none resize-none"
                         required
                       ></textarea>
                     </div>
@@ -454,9 +454,9 @@ export function BlogPostPage() {
                   <input
                     type="text"
                     placeholder="Search here"
-                    className="w-full pl-5 pr-12 py-4 rounded-full border-2 border-gray-200 focus:border-emerald-500 focus:outline-none text-gray-700 shadow-sm bg-gray-50"
+                    className="w-full pl-5 pr-12 py-4 rounded-full border-2 border-gray-200 focus:border-pink-500 focus:outline-none text-gray-700 shadow-sm bg-gray-50"
                   />
-                  <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-full font-semibold transition shadow-md">
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-full font-semibold transition shadow-md">
                     <Search className="w-5 h-5" />
                   </button>
                 </div>
@@ -482,17 +482,17 @@ export function BlogPostPage() {
                               className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                             />
                           ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
+                            <div className="w-full h-full bg-gradient-to-br from-pink-200 to-rose-300 flex items-center justify-center">
                               <BookOpen className="w-8 h-8 text-white opacity-60" />
                             </div>
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center space-x-2 text-xs text-emerald-600 mb-2">
+                          <div className="flex items-center space-x-2 text-xs text-pink-600 mb-2">
                             <Calendar className="w-4 h-4" />
                             <span className="font-medium">{formatDate(recentPost.created_at)}</span>
                           </div>
-                          <h4 className="text-sm font-bold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2 leading-snug">
+                          <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2 leading-snug">
                             {recentPost.title}
                           </h4>
                         </div>
@@ -522,17 +522,17 @@ export function BlogPostPage() {
                               className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                             />
                           ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
+                            <div className="w-full h-full bg-gradient-to-br from-pink-200 to-rose-300 flex items-center justify-center">
                               <BookOpen className="w-8 h-8 text-white opacity-60" />
                             </div>
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center space-x-2 text-xs text-emerald-600 mb-2">
+                          <div className="flex items-center space-x-2 text-xs text-pink-600 mb-2">
                             <Eye className="w-4 h-4" />
                             <span className="font-medium">{popularPost.views.toLocaleString()} views</span>
                           </div>
-                          <h4 className="text-sm font-bold text-gray-900 group-hover:text-emerald-600 transition line-clamp-2 leading-snug">
+                          <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2 leading-snug">
                             {popularPost.title}
                           </h4>
                         </div>
