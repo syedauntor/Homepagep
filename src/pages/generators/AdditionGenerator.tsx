@@ -190,7 +190,7 @@ export function AdditionGenerator() {
               <div>
                 <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '900px' }}>
                   <div className="preview-scale">
-                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl">
+                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col min-h-[1056px]">
                       <div className="text-center mb-8">
                         <h3 className="text-3xl font-bold text-gray-900">{title}</h3>
                         <div className="flex justify-between mt-6 text-base text-gray-600 px-4">
@@ -241,7 +241,7 @@ export function AdditionGenerator() {
                         ))}
                       </div>
 
-                      <div className="mt-12 text-center text-sm text-gray-500">
+                      <div className="mt-auto pt-12 pb-8 text-center text-sm text-gray-500">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
