@@ -23,15 +23,16 @@ const themes: Theme[] = [
 ];
 
 const fonts = [
-  'KG Primary Dots',
-  'Teaching Print',
   'Codystar',
-  'Raleway Dots',
+  'Audiowide',
+  'Bungee Outline',
+  'Orbitron',
+  'Righteous',
 ];
 
 export function NameTracingGenerator() {
   const [text, setText] = useState('JASMINE');
-  const [selectedFont, setSelectedFont] = useState('KG Primary Dots');
+  const [selectedFont, setSelectedFont] = useState('Codystar');
   const [fontSize, setFontSize] = useState(50);
   const [textColor, setTextColor] = useState('#000000');
   const [lines, setLines] = useState(7);
@@ -51,7 +52,7 @@ export function NameTracingGenerator() {
 
   const handleReset = () => {
     setText('JASMINE');
-    setSelectedFont('KG Primary Dots');
+    setSelectedFont('Codystar');
     setFontSize(50);
     setTextColor('#000000');
     setLines(7);
