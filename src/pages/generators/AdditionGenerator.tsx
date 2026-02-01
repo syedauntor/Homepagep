@@ -190,8 +190,8 @@ export function AdditionGenerator() {
               <div>
                 <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '900px' }}>
                   <div className="preview-scale">
-                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col justify-between">
-                      <div className="text-center px-6">
+                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col">
+                      <div className="text-center mb-3">
                         <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
                         <div className="flex justify-between mt-2 text-sm text-gray-600">
                           <span>Name: _________________________</span>
@@ -199,53 +199,49 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center flex-1 px-6 py-8">
-                        <div className="border-4 border-red-500 w-full h-full flex items-start py-6 px-6">
-                          <div className={`grid w-full ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-20 gap-x-40' : 'grid-cols-4 gap-y-20 gap-x-24'}`}>
-                          {problems.map((problem, index) => (
-                            <div key={index} className="text-left">
-                              {orientation === 'horizontal' ? (
-                                <div className="flex items-center justify-start space-x-3 text-xl">
-                                  {showProblemNumber && (
-                                    <span className="text-gray-400 text-base">{index + 1}.</span>
-                                  )}
-                                  <span>{problem.num1}</span>
-                                  <span>+</span>
-                                  <span>{problem.num2}</span>
-                                  <span>=</span>
-                                  {showAnswers ? (
-                                    <span className="font-bold text-orange-500">{problem.answer}</span>
-                                  ) : (
-                                    <span className="inline-block w-20 border-b-2 border-gray-300"></span>
-                                  )}
-                                </div>
-                              ) : (
-                                <div className="inline-block text-right">
-                                  {showProblemNumber && (
-                                    <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
-                                  )}
-                                  <div className="inline-block min-w-[90px]">
-                                    <div className="text-2xl">{problem.num1}</div>
-                                    <div className="text-2xl">
-                                      + {problem.num2}
-                                    </div>
-                                    {showAnswers ? (
-                                      <div className="text-2xl font-bold text-orange-500 border-t-2 border-gray-900 mt-1 pt-1">
-                                        {problem.answer}
-                                      </div>
-                                    ) : (
-                                      <div className="border-t-2 border-gray-900 mt-1 pt-2"></div>
-                                    )}
+                      <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-2' : 'grid-cols-4 gap-2.5'}`}>
+                        {problems.map((problem, index) => (
+                          <div key={index} className="text-center">
+                            {orientation === 'horizontal' ? (
+                              <div className="flex items-center justify-center space-x-2 text-base">
+                                {showProblemNumber && (
+                                  <span className="text-gray-400 text-sm">{index + 1}.</span>
+                                )}
+                                <span>{problem.num1}</span>
+                                <span>+</span>
+                                <span>{problem.num2}</span>
+                                <span>=</span>
+                                {showAnswers ? (
+                                  <span className="font-bold text-orange-500">{problem.answer}</span>
+                                ) : (
+                                  <span className="inline-block w-16 border-b-2 border-gray-300"></span>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="inline-block text-right">
+                                {showProblemNumber && (
+                                  <div className="text-left text-gray-400 text-sm mb-0.5">{index + 1}.</div>
+                                )}
+                                <div className="border-2 border-gray-200 rounded px-3 py-2 inline-block min-w-[70px]">
+                                  <div className="text-lg">{problem.num1}</div>
+                                  <div className="text-lg">
+                                    + {problem.num2}
                                   </div>
+                                  {showAnswers ? (
+                                    <div className="text-lg font-bold text-orange-500 border-t-2 border-gray-900 mt-0.5 pt-0.5">
+                                      {problem.answer}
+                                    </div>
+                                  ) : (
+                                    <div className="border-t-2 border-gray-900 mt-0.5 pt-2"></div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                          ))}
+                              </div>
+                            )}
                           </div>
-                        </div>
+                        ))}
                       </div>
 
-                      <div className="text-center text-xs text-gray-500 px-6">
+                      <div className="mt-auto pt-3 text-center text-xs text-gray-500">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
