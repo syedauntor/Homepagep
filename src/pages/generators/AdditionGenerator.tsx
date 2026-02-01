@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Download, Printer, Eye, RefreshCw, RotateCcw, ChevronRight, Maximize2, Play } from 'lucide-react';
+import { Download, Printer, Eye, RefreshCw, ChevronRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Problem {
@@ -315,12 +315,12 @@ export function AdditionGenerator() {
 
           <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 pb-0">
-              <h2 className="text-xl font-bold text-gray-900 mb-6" style={{ marginTop: '-10px' }}>Worksheet Preview</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Worksheet Preview</h2>
 
               <div className="flex space-x-1 bg-white border-2 border-gray-200 rounded-full p-1 shadow-sm mb-4">
                 <button
                   onClick={() => setActiveTab('worksheet')}
-                  className={`px-6 py-2 font-semibold transition rounded-full ${
+                  className={`flex-1 py-2 font-semibold transition rounded-full ${
                     activeTab === 'worksheet'
                       ? 'bg-pink-600 text-white shadow-md'
                       : 'bg-transparent text-gray-700 hover:bg-gray-50'
@@ -330,7 +330,7 @@ export function AdditionGenerator() {
                 </button>
                 <button
                   onClick={() => setActiveTab('answer')}
-                  className={`px-6 py-2 font-semibold transition rounded-full ${
+                  className={`flex-1 py-2 font-semibold transition rounded-full ${
                     activeTab === 'answer'
                       ? 'bg-pink-600 text-white shadow-md'
                       : 'bg-transparent text-gray-700 hover:bg-gray-50'
@@ -374,9 +374,9 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center py-6" style={{ paddingTop: '14px' }}>
-                        <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
-                        <div className="flex justify-between mt-4 text-base text-gray-600">
+                        <div className="text-center">
+                        <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
+                        <div className="flex justify-between text-base text-gray-600">
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
                         </div>
@@ -479,26 +479,11 @@ export function AdditionGenerator() {
                     </button>
 
                     <button
-                      onClick={() => setActiveTab(activeTab === 'worksheet' ? 'answer' : 'worksheet')}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-pink-600 text-pink-600 rounded-full hover:bg-pink-50 transition font-semibold"
-                    >
-                      <Eye className="w-5 h-5" />
-                      <span>Toggle Answer</span>
-                    </button>
-
-                    <button
                       onClick={handlePrint}
                       className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-pink-600 text-pink-600 rounded-full hover:bg-pink-50 transition font-semibold"
                     >
                       <Printer className="w-5 h-5" />
                       <span>Print</span>
-                    </button>
-
-                    <button
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-pink-600 text-pink-600 rounded-full hover:bg-pink-50 transition font-semibold"
-                    >
-                      <Maximize2 className="w-5 h-5" />
-                      <span>Full Preview</span>
                     </button>
                   </div>
                 </div>
