@@ -202,21 +202,24 @@ export function AdditionGenerator() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Number of Problems
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={numProblems}
-                  onChange={(e) => {
-                    const value = Number(e.target.value);
-                    setNumProblems(Math.min(value, 20));
-                  }}
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Number of Problems
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={numProblems}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      setNumProblems(Math.min(value, 20));
+                    }}
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
+                  />
+                </div>
+                <div></div>
               </div>
 
               <div className="flex items-center space-x-2 pt-2">
@@ -312,15 +315,15 @@ export function AdditionGenerator() {
 
           <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 pb-0">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Worksheet Preview</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6" style={{ marginTop: '-10px' }}>Worksheet Preview</h2>
 
-              <div className="flex space-x-2 mb-4">
+              <div className="flex space-x-1 bg-white border-2 border-gray-200 rounded-full p-1 shadow-sm mb-4">
                 <button
                   onClick={() => setActiveTab('worksheet')}
                   className={`px-6 py-2 font-semibold transition rounded-full ${
                     activeTab === 'worksheet'
-                      ? 'bg-pink-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-pink-600 text-white shadow-md'
+                      : 'bg-transparent text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   Worksheet
@@ -329,8 +332,8 @@ export function AdditionGenerator() {
                   onClick={() => setActiveTab('answer')}
                   className={`px-6 py-2 font-semibold transition rounded-full ${
                     activeTab === 'answer'
-                      ? 'bg-pink-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-pink-600 text-white shadow-md'
+                      : 'bg-transparent text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   Answer Key
@@ -371,7 +374,7 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center py-6">
+                        <div className="text-center py-6" style={{ paddingTop: '14px' }}>
                         <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
                         <div className="flex justify-between mt-4 text-base text-gray-600">
                           <span>Name: _________________________</span>
