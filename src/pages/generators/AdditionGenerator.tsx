@@ -374,8 +374,8 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center">
-                        <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
+                        <div className="text-center -mt-[10px]">
+                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
                         <div className="flex justify-between text-base text-gray-600">
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
