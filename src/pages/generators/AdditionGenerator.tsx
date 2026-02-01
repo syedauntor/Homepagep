@@ -200,12 +200,12 @@ export function AdditionGenerator() {
                       </div>
 
                       <div className="flex items-center justify-center flex-1 px-6 py-8">
-                        <div className="border-4 border-red-500 w-full h-full flex items-center justify-center py-8 px-12">
-                          <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-16 gap-x-32' : 'grid-cols-4 gap-y-16 gap-x-20'}`}>
+                        <div className="border-4 border-red-500 w-full h-full flex items-start py-6 px-6">
+                          <div className={`grid w-full ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-20 gap-x-40' : 'grid-cols-4 gap-y-20 gap-x-24'}`}>
                           {problems.map((problem, index) => (
-                            <div key={index} className="text-center">
+                            <div key={index} className="text-left">
                               {orientation === 'horizontal' ? (
-                                <div className="flex items-center justify-center space-x-3 text-xl">
+                                <div className="flex items-center justify-start space-x-3 text-xl">
                                   {showProblemNumber && (
                                     <span className="text-gray-400 text-base">{index + 1}.</span>
                                   )}
