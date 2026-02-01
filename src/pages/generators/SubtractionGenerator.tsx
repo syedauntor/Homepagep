@@ -35,6 +35,8 @@ export function SubtractionGenerator() {
   const [numProblems, setNumProblems] = useState(20);
   const [showProblemNumber, setShowProblemNumber] = useState(true);
   const [showAnswers, setShowAnswers] = useState(false);
+  const [showName, setShowName] = useState(true);
+  const [showDate, setShowDate] = useState(true);
   const [problems, setProblems] = useState<Problem[]>([]);
   const [activeTab, setActiveTab] = useState<'worksheet' | 'answer'>('worksheet');
   const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
@@ -84,6 +86,8 @@ export function SubtractionGenerator() {
     setOrientation('horizontal');
     setNumProblems(20);
     setShowProblemNumber(true);
+    setShowName(true);
+    setShowDate(true);
     setProblems([]);
   };
 
@@ -158,17 +162,44 @@ export function SubtractionGenerator() {
           <div className="lg:col-span-2 bg-purple-50 rounded-2xl shadow-sm p-8">
             {activeNavTab === 'generator' ? (
               <>
-                <h2 className="text-lg font-bold text-gray-900 mb-6">Title</h2>
+                <h2 className="text-lg font-bold text-gray-900 mb-6">Worksheet Settings</h2>
 
                 <div className="space-y-6">
               <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Title
+                </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
+                  placeholder="Enter worksheet title"
                 />
               </div>
+
+              <div className="flex items-center space-x-6">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showName}
+                    onChange={(e) => setShowName(e.target.checked)}
+                    className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                  />
+                  <span className="text-gray-900 font-medium">Show Name</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showDate}
+                    onChange={(e) => setShowDate(e.target.checked)}
+                    className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                  />
+                  <span className="text-gray-900 font-medium">Show Date</span>
+                </label>
+              </div>
+
+              <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Problem Settings</h2>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -379,15 +410,28 @@ export function SubtractionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center -mt-[10px]">
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
-                        <div className="flex justify-between text-base text-gray-600">
-                          <span>Name: _________________________</span>
-                          <span>Date: _________________________</span>
-                        </div>
-                      </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-6 mt-[15px]">
+                        <div className="flex flex-col" style={{ marginBottom: '20px' }}>
+                          <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+                            <div className="flex items-center space-x-6">
+                              {showName && (
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-700">Name:</span>
+                                  <div className="border-b border-gray-400" style={{ width: '150px', height: '1px' }}></div>
+                                </div>
+                              )}
+                              {showDate && (
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-700">Date:</span>
+                                  <div className="border-b border-gray-400" style={{ width: '150px', height: '1px' }}></div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                      <div className="flex-1 flex flex-col justify-between py-6">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
