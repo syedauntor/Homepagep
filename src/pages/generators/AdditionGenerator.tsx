@@ -351,22 +351,25 @@ export function AdditionGenerator() {
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
-                      className="worksheet-content bg-white shadow-xl flex flex-col justify-between relative py-8"
-                      style={{
-                        borderColor: selectedTheme.borderColor,
-                        borderWidth: selectedTheme.borderWidth,
-                        borderStyle: selectedTheme.borderStyle
-                      }}
+                      className="worksheet-content bg-white shadow-xl p-8"
                     >
-                      {selectedTheme.decoration && (
-                        <>
-                          <span className="absolute top-4 left-4 text-3xl">{selectedTheme.decoration.split('')[0]}</span>
-                          <span className="absolute top-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
-                          <span className="absolute bottom-4 left-4 text-3xl">{selectedTheme.decoration.split('')[0]}</span>
-                          <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
-                        </>
-                      )}
-                      <div className="text-center py-6">
+                      <div
+                        className="flex flex-col justify-between relative py-8"
+                        style={{
+                          borderColor: selectedTheme.borderColor,
+                          borderWidth: selectedTheme.borderWidth,
+                          borderStyle: selectedTheme.borderStyle
+                        }}
+                      >
+                        {selectedTheme.decoration && (
+                          <>
+                            <span className="absolute top-4 left-4 text-3xl">{selectedTheme.decoration.split('')[0]}</span>
+                            <span className="absolute top-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
+                            <span className="absolute bottom-4 left-4 text-3xl">{selectedTheme.decoration.split('')[0]}</span>
+                            <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
+                          </>
+                        )}
+                        <div className="text-center py-6">
                         <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
                         <div className="flex justify-between mt-4 text-base text-gray-600 px-8">
                           <span>Name: _________________________</span>
@@ -442,9 +445,10 @@ export function AdditionGenerator() {
                         )}
                       </div>
 
-                      <div className="text-center text-xs text-gray-500 py-6">
-                        <p>Find more educational worksheets at PrintAndUse.com</p>
-                        <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
+                        <div className="text-center text-xs text-gray-500 py-6">
+                          <p>Find more educational worksheets at PrintAndUse.com</p>
+                          <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
+                        </div>
                       </div>
                     </div>
                   </div>
