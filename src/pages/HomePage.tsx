@@ -14,20 +14,31 @@ export function HomePage() {
 
   async function fetchBlogPosts() {
     try {
-      const { data: latest } = await supabase
+      const { data: latest, error: latestError } = await supabase
         .from('blog_posts')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(8);
 
-      const { data: popular } = await supabase
+      const { data: popular, error: popularError } = await supabase
         .from('blog_posts')
         .select('*')
         .order('views', { ascending: false })
         .limit(6);
 
-      if (latest) setLatestPosts(latest);
-      if (popular) setPopularPosts(popular);
+      if (latestError) {
+        console.error('Error fetching latest posts:', latestError);
+      } else if (latest) {
+        console.log('Latest posts fetched:', latest.length);
+        setLatestPosts(latest);
+      }
+
+      if (popularError) {
+        console.error('Error fetching popular posts:', popularError);
+      } else if (popular) {
+        console.log('Popular posts fetched:', popular.length);
+        setPopularPosts(popular);
+      }
     } catch (error) {
       console.error('Error fetching blog posts:', error);
     } finally {
@@ -166,6 +177,11 @@ export function HomePage() {
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
             </div>
+          ) : latestPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-xl">No posts available yet.</p>
+            </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {latestPosts.map((post) => (
@@ -268,6 +284,11 @@ export function HomePage() {
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+            </div>
+          ) : popularPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-xl">No popular posts available yet.</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-8">
