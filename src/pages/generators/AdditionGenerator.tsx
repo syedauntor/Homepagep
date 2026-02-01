@@ -366,7 +366,7 @@ export function AdditionGenerator() {
                           <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                         </>
                       )}
-                      <div className="text-center mb-8">
+                      <div className="text-center py-6">
                         <h3 className="text-lg font-bold text-gray-900">{title}</h3>
                         <div className="flex justify-between mt-4 text-sm text-gray-600 px-8">
                           <span>Name: _________________________</span>
@@ -374,7 +374,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between px-8" style={{ minHeight: '600px' }}>
+                      <div className="flex-1 flex flex-col justify-between px-8 py-6">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -442,7 +442,7 @@ export function AdditionGenerator() {
                         )}
                       </div>
 
-                      <div className="text-center text-xs text-gray-500 mt-8">
+                      <div className="text-center text-xs text-gray-500 py-6">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
