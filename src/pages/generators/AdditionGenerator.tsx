@@ -368,7 +368,7 @@ export function AdditionGenerator() {
                       )}
                       <div className="text-center py-6">
                         <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
-                        <div className="flex justify-between mt-4 text-sm text-gray-600 px-8">
+                        <div className="flex justify-between mt-4 text-base text-gray-600 px-8">
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
                         </div>
