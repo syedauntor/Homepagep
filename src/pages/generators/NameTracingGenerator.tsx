@@ -413,12 +413,10 @@ export function NameTracingGenerator() {
                                       fontSize: `${fontSize}px`,
                                       fill: 'none',
                                       stroke: textColor,
-                                      strokeWidth: '2',
-                                      strokeDasharray: '2,4',
-                                      strokeLinecap: 'round',
+                                      strokeWidth: '1.5',
                                       letterSpacing: '2px',
                                       textTransform: 'uppercase',
-                                      fontWeight: 'bold',
+                                      fontWeight: '300',
                                     }}
                                   >
                                     {text.toUpperCase()}
