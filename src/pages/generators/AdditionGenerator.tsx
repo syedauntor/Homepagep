@@ -8,6 +8,26 @@ interface Problem {
   answer: number;
 }
 
+interface Theme {
+  id: string;
+  name: string;
+  borderColor: string;
+  borderWidth: string;
+  borderStyle: string;
+  decoration?: string;
+}
+
+const themes: Theme[] = [
+  { id: 'blank', name: 'Blank', borderColor: '#3B82F6', borderWidth: '3px', borderStyle: 'solid' },
+  { id: 'autumn', name: 'Autumn Leaves', borderColor: '#10B981', borderWidth: '3px', borderStyle: 'solid', decoration: '🍂🍁' },
+  { id: 'beep', name: 'Beep Beep', borderColor: '#F59E0B', borderWidth: '3px', borderStyle: 'solid', decoration: '🚗🚕' },
+  { id: 'biking', name: 'Biking', borderColor: '#8B5CF6', borderWidth: '3px', borderStyle: 'solid', decoration: '🚴‍♂️🚴‍♀️' },
+  { id: 'blue', name: 'Blue', borderColor: '#06B6D4', borderWidth: '3px', borderStyle: 'solid' },
+  { id: 'green', name: 'Green', borderColor: '#10B981', borderWidth: '3px', borderStyle: 'solid' },
+  { id: 'hearts', name: 'Hearts', borderColor: '#EC4899', borderWidth: '3px', borderStyle: 'solid', decoration: '❤️💕' },
+  { id: 'yellow', name: 'Yellow', borderColor: '#EAB308', borderWidth: '3px', borderStyle: 'solid' },
+];
+
 export function AdditionGenerator() {
   const [title, setTitle] = useState('Addition Generator');
   const [difficulty, setDifficulty] = useState<'simple' | 'medium' | 'hard'>('simple');
@@ -18,6 +38,7 @@ export function AdditionGenerator() {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [activeTab, setActiveTab] = useState<'worksheet' | 'answer'>('worksheet');
   const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
+  const [selectedTheme, setSelectedTheme] = useState<Theme>(themes[0]);
   const worksheetRef = useRef<HTMLDivElement>(null);
 
   const generateProblems = () => {
@@ -121,9 +142,11 @@ export function AdditionGenerator() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="bg-purple-50 rounded-2xl shadow-sm p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6">Title</h2>
+            {activeNavTab === 'generator' ? (
+              <>
+                <h2 className="text-lg font-bold text-gray-900 mb-6">Title</h2>
 
-            <div className="space-y-6">
+                <div className="space-y-6">
               <div>
                 <input
                   type="text"
@@ -216,6 +239,66 @@ export function AdditionGenerator() {
                 </button>
               </div>
             </div>
+              </>
+            ) : activeNavTab === 'theme' ? (
+              <>
+                <h2 className="text-lg font-bold text-gray-900 mb-6">Select Addition Worksheet Theme</h2>
+
+                <div className="grid grid-cols-2 gap-4 max-h-[600px] overflow-y-auto pr-2">
+                  {themes.map((theme) => (
+                    <button
+                      key={theme.id}
+                      onClick={() => setSelectedTheme(theme)}
+                      className={`relative border-2 rounded-lg p-4 transition-all ${
+                        selectedTheme.id === theme.id
+                          ? 'border-pink-600 bg-pink-50'
+                          : 'border-gray-200 hover:border-pink-300'
+                      }`}
+                    >
+                      <div
+                        className="w-full h-32 bg-white rounded border-2 mb-2 flex items-center justify-center relative overflow-hidden"
+                        style={{
+                          borderColor: theme.borderColor,
+                          borderWidth: theme.borderWidth,
+                          borderStyle: theme.borderStyle
+                        }}
+                      >
+                        {theme.decoration && (
+                          <>
+                            <span className="absolute top-1 left-1 text-lg">{theme.decoration.split('')[0]}</span>
+                            <span className="absolute top-1 right-1 text-lg">{theme.decoration.split('')[1] || theme.decoration.split('')[0]}</span>
+                            <span className="absolute bottom-1 left-1 text-lg">{theme.decoration.split('')[0]}</span>
+                            <span className="absolute bottom-1 right-1 text-lg">{theme.decoration.split('')[1] || theme.decoration.split('')[0]}</span>
+                          </>
+                        )}
+                        <span className="text-xs text-gray-400">Preview</span>
+                      </div>
+                      <p className="text-sm font-semibold text-gray-900">{theme.name}</p>
+                      {selectedTheme.id === theme.id && (
+                        <div className="absolute top-2 right-2 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-lg font-bold text-gray-900 mb-6">How to Make Addition Worksheets</h2>
+                <div className="prose prose-sm text-gray-700 space-y-4">
+                  <ol className="list-decimal list-inside space-y-3">
+                    <li>Choose your worksheet settings in the Generator tab</li>
+                    <li>Select a theme/border style in the Theme tab</li>
+                    <li>Click "Regenerate Addition" to create new problems</li>
+                    <li>Preview your worksheet and answer key</li>
+                    <li>Download or print your worksheet</li>
+                  </ol>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
@@ -257,7 +340,23 @@ export function AdditionGenerator() {
               <div>
                 <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '900px' }}>
                   <div className="preview-scale">
-                    <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col justify-between">
+                    <div
+                      ref={worksheetRef}
+                      className="worksheet-content bg-white shadow-xl flex flex-col justify-between relative"
+                      style={{
+                        borderColor: selectedTheme.borderColor,
+                        borderWidth: selectedTheme.borderWidth,
+                        borderStyle: selectedTheme.borderStyle
+                      }}
+                    >
+                      {selectedTheme.decoration && (
+                        <>
+                          <span className="absolute top-4 left-4 text-3xl">{selectedTheme.decoration.split('')[0]}</span>
+                          <span className="absolute top-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
+                          <span className="absolute bottom-4 left-4 text-3xl">{selectedTheme.decoration.split('')[0]}</span>
+                          <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
+                        </>
+                      )}
                       <div className="text-center">
                         <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
                         <div className="flex justify-between mt-2 text-sm text-gray-600">
@@ -407,6 +506,9 @@ export function AdditionGenerator() {
             height: 297mm;
             padding: 12mm 15mm;
             box-shadow: none !important;
+            border-color: inherit !important;
+            border-width: inherit !important;
+            border-style: inherit !important;
           }
 
           .preview-scale {
