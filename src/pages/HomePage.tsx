@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Grid3x3, Gift, TrendingUp, Mail } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
 
 export function HomePage() {
@@ -75,6 +75,57 @@ export function HomePage() {
     },
   ];
 
+  const exploreCategories = [
+    {
+      name: 'Coloring Pages',
+      icon: Palette,
+      description: 'Beautiful coloring pages for all ages',
+      posts: '250+ Posts',
+      color: 'bg-red-500',
+      link: '/blog?category=Coloring+Pages'
+    },
+    {
+      name: 'Activity Books',
+      icon: BookOpen,
+      description: 'Complete activity books to download',
+      posts: '180+ Posts',
+      color: 'bg-orange-500',
+      link: '/blog?category=Activity+Books'
+    },
+    {
+      name: 'Puzzles & Games',
+      icon: Grid3x3,
+      description: 'Fun puzzles and brain teasers',
+      posts: '150+ Posts',
+      color: 'bg-blue-500',
+      link: '/blog?category=Puzzles'
+    },
+    {
+      name: 'Educational Resources',
+      icon: GraduationCap,
+      description: 'Learning materials for students',
+      posts: '200+ Posts',
+      color: 'bg-green-500',
+      link: '/blog?category=Education'
+    },
+    {
+      name: 'Seasonal & Holidays',
+      icon: Gift,
+      description: 'Holiday-themed activities',
+      posts: '120+ Posts',
+      color: 'bg-pink-500',
+      link: '/blog?category=Holidays'
+    },
+    {
+      name: 'Trending Now',
+      icon: TrendingUp,
+      description: 'Most popular this month',
+      posts: '85+ Posts',
+      color: 'bg-amber-500',
+      link: '/blog'
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <section className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-20">
@@ -126,31 +177,24 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">OUR TEAM</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Meet Our Amazing Team</h2>
-          <p className="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
-            Passionate educators and designers creating amazing resources
-          </p>
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">ABOUT US</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Your Trusted Partner in Engaging Education</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We believe that every child deserves access to fun, engaging, and effective learning resources.
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {team.map((member) => (
-              <div key={member.name} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
-                <div className={`w-32 h-32 bg-gradient-to-br ${member.color} rounded-full mx-auto mb-6`}></div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                <p className="text-gray-600 mb-6">{member.role}</p>
-                <div className="flex justify-center space-x-4">
-                  <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
-                    <Facebook className="w-5 h-5" />
-                  </button>
-                  <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
-                    <Instagram className="w-5 h-5" />
-                  </button>
-                  <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
-                    <Linkedin className="w-5 h-5" />
-                  </button>
+            {features.map((feature) => (
+              <div key={feature.title} className={`${feature.bgColor} rounded-3xl p-8 hover:shadow-xl transition`}>
+                <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center mb-6`}>
+                  <feature.icon className="w-8 h-8 text-white" />
                 </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -163,67 +207,6 @@ export function HomePage() {
         </div>
       ) : (
         <>
-          <section className="py-20 bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
-                <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">MOST POPULAR</p>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Explore Our Most Read Blog Posts</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Dive into our most engaging and helpful content
-                </p>
-              </div>
-
-              {popularPosts.length > 0 && (
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                  {popularPosts.map((post) => (
-                    <Link
-                      key={post.id}
-                      to={`/blog/${post.id}`}
-                      className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
-                    >
-                      <div className="h-48 overflow-hidden relative">
-                        {post.image_url ? (
-                          <img
-                            src={post.image_url}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                          />
-                        ) : (
-                          <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
-                            <BookOpen className="w-12 h-12 text-white opacity-50" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-6">
-                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{formatDate(post.created_at)}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-orange-500 font-semibold">
-                            <Eye className="w-4 h-4" />
-                            <span>{post.views.toLocaleString()}</span>
-                          </div>
-                        </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-orange-500 transition line-clamp-2">
-                          {post.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.excerpt}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">By {post.author}</span>
-                          <span className="text-orange-500 font-semibold flex items-center space-x-1 text-sm">
-                            <span>Read</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
-
           <section className="py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
@@ -296,29 +279,149 @@ export function HomePage() {
               )}
             </div>
           </section>
+
+          <section className="py-20 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">OUR TEAM</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Meet Our Amazing Team</h2>
+              <p className="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
+                Passionate educators and designers creating amazing resources
+              </p>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                {team.map((member) => (
+                  <div key={member.name} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+                    <div className={`w-32 h-32 bg-gradient-to-br ${member.color} rounded-full mx-auto mb-6`}></div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                    <p className="text-gray-600 mb-6">{member.role}</p>
+                    <div className="flex justify-center space-x-4">
+                      <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
+                        <Facebook className="w-5 h-5" />
+                      </button>
+                      <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
+                        <Instagram className="w-5 h-5" />
+                      </button>
+                      <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
+                        <Linkedin className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-16">
+                <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">MOST POPULAR</p>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Explore Our Most Read Blog Posts</h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                  Dive into our most engaging and helpful content
+                </p>
+              </div>
+
+              {popularPosts.length > 0 && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                  {popularPosts.map((post) => (
+                    <Link
+                      key={post.id}
+                      to={`/blog/${post.id}`}
+                      className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
+                    >
+                      <div className="h-48 overflow-hidden relative">
+                        {post.image_url ? (
+                          <img
+                            src={post.image_url}
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          />
+                        ) : (
+                          <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
+                            <BookOpen className="w-12 h-12 text-white opacity-50" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>{formatDate(post.created_at)}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-orange-500 font-semibold">
+                            <Eye className="w-4 h-4" />
+                            <span>{post.views.toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-orange-500 transition line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.excerpt}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">By {post.author}</span>
+                          <span className="text-orange-500 font-semibold flex items-center space-x-1 text-sm">
+                            <span>Read</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
         </>
       )}
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">ABOUT US</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Your Trusted Partner in Engaging Education</h2>
+            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">EXPLORE BY CATEGORY</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Popular Blog Categories</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We believe that every child deserves access to fun, engaging, and effective learning resources.
+              Find exactly what you're looking for in our organized collections
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature) => (
-              <div key={feature.title} className={`${feature.bgColor} rounded-3xl p-8 hover:shadow-xl transition`}>
-                <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center mb-6`}>
-                  <feature.icon className="w-8 h-8 text-white" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {exploreCategories.map((category) => (
+              <Link
+                key={category.name}
+                to={category.link}
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition group border border-gray-100"
+              >
+                <div className={`w-16 h-16 ${category.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>
+                  <category.icon className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-              </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition">{category.name}</h3>
+                <p className="text-gray-600 mb-4">{category.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-orange-500 font-semibold">{category.posts}</span>
+                  <ArrowRight className="w-5 h-5 text-orange-500 group-hover:translate-x-1 transition" />
+                </div>
+              </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gradient-to-r from-orange-500 to-amber-500 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Subscribe for Daily Updates</h2>
+          <p className="text-xl text-orange-50 mb-8">
+            Get the latest activity books and resources delivered to your inbox
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              className="flex-1 px-6 py-4 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
+            />
+            <button className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition inline-flex items-center justify-center space-x-2">
+              <span>Subscribe</span>
+              <Mail className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </section>

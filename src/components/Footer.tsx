@@ -21,7 +21,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li><Link to="/" className="hover:text-orange-500 transition">Home</Link></li>
               <li><Link to="/generators" className="hover:text-orange-500 transition">Generators</Link></li>
-              <li><Link to="/category" className="hover:text-orange-500 transition">Blog</Link></li>
+              <li><Link to="/blog" className="hover:text-orange-500 transition">Blog</Link></li>
               <li><Link to="/about" className="hover:text-orange-500 transition">About</Link></li>
               <li><Link to="/contact" className="hover:text-orange-500 transition">Contact</Link></li>
             </ul>
