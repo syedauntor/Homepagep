@@ -203,12 +203,12 @@ export function HomePage() {
                   </div>
                   <div className="p-5">
                     <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-3 h-3" />
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-3 h-3 flex-shrink-0" />
                         <span>{formatDate(post.created_at)}</span>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Eye className="w-3 h-3" />
+                      <div className="flex items-center gap-1.5">
+                        <Eye className="w-3 h-3 flex-shrink-0" />
                         <span>{post.views}</span>
                       </div>
                     </div>
@@ -317,12 +317,12 @@ export function HomePage() {
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 flex-shrink-0" />
                         <span>{formatDate(post.created_at)}</span>
                       </div>
-                      <div className="flex items-center space-x-1 text-orange-500 font-semibold">
-                        <Eye className="w-4 h-4" />
+                      <div className="flex items-center gap-2 text-orange-500 font-semibold">
+                        <Eye className="w-4 h-4 flex-shrink-0" />
                         <span>{post.views.toLocaleString()} views</span>
                       </div>
                     </div>
