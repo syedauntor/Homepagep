@@ -13,6 +13,7 @@ export function HomePage() {
   }, []);
 
   async function fetchBlogPosts() {
+    console.log('🔄 Fetching blog posts...');
     try {
       const { data: latest, error: latestError } = await supabase
         .from('blog_posts')
@@ -27,21 +28,22 @@ export function HomePage() {
         .limit(6);
 
       if (latestError) {
-        console.error('Error fetching latest posts:', latestError);
-      } else if (latest) {
-        console.log('Latest posts fetched:', latest.length);
-        setLatestPosts(latest);
+        console.error('❌ Error fetching latest posts:', latestError);
+      } else {
+        console.log('✅ Latest posts fetched:', latest?.length || 0, latest);
+        setLatestPosts(latest || []);
       }
 
       if (popularError) {
-        console.error('Error fetching popular posts:', popularError);
-      } else if (popular) {
-        console.log('Popular posts fetched:', popular.length);
-        setPopularPosts(popular);
+        console.error('❌ Error fetching popular posts:', popularError);
+      } else {
+        console.log('✅ Popular posts fetched:', popular?.length || 0, popular);
+        setPopularPosts(popular || []);
       }
     } catch (error) {
-      console.error('Error fetching blog posts:', error);
+      console.error('❌ Error fetching blog posts:', error);
     } finally {
+      console.log('✅ Fetch complete, loading set to false');
       setLoading(false);
     }
   }
