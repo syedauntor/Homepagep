@@ -13,6 +13,16 @@ export interface BlogPost {
   author: string;
   image_url: string | null;
   views: number;
+  category_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
   created_at: string;
   updated_at: string;
 }
