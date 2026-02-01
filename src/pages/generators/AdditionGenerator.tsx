@@ -351,7 +351,7 @@ export function AdditionGenerator() {
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
-                      className="worksheet-content bg-white shadow-xl flex flex-col justify-between relative"
+                      className="worksheet-content bg-white shadow-xl flex flex-col justify-between relative py-8"
                       style={{
                         borderColor: selectedTheme.borderColor,
                         borderWidth: selectedTheme.borderWidth,
@@ -366,18 +366,18 @@ export function AdditionGenerator() {
                           <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                         </>
                       )}
-                      <div className="text-center">
-                        <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-                        <div className={`flex justify-between mt-2 text-sm text-gray-600 ${orientation === 'horizontal' ? 'px-8' : ''}`}>
+                      <div className="text-center mb-6">
+                        <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+                        <div className={`flex justify-between mt-4 text-sm text-gray-600 ${orientation === 'horizontal' ? 'px-8' : ''}`}>
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center flex-1 py-8 px-0">
-                        <div className={`w-full ${orientation === 'horizontal' ? 'flex flex-wrap justify-between px-8' : 'grid grid-cols-4 gap-y-10 gap-x-8 px-8'}`}>
+                      <div className="flex items-center justify-center flex-1 py-4 px-0">
+                        <div className={`w-full ${orientation === 'horizontal' ? 'flex flex-wrap justify-between px-8' : 'grid grid-cols-4 gap-y-16 gap-x-8 px-8'}`}>
                           {problems.map((problem, index) => (
-                            <div key={index} className={orientation === 'horizontal' ? `text-left w-[47%] mb-12 ${index % 2 === 0 ? '' : ''}` : 'text-center'}>
+                            <div key={index} className={orientation === 'horizontal' ? `text-left w-[47%] mb-16 ${index % 2 === 0 ? '' : ''}` : 'text-center'}>
                               {orientation === 'horizontal' ? (
                                 <div className="flex items-center space-x-3 text-xl justify-start">
                                   {showProblemNumber && (
@@ -418,7 +418,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="text-center text-xs text-gray-500">
+                      <div className="text-center text-xs text-gray-500 mt-6">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
