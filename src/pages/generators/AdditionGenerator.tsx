@@ -347,7 +347,7 @@ export function AdditionGenerator() {
               </div>
             ) : (
               <div>
-                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '900px' }}>
+                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '650px' }}>
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
@@ -483,7 +483,7 @@ export function AdditionGenerator() {
         }
 
         .preview-scale {
-          transform: scale(0.62);
+          transform: scale(0.45);
           transform-origin: center center;
         }
 
