@@ -23,6 +23,7 @@ const themes: Theme[] = [
 ];
 
 const fonts = [
+  'Open Sans',
   'Arial',
   'Times New Roman',
   'Courier New',
@@ -35,7 +36,7 @@ const fonts = [
 
 export function NameTracingGenerator() {
   const [text, setText] = useState('JASMINE');
-  const [selectedFont, setSelectedFont] = useState('Arial');
+  const [selectedFont, setSelectedFont] = useState('Open Sans');
   const [fontSize, setFontSize] = useState(50);
   const [textColor, setTextColor] = useState('#000000');
   const [lines, setLines] = useState(7);
@@ -52,7 +53,7 @@ export function NameTracingGenerator() {
 
   const handleReset = () => {
     setText('JASMINE');
-    setSelectedFont('Arial');
+    setSelectedFont('Open Sans');
     setFontSize(50);
     setTextColor('#000000');
     setLines(7);
@@ -399,18 +400,30 @@ export function NameTracingGenerator() {
                                   marginBottom: `${spacing * 4}px`
                                 }}
                               >
-                                <span
-                                  className="tracing-text"
-                                  style={{
-                                    fontFamily: selectedFont,
-                                    fontSize: `${fontSize}px`,
-                                    color: textColor,
-                                    letterSpacing: '2px',
-                                    textTransform: 'uppercase',
-                                  }}
+                                <svg
+                                  width="100%"
+                                  height={fontSize * 1.5}
+                                  style={{ overflow: 'visible' }}
                                 >
-                                  {text}
-                                </span>
+                                  <text
+                                    x="0"
+                                    y={fontSize}
+                                    style={{
+                                      fontFamily: selectedFont,
+                                      fontSize: `${fontSize}px`,
+                                      fill: 'none',
+                                      stroke: textColor,
+                                      strokeWidth: '2',
+                                      strokeDasharray: '2,4',
+                                      strokeLinecap: 'round',
+                                      letterSpacing: '2px',
+                                      textTransform: 'uppercase',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    {text.toUpperCase()}
+                                  </text>
+                                </svg>
                               </div>
                             ))}
                           </div>
@@ -466,16 +479,6 @@ export function NameTracingGenerator() {
         .preview-container {
           padding: 10px 5px;
           position: relative;
-        }
-
-        .tracing-text {
-          font-weight: 300;
-          opacity: 0.3;
-          text-shadow:
-            1px 1px 0 currentColor,
-            -1px -1px 0 currentColor,
-            1px -1px 0 currentColor,
-            -1px 1px 0 currentColor;
         }
 
         @media print {
