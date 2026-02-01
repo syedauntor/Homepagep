@@ -420,17 +420,18 @@ export function AdditionGenerator() {
                                   const problem = problems[index];
                                   return (
                                     <div key={index}>
-                                      <div className="inline-block text-right">
+                                      <div className="inline-block">
                                         {showProblemNumber && (
                                           <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
                                         )}
                                         <div className="inline-block min-w-[90px]">
-                                          <div className="text-2xl">{problem.num1}</div>
-                                          <div className="text-2xl">
-                                            + {problem.num2}
+                                          <div className="text-2xl text-right pr-1">{problem.num1}</div>
+                                          <div className="text-2xl text-right flex items-center justify-end">
+                                            <span className="mr-1">+</span>
+                                            <span className="pr-1">{problem.num2}</span>
                                           </div>
                                           {activeTab === 'answer' ? (
-                                            <div className="text-2xl font-bold text-pink-600 border-t-2 border-gray-900 mt-1 pt-1">
+                                            <div className="text-2xl font-bold text-pink-600 border-t-2 border-gray-900 mt-1 pt-1 text-right pr-1">
                                               {problem.answer}
                                             </div>
                                           ) : (
