@@ -8,6 +8,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { GeneratorsPage } from './pages/GeneratorsPage';
 import { AdditionGenerator } from './pages/generators/AdditionGenerator';
+import { SubtractionGenerator } from './pages/generators/SubtractionGenerator';
 import CategoryPage from './pages/CategoryPage';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/generators" element={<GeneratorsPage />} />
             <Route path="/generator/addition" element={<AdditionGenerator />} />
+            <Route path="/generator/subtraction" element={<SubtractionGenerator />} />
             <Route path="/blog" element={<AllBlogPostsPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
             <Route path="/category" element={<CategoryPage />} />
