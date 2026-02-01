@@ -366,59 +366,83 @@ export function AdditionGenerator() {
                           <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                         </>
                       )}
-                      <div className="text-center mb-12">
+                      <div className="text-center mb-8">
                         <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-                        <div className={`flex justify-between mt-4 text-sm text-gray-600 ${orientation === 'horizontal' ? 'px-8' : ''}`}>
+                        <div className="flex justify-between mt-4 text-sm text-gray-600 px-8">
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-start flex-1 px-0 min-h-[600px]">
-                        <div className={`w-full ${orientation === 'horizontal' ? 'flex flex-wrap justify-between px-8' : 'grid grid-cols-4 gap-y-12 gap-x-8 px-8'}`}>
-                          {problems.map((problem, index) => (
-                            <div key={index} className={orientation === 'horizontal' ? `text-left w-[47%] mb-12 ${index % 2 === 0 ? '' : ''}` : 'text-center'}>
-                              {orientation === 'horizontal' ? (
-                                <div className="flex items-center space-x-3 text-xl justify-start">
-                                  {showProblemNumber && (
-                                    <span className="text-gray-400 text-base">{index + 1}.</span>
-                                  )}
-                                  <span>{problem.num1}</span>
-                                  <span>+</span>
-                                  <span>{problem.num2}</span>
-                                  <span>=</span>
-                                  {activeTab === 'answer' ? (
-                                    <span className="font-bold text-pink-600">{problem.answer}</span>
-                                  ) : (
-                                    <span className="inline-block w-20 border-b-2 border-gray-300"></span>
-                                  )}
-                                </div>
-                              ) : (
-                                <div className="inline-block text-right">
-                                  {showProblemNumber && (
-                                    <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
-                                  )}
-                                  <div className="inline-block min-w-[90px]">
-                                    <div className="text-2xl">{problem.num1}</div>
-                                    <div className="text-2xl">
-                                      + {problem.num2}
-                                    </div>
-                                    {activeTab === 'answer' ? (
-                                      <div className="text-2xl font-bold text-pink-600 border-t-2 border-gray-900 mt-1 pt-1">
-                                        {problem.answer}
+                      <div className="flex-1 flex flex-col justify-between px-8" style={{ minHeight: '600px' }}>
+                        {orientation === 'horizontal' ? (
+                          <>
+                            {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
+                              <div key={rowIndex} className="flex justify-between w-full">
+                                {[0, 1].map((colIndex) => {
+                                  const index = rowIndex * 2 + colIndex;
+                                  if (index >= problems.length) return <div key={colIndex} className="w-[47%]"></div>;
+                                  const problem = problems[index];
+                                  return (
+                                    <div key={index} className="text-left w-[47%]">
+                                      <div className="flex items-center space-x-3 text-xl justify-start">
+                                        {showProblemNumber && (
+                                          <span className="text-gray-400 text-base">{index + 1}.</span>
+                                        )}
+                                        <span>{problem.num1}</span>
+                                        <span>+</span>
+                                        <span>{problem.num2}</span>
+                                        <span>=</span>
+                                        {activeTab === 'answer' ? (
+                                          <span className="font-bold text-pink-600">{problem.answer}</span>
+                                        ) : (
+                                          <span className="inline-block w-20 border-b-2 border-gray-300"></span>
+                                        )}
                                       </div>
-                                    ) : (
-                                      <div className="border-t-2 border-gray-900 mt-1 pt-2"></div>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            {Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => (
+                              <div key={rowIndex} className="grid grid-cols-4 gap-x-8 w-full">
+                                {[0, 1, 2, 3].map((colIndex) => {
+                                  const index = rowIndex * 4 + colIndex;
+                                  if (index >= problems.length) return <div key={colIndex}></div>;
+                                  const problem = problems[index];
+                                  return (
+                                    <div key={index} className="text-center">
+                                      <div className="inline-block text-right">
+                                        {showProblemNumber && (
+                                          <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
+                                        )}
+                                        <div className="inline-block min-w-[90px]">
+                                          <div className="text-2xl">{problem.num1}</div>
+                                          <div className="text-2xl">
+                                            + {problem.num2}
+                                          </div>
+                                          {activeTab === 'answer' ? (
+                                            <div className="text-2xl font-bold text-pink-600 border-t-2 border-gray-900 mt-1 pt-1">
+                                              {problem.answer}
+                                            </div>
+                                          ) : (
+                                            <div className="border-t-2 border-gray-900 mt-1 pt-2"></div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                          </>
+                        )}
                       </div>
 
-                      <div className="text-center text-xs text-gray-500 mt-12">
+                      <div className="text-center text-xs text-gray-500 mt-8">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
