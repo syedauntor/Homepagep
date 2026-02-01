@@ -24,10 +24,7 @@ const themes: Theme[] = [
 
 const fonts = [
   'Codystar',
-  'Audiowide',
-  'Bungee Outline',
-  'Orbitron',
-  'Righteous',
+  'Raleway Dots',
 ];
 
 export function NameTracingGenerator() {
