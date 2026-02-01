@@ -32,7 +32,7 @@ export function AdditionGenerator() {
   const [title, setTitle] = useState('Addition Generator');
   const [difficulty, setDifficulty] = useState<'simple' | 'medium' | 'hard'>('simple');
   const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
-  const [numProblems, setNumProblems] = useState(32);
+  const [numProblems, setNumProblems] = useState(20);
   const [showProblemNumber, setShowProblemNumber] = useState(true);
   const [showAnswers, setShowAnswers] = useState(false);
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -77,7 +77,7 @@ export function AdditionGenerator() {
     setTitle('Addition Generator');
     setDifficulty('simple');
     setOrientation('horizontal');
-    setNumProblems(32);
+    setNumProblems(20);
     setShowProblemNumber(true);
     setProblems([]);
   };
@@ -190,7 +190,7 @@ export function AdditionGenerator() {
                     onChange={(e) => {
                       const newOrientation = e.target.value as 'horizontal' | 'vertical';
                       setOrientation(newOrientation);
-                      if (newOrientation === 'vertical' && numProblems > 20) {
+                      if (numProblems > 20) {
                         setNumProblems(20);
                       }
                     }}
@@ -209,11 +209,11 @@ export function AdditionGenerator() {
                 <input
                   type="number"
                   min="1"
-                  max={orientation === 'vertical' ? 20 : 50}
+                  max="20"
                   value={numProblems}
                   onChange={(e) => {
                     const value = Number(e.target.value);
-                    setNumProblems(orientation === 'vertical' ? Math.min(value, 20) : value);
+                    setNumProblems(Math.min(value, 20));
                   }}
                   className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
                 />
@@ -374,7 +374,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center flex-1 py-4 px-0">
+                      <div className="flex items-center justify-center flex-1 py-4 px-0 min-h-[600px]">
                         <div className={`w-full ${orientation === 'horizontal' ? 'flex flex-wrap justify-between px-8' : 'grid grid-cols-4 gap-y-16 gap-x-8 px-8'}`}>
                           {problems.map((problem, index) => (
                             <div key={index} className={orientation === 'horizontal' ? `text-left w-[47%] mb-16 ${index % 2 === 0 ? '' : ''}` : 'text-center'}>
