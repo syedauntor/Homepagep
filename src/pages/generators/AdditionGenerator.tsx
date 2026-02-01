@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Download, Printer, Eye, RefreshCw, RotateCcw, ChevronRight, Maximize2 } from 'lucide-react';
+import { Download, Printer, Eye, RefreshCw, RotateCcw, ChevronRight, Maximize2, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Problem {
@@ -106,27 +106,30 @@ export function AdditionGenerator() {
           <p className="text-gray-600">Keep it to 20 items or less</p>
         </div>
 
-        <div className="flex justify-center space-x-1 mb-8">
-          <button
-            onClick={() => setActiveNavTab('generator')}
-            className={`px-8 py-3 font-semibold transition rounded-full ${
-              activeNavTab === 'generator'
-                ? 'bg-pink-600 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            Generator
-          </button>
-          <button
-            onClick={() => setActiveNavTab('theme')}
-            className={`px-8 py-3 font-semibold transition rounded-full ${
-              activeNavTab === 'theme'
-                ? 'bg-pink-600 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            Theme
-          </button>
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex space-x-1">
+            <button
+              onClick={() => setActiveNavTab('generator')}
+              className={`px-8 py-3 font-semibold transition rounded-full ${
+                activeNavTab === 'generator'
+                  ? 'bg-pink-600 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              Generator
+            </button>
+            <button
+              onClick={() => setActiveNavTab('theme')}
+              className={`px-8 py-3 font-semibold transition rounded-full ${
+                activeNavTab === 'theme'
+                  ? 'bg-pink-600 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              Theme
+            </button>
+          </div>
+
           <button
             onClick={() => setActiveNavTab('howto')}
             className={`px-8 py-3 font-semibold transition rounded-full flex items-center space-x-2 ${
@@ -136,7 +139,13 @@ export function AdditionGenerator() {
             }`}
           >
             <span>How to make</span>
-            <ChevronRight className="w-4 h-4" />
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+              activeNavTab === 'howto' ? 'bg-white' : 'bg-pink-600'
+            }`}>
+              <Play className={`w-4 h-4 ${
+                activeNavTab === 'howto' ? 'text-pink-600' : 'text-white'
+              }`} fill="currentColor" />
+            </div>
           </button>
         </div>
 
