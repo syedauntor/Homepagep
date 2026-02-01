@@ -107,13 +107,13 @@ export function AdditionGenerator() {
         </div>
 
         <div className="flex justify-between items-center mb-8">
-          <div className="flex space-x-1">
+          <div className="flex space-x-1 bg-white border-2 border-gray-200 rounded-full p-1 shadow-sm">
             <button
               onClick={() => setActiveNavTab('generator')}
               className={`px-8 py-3 font-semibold transition rounded-full ${
                 activeNavTab === 'generator'
                   ? 'bg-pink-600 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  : 'bg-transparent text-gray-700 hover:bg-gray-50'
               }`}
             >
               Generator
@@ -123,7 +123,7 @@ export function AdditionGenerator() {
               className={`px-8 py-3 font-semibold transition rounded-full ${
                 activeNavTab === 'theme'
                   ? 'bg-pink-600 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  : 'bg-transparent text-gray-700 hover:bg-gray-50'
               }`}
             >
               Theme
