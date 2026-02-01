@@ -382,7 +382,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-6 mt-[25px]">
+                      <div className="flex-1 flex flex-col justify-between py-6 mt-[15px]">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -451,7 +451,7 @@ export function AdditionGenerator() {
                         )}
                       </div>
 
-                        <div className="text-center text-xs text-gray-500 py-6">
+                        <div className="text-center text-xs text-gray-500 py-[15px]">
                           <p>Find more educational worksheets at PrintAndUse.com</p>
                           <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                         </div>
