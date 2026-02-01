@@ -40,6 +40,9 @@ export function NameTracingGenerator() {
   const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
   const [selectedTheme, setSelectedTheme] = useState<Theme>(themes[0]);
   const [hasGenerated, setHasGenerated] = useState(false);
+  const [title, setTitle] = useState('Name Tracing Generator');
+  const [showName, setShowName] = useState(true);
+  const [showDate, setShowDate] = useState(true);
   const worksheetRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = () => {
@@ -48,12 +51,15 @@ export function NameTracingGenerator() {
 
   const handleReset = () => {
     setText('JASMINE');
-    setSelectedFont('Open Sans');
+    setSelectedFont('KG Primary Dots');
     setFontSize(50);
     setTextColor('#000000');
     setLines(7);
     setSpacing(2);
     setColumns(3);
+    setTitle('Name Tracing Generator');
+    setShowName(true);
+    setShowDate(true);
     setHasGenerated(false);
   };
 
@@ -128,9 +134,45 @@ export function NameTracingGenerator() {
           <div className="lg:col-span-2 bg-purple-50 rounded-2xl shadow-sm p-8">
             {activeNavTab === 'generator' ? (
               <>
-                <h2 className="text-lg font-bold text-gray-900 mb-6">Text</h2>
+                <h2 className="text-lg font-bold text-gray-900 mb-6">Worksheet Settings</h2>
 
                 <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
+                      placeholder="Enter worksheet title"
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-6">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showName}
+                        onChange={(e) => setShowName(e.target.checked)}
+                        className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                      />
+                      <span className="text-gray-900 font-medium">Show Name</span>
+                    </label>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showDate}
+                        onChange={(e) => setShowDate(e.target.checked)}
+                        className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                      />
+                      <span className="text-gray-900 font-medium">Show Date</span>
+                    </label>
+                  </div>
+
+                  <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Text</h2>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <input
@@ -379,7 +421,27 @@ export function NameTracingGenerator() {
                           </>
                         )}
 
-                        <div className="flex-1 flex flex-col py-6 mt-[15px]">
+                        <div className="flex flex-col" style={{ marginBottom: '20px' }}>
+                          <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+                            <div className="flex items-center space-x-6">
+                              {showName && (
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-700">Name:</span>
+                                  <div className="border-b border-gray-400" style={{ width: '150px', height: '1px' }}></div>
+                                </div>
+                              )}
+                              {showDate && (
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-700">Date:</span>
+                                  <div className="border-b border-gray-400" style={{ width: '150px', height: '1px' }}></div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex-1 flex flex-col py-6">
                           <div
                             className={`grid ${
                               columns === 1 ? 'grid-cols-1' :
