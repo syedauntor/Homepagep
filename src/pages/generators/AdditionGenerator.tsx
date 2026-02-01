@@ -405,28 +405,16 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-
-                        <div className="flex flex-col" style={{ marginBottom: '20px' }}>
-                          <div className="flex items-center justify-between">
-                            <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-                            <div className="flex items-center space-x-6">
-                              {showName && (
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-700">Name:</span>
-                                  <div className="border-b border-gray-400" style={{ width: '150px', height: '1px' }}></div>
-                                </div>
-                              )}
-                              {showDate && (
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-700">Date:</span>
-                                  <div className="border-b border-gray-400" style={{ width: '150px', height: '1px' }}></div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
+                        <div className="text-center -mt-[10px]">
+                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
+                        <div className="flex justify-between text-base text-gray-600">
+                          {showName && <span>Name: _________________________</span>}
+                          {!showName && <span></span>}
+                          {showDate && <span>Date: _________________________</span>}
                         </div>
+                      </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-6">
+                      <div className="flex-1 flex flex-col justify-between py-6 mt-[15px]">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
