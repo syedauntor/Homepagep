@@ -382,7 +382,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-6 mt-[15px]">
+                      <div className="flex-1 flex flex-col justify-between py-6 mt-[25px]">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
