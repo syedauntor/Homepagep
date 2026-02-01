@@ -513,8 +513,21 @@ export function AdditionGenerator() {
 
         @media print {
           @page {
-            size: A4;
+            size: A4 portrait;
             margin: 0;
+          }
+
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+
+          html, body {
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
           }
 
           body * {
@@ -527,16 +540,18 @@ export function AdditionGenerator() {
           }
 
           .worksheet-content {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 210mm;
-            height: 297mm;
-            padding: 12mm 15mm;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            margin: 0 !important;
+            padding: 12mm 15mm !important;
             box-shadow: none !important;
-            border-color: inherit !important;
-            border-width: inherit !important;
-            border-style: inherit !important;
+            transform: none !important;
+            page-break-after: avoid !important;
+            page-break-before: avoid !important;
+            page-break-inside: avoid !important;
           }
 
           .preview-scale {
@@ -544,9 +559,16 @@ export function AdditionGenerator() {
           }
 
           .preview-container {
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
             background: white !important;
             padding: 0 !important;
+            margin: 0 !important;
             box-shadow: none !important;
+            overflow: hidden !important;
           }
         }
       `}</style>
