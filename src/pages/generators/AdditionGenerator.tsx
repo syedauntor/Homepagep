@@ -358,7 +358,9 @@ export function AdditionGenerator() {
                         style={{
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
-                          borderStyle: selectedTheme.borderStyle
+                          borderStyle: selectedTheme.borderStyle,
+                          height: '1050px',
+                          minHeight: '1050px'
                         }}
                       >
                         {selectedTheme.decoration && (
