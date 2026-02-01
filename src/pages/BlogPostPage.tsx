@@ -323,8 +323,8 @@ export function BlogPostPage() {
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-purple-600 mb-2">
-                          <Calendar className="w-4 h-4 flex-shrink-0" />
+                        <div className="flex items-center space-x-2 text-xs text-purple-600 mb-2">
+                          <Calendar className="w-4 h-4" />
                           <span className="font-medium">{formatDate(previousPost.created_at)}</span>
                         </div>
                         <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2">
@@ -351,8 +351,8 @@ export function BlogPostPage() {
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-purple-600 mb-2">
-                          <Calendar className="w-4 h-4 flex-shrink-0" />
+                        <div className="flex items-center space-x-2 text-xs text-purple-600 mb-2">
+                          <Calendar className="w-4 h-4" />
                           <span className="font-medium">{formatDate(nextPost.created_at)}</span>
                         </div>
                         <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2">
@@ -380,8 +380,8 @@ export function BlogPostPage() {
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-purple-600 mb-2">
-                          <Calendar className="w-4 h-4 flex-shrink-0" />
+                        <div className="flex items-center space-x-2 text-xs text-purple-600 mb-2">
+                          <Calendar className="w-4 h-4" />
                           <span className="font-medium">{formatDate(relatedPost.created_at)}</span>
                         </div>
                         <h4 className="text-sm font-bold text-gray-900 group-hover:text-pink-600 transition line-clamp-2">
@@ -488,8 +488,8 @@ export function BlogPostPage() {
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 text-xs text-orange-500 mb-2">
-                            <Calendar className="w-4 h-4 flex-shrink-0" />
+                          <div className="flex items-center space-x-2 text-xs text-orange-500 mb-2">
+                            <Calendar className="w-4 h-4" />
                             <span className="font-medium">{formatDate(recentPost.created_at)}</span>
                           </div>
                           <h4 className="text-sm font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">
@@ -528,8 +528,8 @@ export function BlogPostPage() {
                           )}
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 text-xs text-orange-500 mb-2">
-                            <Eye className="w-4 h-4 flex-shrink-0" />
+                          <div className="flex items-center space-x-2 text-xs text-orange-500 mb-2">
+                            <Eye className="w-4 h-4" />
                             <span className="font-medium">{popularPost.views.toLocaleString()} views</span>
                           </div>
                           <h4 className="text-sm font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">

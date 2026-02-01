@@ -154,12 +154,12 @@ export function AllBlogPostsPage() {
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 flex-shrink-0" />
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-4 h-4" />
                         <span>{formatDate(post.created_at)}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-emerald-600 font-semibold">
-                        <Eye className="w-4 h-4 flex-shrink-0" />
+                      <div className="flex items-center space-x-1 text-emerald-600 font-semibold">
+                        <Eye className="w-4 h-4" />
                         <span>{post.views.toLocaleString()}</span>
                       </div>
                     </div>
