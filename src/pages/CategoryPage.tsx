@@ -113,7 +113,7 @@ export default function CategoryPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm p-6 mb-12">
+        <div className="p-6 mb-12">
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               to="/category"
