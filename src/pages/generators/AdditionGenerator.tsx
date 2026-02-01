@@ -92,7 +92,7 @@ export function AdditionGenerator() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
           <Link to="/" className="hover:text-pink-600 transition">Home</Link>
           <ChevronRight className="w-4 h-4" />
@@ -149,8 +149,8 @@ export function AdditionGenerator() {
           </button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="bg-purple-50 rounded-2xl shadow-sm p-8">
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-purple-50 rounded-2xl shadow-sm p-8">
             {activeNavTab === 'generator' ? (
               <>
                 <h2 className="text-lg font-bold text-gray-900 mb-6">Title</h2>
@@ -310,9 +310,9 @@ export function AdditionGenerator() {
             )}
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-8 pb-0">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Worksheet Preview</h2>
+          <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="p-6 pb-0">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Worksheet Preview</h2>
 
               <div className="flex space-x-2 mb-4">
                 <button
@@ -339,7 +339,7 @@ export function AdditionGenerator() {
             </div>
 
             {problems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-96 bg-gray-50 mx-8 mb-8 rounded-lg">
+              <div className="flex flex-col items-center justify-center h-96 bg-gray-50 mx-6 mb-6 rounded-lg">
                 <div className="w-16 h-16 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
                   <Eye className="w-8 h-8 text-gray-400" />
                 </div>
@@ -347,7 +347,7 @@ export function AdditionGenerator() {
               </div>
             ) : (
               <div>
-                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '650px' }}>
+                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '700px' }}>
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
@@ -457,7 +457,7 @@ export function AdditionGenerator() {
                   </div>
                 </div>
 
-                <div className="p-8 pt-4">
+                <div className="p-6 pt-4">
                   <div className="space-y-3">
                     <button
                       onClick={downloadWorksheet}
@@ -514,12 +514,12 @@ export function AdditionGenerator() {
         }
 
         .preview-scale {
-          transform: scale(0.45);
+          transform: scale(0.52);
           transform-origin: center center;
         }
 
         .preview-container {
-          padding: 15px 10px;
+          padding: 10px 5px;
           position: relative;
         }
 
