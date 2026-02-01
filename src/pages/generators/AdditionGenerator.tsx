@@ -357,7 +357,7 @@ export function AdditionGenerator() {
                       className="worksheet-content bg-white shadow-xl p-8"
                     >
                       <div
-                        className="flex flex-col justify-between relative p-8"
+                        className="flex flex-col relative p-8"
                         style={{
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
@@ -374,7 +374,7 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center">
+                        <div className="text-center mb-8">
                         <h1 className="text-3xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
                         <div className="flex justify-between text-base text-gray-600">
                           <span>Name: _________________________</span>
@@ -382,7 +382,8 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-6">
+                      <div className="flex-1 flex items-center justify-center">
+                        <div className="w-full space-y-6">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -449,9 +450,10 @@ export function AdditionGenerator() {
                             ))}
                           </>
                         )}
+                        </div>
                       </div>
 
-                        <div className="text-center text-xs text-gray-500 py-6">
+                        <div className="text-center text-xs text-gray-500 mt-8">
                           <p>Find more educational worksheets at PrintAndUse.com</p>
                           <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                         </div>
