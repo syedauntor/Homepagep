@@ -377,9 +377,9 @@ export function AdditionGenerator() {
                       <div className="flex items-center justify-center flex-1 py-8 px-0">
                         <div className={`w-full ${orientation === 'horizontal' ? 'flex flex-wrap justify-between' : 'grid grid-cols-4 gap-y-10 gap-x-8 px-8'}`}>
                           {problems.map((problem, index) => (
-                            <div key={index} className={orientation === 'horizontal' ? 'text-left w-[47%] mb-12' : 'text-center'}>
+                            <div key={index} className={orientation === 'horizontal' ? `text-left w-[47%] mb-12 ${index % 2 === 0 ? '' : ''}` : 'text-center'}>
                               {orientation === 'horizontal' ? (
-                                <div className={`flex items-center space-x-3 text-xl ${index % 2 === 0 ? 'justify-start' : 'justify-start'}`}>
+                                <div className="flex items-center space-x-3 text-xl justify-start">
                                   {showProblemNumber && (
                                     <span className="text-gray-400 text-base">{index + 1}.</span>
                                   )}
