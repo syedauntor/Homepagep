@@ -408,13 +408,13 @@ export function AdditionGenerator() {
                         ) : (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => (
-                              <div key={rowIndex} className="grid grid-cols-4 gap-x-8 w-full">
+                              <div key={rowIndex} className="flex justify-between w-full">
                                 {[0, 1, 2, 3].map((colIndex) => {
                                   const index = rowIndex * 4 + colIndex;
                                   if (index >= problems.length) return <div key={colIndex}></div>;
                                   const problem = problems[index];
                                   return (
-                                    <div key={index} className="text-center">
+                                    <div key={index}>
                                       <div className="inline-block text-right">
                                         {showProblemNumber && (
                                           <div className="text-left text-gray-400 text-base mb-1">{index + 1}.</div>
