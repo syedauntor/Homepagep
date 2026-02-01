@@ -191,7 +191,7 @@ export function AdditionGenerator() {
                 <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '900px' }}>
                   <div className="preview-scale">
                     <div ref={worksheetRef} className="worksheet-content bg-white shadow-xl flex flex-col justify-between">
-                      <div className="text-center">
+                      <div className="text-center px-6">
                         <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
                         <div className="flex justify-between mt-2 text-sm text-gray-600">
                           <span>Name: _________________________</span>
@@ -199,12 +199,13 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center flex-1 px-16 py-14">
-                        <div className={`grid ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-16 gap-x-32' : 'grid-cols-4 gap-y-16 gap-x-20'}`}>
+                      <div className="flex items-center justify-center flex-1 px-6 py-8">
+                        <div className="border-4 border-red-500 w-full h-full flex items-start py-6 px-6">
+                          <div className={`grid w-full ${orientation === 'horizontal' ? 'grid-cols-2 gap-y-20 gap-x-40' : 'grid-cols-4 gap-y-20 gap-x-24'}`}>
                           {problems.map((problem, index) => (
-                            <div key={index} className="text-center">
+                            <div key={index} className="text-left">
                               {orientation === 'horizontal' ? (
-                                <div className="flex items-center justify-center space-x-3 text-xl">
+                                <div className="flex items-center justify-start space-x-3 text-xl">
                                   {showProblemNumber && (
                                     <span className="text-gray-400 text-base">{index + 1}.</span>
                                   )}
@@ -240,10 +241,11 @@ export function AdditionGenerator() {
                               )}
                             </div>
                           ))}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="text-center text-xs text-gray-500">
+                      <div className="text-center text-xs text-gray-500 px-6">
                         <p>Find more educational worksheets at PrintAndUse.com</p>
                         <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                       </div>
