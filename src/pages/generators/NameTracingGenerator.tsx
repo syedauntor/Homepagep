@@ -23,20 +23,15 @@ const themes: Theme[] = [
 ];
 
 const fonts = [
-  'Open Sans',
-  'Arial',
-  'Times New Roman',
-  'Courier New',
-  'Georgia',
-  'Verdana',
-  'Comic Sans MS',
-  'Impact',
-  'Trebuchet MS',
+  'KG Primary Dots',
+  'Teaching Print',
+  'Codystar',
+  'Raleway Dots',
 ];
 
 export function NameTracingGenerator() {
   const [text, setText] = useState('JASMINE');
-  const [selectedFont, setSelectedFont] = useState('Open Sans');
+  const [selectedFont, setSelectedFont] = useState('KG Primary Dots');
   const [fontSize, setFontSize] = useState(50);
   const [textColor, setTextColor] = useState('#000000');
   const [lines, setLines] = useState(7);
