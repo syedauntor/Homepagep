@@ -354,7 +354,7 @@ export function AdditionGenerator() {
                       className="worksheet-content bg-white shadow-xl p-8"
                     >
                       <div
-                        className="flex flex-col justify-between relative py-8"
+                        className="flex flex-col justify-between relative p-8"
                         style={{
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
@@ -373,13 +373,13 @@ export function AdditionGenerator() {
                         )}
                         <div className="text-center py-6">
                         <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
-                        <div className="flex justify-between mt-4 text-base text-gray-600 px-8">
+                        <div className="flex justify-between mt-4 text-base text-gray-600">
                           <span>Name: _________________________</span>
                           <span>Date: _________________________</span>
                         </div>
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between px-8 py-6">
+                      <div className="flex-1 flex flex-col justify-between py-6">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
