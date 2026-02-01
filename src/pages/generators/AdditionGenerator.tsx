@@ -373,22 +373,23 @@ export function AdditionGenerator() {
                         )}
                         <div className="text-center py-6">
                         <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
+                        <div className="flex justify-between mt-4 text-base text-gray-600">
+                          <span>Name: _________________________</span>
+                          <span>Date: _________________________</span>
+                        </div>
                       </div>
 
                       <div className="flex-1 flex flex-col justify-between py-6">
                         {orientation === 'horizontal' ? (
                           <>
-                            <div className="flex justify-between w-full gap-8">
-                              <div className="w-1/2 space-y-4">
-                                <div className="text-base text-gray-600 mb-6">
-                                  <span>Name: _________________________</span>
-                                </div>
-                                {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => {
-                                  const index = rowIndex * 2;
-                                  if (index >= problems.length) return null;
+                            {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
+                              <div key={rowIndex} className="flex justify-between w-full">
+                                {[0, 1].map((colIndex) => {
+                                  const index = rowIndex * 2 + colIndex;
+                                  if (index >= problems.length) return <div key={colIndex} className="w-[47%]"></div>;
                                   const problem = problems[index];
                                   return (
-                                    <div key={index} className="text-left">
+                                    <div key={index} className="text-left w-[47%]">
                                       <div className="flex items-center space-x-3 text-xl justify-start">
                                         {showProblemNumber && (
                                           <span className="text-gray-400 text-base">{index + 1}.</span>
@@ -407,42 +408,10 @@ export function AdditionGenerator() {
                                   );
                                 })}
                               </div>
-                              <div className="w-1/2 space-y-4">
-                                <div className="text-base text-gray-600 mb-6">
-                                  <span>Date: _________________________</span>
-                                </div>
-                                {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => {
-                                  const index = rowIndex * 2 + 1;
-                                  if (index >= problems.length) return null;
-                                  const problem = problems[index];
-                                  return (
-                                    <div key={index} className="text-left">
-                                      <div className="flex items-center space-x-3 text-xl justify-start">
-                                        {showProblemNumber && (
-                                          <span className="text-gray-400 text-base">{index + 1}.</span>
-                                        )}
-                                        <span>{problem.num1}</span>
-                                        <span>+</span>
-                                        <span>{problem.num2}</span>
-                                        <span>=</span>
-                                        {activeTab === 'answer' ? (
-                                          <span className="font-bold text-pink-600">{problem.answer}</span>
-                                        ) : (
-                                          <span className="inline-block w-20 border-b-2 border-gray-300"></span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
+                            ))}
                           </>
                         ) : (
                           <>
-                            <div className="flex justify-between mt-4 text-base text-gray-600 mb-6">
-                              <span>Name: _________________________</span>
-                              <span>Date: _________________________</span>
-                            </div>
                             {Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => (
                               <div key={rowIndex} className="flex justify-between w-full">
                                 {[0, 1, 2, 3].map((colIndex) => {
