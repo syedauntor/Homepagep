@@ -75,51 +75,31 @@ export function HomePage() {
             <div className="relative">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition">
-                    <div className="aspect-[3/4] relative">
-                      <img
-                        src="https://images.pexels.com/photos/8088495/pexels-photo-8088495.jpeg"
-                        alt="Coloring Pages"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                  <div className="bg-white rounded-2xl shadow-xl p-4 transform hover:scale-105 transition">
+                    <div className="aspect-[3/4] bg-gradient-to-br from-pink-200 to-rose-300 rounded-xl flex items-center justify-center">
+                      <Palette className="w-16 h-16 text-white" />
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 p-3">Coloring Pages</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-3">Coloring Pages</p>
                   </div>
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition">
-                    <div className="aspect-[3/4] relative">
-                      <img
-                        src="https://images.pexels.com/photos/8500427/pexels-photo-8500427.jpeg"
-                        alt="Learning Activities"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                  <div className="bg-white rounded-2xl shadow-xl p-4 transform hover:scale-105 transition">
+                    <div className="aspect-[3/4] bg-gradient-to-br from-blue-200 to-cyan-300 rounded-xl flex items-center justify-center">
+                      <GraduationCap className="w-16 h-16 text-white" />
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 p-3">Learning Activities</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-3">Learning Activities</p>
                   </div>
                 </div>
                 <div className="space-y-4 mt-8">
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition">
-                    <div className="aspect-[3/4] relative">
-                      <img
-                        src="https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg"
-                        alt="Activity Books"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                  <div className="bg-white rounded-2xl shadow-xl p-4 transform hover:scale-105 transition">
+                    <div className="aspect-[3/4] bg-gradient-to-br from-amber-200 to-orange-300 rounded-xl flex items-center justify-center">
+                      <BookOpen className="w-16 h-16 text-white" />
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 p-3">Activity Books</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-3">Activity Books</p>
                   </div>
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition">
-                    <div className="aspect-[3/4] relative">
-                      <img
-                        src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg"
-                        alt="Puzzles & Games"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                  <div className="bg-white rounded-2xl shadow-xl p-4 transform hover:scale-105 transition">
+                    <div className="aspect-[3/4] bg-gradient-to-br from-yellow-200 to-amber-300 rounded-xl flex items-center justify-center">
+                      <Sparkles className="w-16 h-16 text-white" />
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 p-3">Puzzles & Games</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-3">Puzzles & Games</p>
                   </div>
                 </div>
               </div>
@@ -250,18 +230,12 @@ export function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { name: "Sarah Johnson", role: "Graphic Designer", image: "https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg" },
-              { name: "Michael Chen", role: "Content Creator", image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg" },
-              { name: "Emily Davis", role: "Education Specialist", image: "https://images.pexels.com/photos/3767411/pexels-photo-3767411.jpeg" }
+              { name: "Sarah Johnson", role: "Graphic Designer", gradient: "from-orange-400 to-amber-500" },
+              { name: "Michael Chen", role: "Content Creator", gradient: "from-blue-400 to-cyan-500" },
+              { name: "Emily Davis", role: "Education Specialist", gradient: "from-green-400 to-emerald-500" }
             ].map((member, index) => (
               <div key={index} className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl transition group">
-                <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 group-hover:scale-110 transition">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+                <div className={`w-32 h-32 mx-auto rounded-full bg-gradient-to-br ${member.gradient} mb-6 group-hover:scale-110 transition`}></div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
                 <p className="text-gray-600 mb-6">{member.role}</p>
                 <div className="flex justify-center space-x-4">
