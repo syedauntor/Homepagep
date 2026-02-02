@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Download, Printer, Eye, RefreshCw, ChevronRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { RelatedGenerators } from '../../components/RelatedGenerators';
 
 interface Problem {
   num1: number;
@@ -26,6 +27,15 @@ const themes: Theme[] = [
   { id: 'green', name: 'Green', borderColor: '#10B981', borderWidth: '3px', borderStyle: 'solid' },
   { id: 'hearts', name: 'Hearts', borderColor: '#EC4899', borderWidth: '3px', borderStyle: 'solid', decoration: '❤️💕' },
   { id: 'yellow', name: 'Yellow', borderColor: '#EAB308', borderWidth: '3px', borderStyle: 'solid' },
+];
+
+const tracingPracticeGenerators = [
+  { name: 'Alphabet Tracing Generator', slug: 'alphabet-tracing' },
+  { name: 'Name Tracing Worksheets', slug: 'name-tracing' },
+  { name: 'Telling Time Worksheet Generator', slug: 'telling-time' },
+  { name: 'Picture Coloring and Tracing Worksheet', slug: 'picture-tracing' },
+  { name: 'Sentence Tracing Practice Worksheet', slug: 'sentence-tracing' },
+  { name: 'Word Tracing Practice Worksheet Maker', slug: 'word-tracing' },
 ];
 
 export function SubtractionGenerator() {
@@ -528,6 +538,8 @@ export function SubtractionGenerator() {
             )}
           </div>
         </div>
+
+        <RelatedGenerators generators={tracingPracticeGenerators} />
       </div>
 
       <style>{`

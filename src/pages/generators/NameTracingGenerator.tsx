@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Download, Printer, Eye, RefreshCw, ChevronRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { RelatedGenerators } from '../../components/RelatedGenerators';
 
 interface Theme {
   id: string;
@@ -25,6 +26,15 @@ const themes: Theme[] = [
 const fonts = [
   'Codystar',
   'Raleway Dots',
+];
+
+const tracingPracticeGenerators = [
+  { name: 'Alphabet Tracing Generator', slug: 'alphabet-tracing' },
+  { name: 'Name Tracing Worksheets', slug: 'name-tracing' },
+  { name: 'Telling Time Worksheet Generator', slug: 'telling-time' },
+  { name: 'Picture Coloring and Tracing Worksheet', slug: 'picture-tracing' },
+  { name: 'Sentence Tracing Practice Worksheet', slug: 'sentence-tracing' },
+  { name: 'Word Tracing Practice Worksheet Maker', slug: 'word-tracing' },
 ];
 
 export function NameTracingGenerator() {
@@ -502,6 +512,11 @@ export function NameTracingGenerator() {
             )}
           </div>
         </div>
+
+        <RelatedGenerators
+          generators={tracingPracticeGenerators}
+          currentSlug="name-tracing"
+        />
       </div>
 
       <style>{`
