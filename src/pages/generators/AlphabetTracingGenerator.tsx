@@ -39,7 +39,7 @@ export default function AlphabetTracingGenerator() {
   const [letterCase, setLetterCase] = useState<'uppercase' | 'lowercase' | 'both'>('uppercase');
   const [letterRange, setLetterRange] = useState<'all' | 'first-half' | 'second-half' | 'custom'>('all');
   const [customLetters, setCustomLetters] = useState('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  const [fontStyle, setFontStyle] = useState('Codystar');
+  const [fontStyle, setFontStyle] = useState('Raleway Dots');
   const [fontSize, setFontSize] = useState(60);
   const [repetitions, setRepetitions] = useState(3);
   const [letterColor, setLetterColor] = useState('#000000');
@@ -49,14 +49,45 @@ export default function AlphabetTracingGenerator() {
   const [letters, setLetters] = useState<string[]>([]);
   const printRef = useRef<HTMLDivElement>(null);
 
+  const getMaxFontSize = React.useCallback(() => {
+    if (letterCase === 'both' && letterRange === 'all') {
+      return 40;
+    }
+    return 70;
+  }, [letterCase, letterRange]);
+
+  const getAvailableFontSizes = React.useCallback(() => {
+    const maxSize = getMaxFontSize();
+    const allSizes = [40, 50, 60, 70];
+    return allSizes.filter(size => size <= maxSize);
+  }, [getMaxFontSize]);
+
+  const getAvailableRepetitions = () => {
+    return [2, 3];
+  };
+
+  React.useEffect(() => {
+    const maxSize = getMaxFontSize();
+    if (fontSize > maxSize) {
+      setFontSize(maxSize);
+    }
+  }, [letterCase, letterRange, fontSize, getMaxFontSize]);
+
+  React.useEffect(() => {
+    const maxRep = 3;
+    if (repetitions > maxRep) {
+      setRepetitions(maxRep);
+    }
+  }, [letterCase, letterRange, repetitions]);
+
   const getGridColumns = () => {
-    if (repetitions === 2) return 4;
+    if (repetitions === 2) {
+      return 4;
+    }
     if (repetitions === 3) {
       if (fontSize >= 60) return 3;
       return 4;
     }
-    if (repetitions === 4) return 3;
-    if (repetitions >= 5) return 2;
     return 4;
   };
 
@@ -104,7 +135,7 @@ export default function AlphabetTracingGenerator() {
     setLetterCase('uppercase');
     setLetterRange('all');
     setCustomLetters('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-    setFontStyle('Codystar');
+    setFontStyle('Raleway Dots');
     setFontSize(60);
     setRepetitions(3);
     setLetterColor('#000000');
@@ -296,11 +327,9 @@ export default function AlphabetTracingGenerator() {
                         onChange={(e) => setFontSize(Number(e.target.value))}
                         className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition appearance-none"
                       >
-                        <option value="40">40px</option>
-                        <option value="50">50px</option>
-                        <option value="60">60px</option>
-                        <option value="70">70px</option>
-                        <option value="80">80px</option>
+                        {getAvailableFontSizes().map(size => (
+                          <option key={size} value={size}>{size}px</option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -315,11 +344,9 @@ export default function AlphabetTracingGenerator() {
                         onChange={(e) => setRepetitions(Number(e.target.value))}
                         className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition appearance-none"
                       >
-                        <option value="2">2 times</option>
-                        <option value="3">3 times</option>
-                        <option value="4">4 times</option>
-                        <option value="5">5 times</option>
-                        <option value="6">6 times</option>
+                        {getAvailableRepetitions().map(rep => (
+                          <option key={rep} value={rep}>{rep} times</option>
+                        ))}
                       </select>
                     </div>
 
