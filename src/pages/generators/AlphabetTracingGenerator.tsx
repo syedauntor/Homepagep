@@ -49,9 +49,19 @@ export default function AlphabetTracingGenerator() {
   const [letters, setLetters] = useState<string[]>([]);
   const printRef = useRef<HTMLDivElement>(null);
 
+  const getGridColumns = () => {
+    if (repetitions === 2) return 4;
+    if (repetitions === 3) {
+      if (fontSize >= 60) return 3;
+      return 4;
+    }
+    if (repetitions === 4) return 3;
+    if (repetitions >= 5) return 2;
+    return 4;
+  };
+
   const generateAlphabet = () => {
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
     let result: string[] = [];
 
     if (letterRange === 'custom') {
@@ -62,7 +72,7 @@ export default function AlphabetTracingGenerator() {
       } else if (letterCase === 'lowercase') {
         result = customArray.map(c => c.toLowerCase());
       } else {
-        result = customArray.flatMap(c => [c.toUpperCase(), c.toLowerCase()]);
+        result = customArray.flatMap(c => [c, c.toLowerCase()]);
       }
     } else {
       let baseLetters = '';
@@ -80,7 +90,7 @@ export default function AlphabetTracingGenerator() {
       } else if (letterCase === 'lowercase') {
         result = baseLetters.toLowerCase().split('');
       } else {
-        result = baseLetters.split('').flatMap(c => [c.toUpperCase(), c.toLowerCase()]);
+        result = baseLetters.split('').flatMap(c => [c, c.toLowerCase()]);
       }
     }
 
@@ -476,11 +486,14 @@ export default function AlphabetTracingGenerator() {
                         </div>
 
                         <div className="flex-1 flex flex-col justify-start py-6 mt-[15px] overflow-hidden">
-                          <div className="grid grid-cols-4 gap-x-4 gap-y-3">
+                          <div
+                            className="grid gap-x-4 gap-y-3"
+                            style={{ gridTemplateColumns: `repeat(${getGridColumns()}, 1fr)` }}
+                          >
                             {letters.map((letter, index) => (
                               <div
                                 key={index}
-                                className={`flex gap-1 items-center py-1 ${
+                                className={`flex gap-1 items-center justify-start py-1 ${
                                   showGuideLines ? 'border-b border-dashed border-gray-300' : ''
                                 }`}
                               >
