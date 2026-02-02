@@ -10,6 +10,7 @@ import { GeneratorsPage } from './pages/GeneratorsPage';
 import { AdditionGenerator } from './pages/generators/AdditionGenerator';
 import { SubtractionGenerator } from './pages/generators/SubtractionGenerator';
 import { NameTracingGenerator } from './pages/generators/NameTracingGenerator';
+import AlphabetTracingGenerator from './pages/generators/AlphabetTracingGenerator';
 import CategoryPage from './pages/CategoryPage';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/generators" element={<GeneratorsPage />} />
             <Route path="/generator/addition" element={<AdditionGenerator />} />
             <Route path="/generator/subtraction" element={<SubtractionGenerator />} />
+            <Route path="/generator/alphabet-tracing" element={<AlphabetTracingGenerator />} />
             <Route path="/generator/name-tracing" element={<NameTracingGenerator />} />
             <Route path="/blog" element={<AllBlogPostsPage />} />
             <Route path="/blog/:id" element={<BlogPostPage />} />
