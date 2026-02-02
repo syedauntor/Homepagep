@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Grid3x3, Gift, TrendingUp, Mail } from 'lucide-react';
+import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Grid3x3, Gift, TrendingUp, Mail, Plus, Minus, Type, Pen } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
 
 export function HomePage() {
@@ -123,6 +123,41 @@ export function HomePage() {
       posts: '85+ Posts',
       color: 'bg-amber-500',
       link: '/blog'
+    },
+  ];
+
+  const generators = [
+    {
+      name: 'Addition Generator',
+      icon: Plus,
+      description: 'Generate custom addition worksheets for math practice',
+      color: 'bg-blue-500',
+      bgGradient: 'from-blue-50 to-blue-100',
+      link: '/generator/addition'
+    },
+    {
+      name: 'Subtraction Generator',
+      icon: Minus,
+      description: 'Create subtraction problems for students to solve',
+      color: 'bg-green-500',
+      bgGradient: 'from-green-50 to-green-100',
+      link: '/generator/subtraction'
+    },
+    {
+      name: 'Name Tracing Generator',
+      icon: Pen,
+      description: 'Make personalized name tracing worksheets for kids',
+      color: 'bg-pink-500',
+      bgGradient: 'from-pink-50 to-pink-100',
+      link: '/generator/name-tracing'
+    },
+    {
+      name: 'Alphabet Tracing',
+      icon: Type,
+      description: 'Generate alphabet tracing sheets for handwriting practice',
+      color: 'bg-amber-500',
+      bgGradient: 'from-amber-50 to-amber-100',
+      link: '/generator/alphabet-tracing'
     },
   ];
 
@@ -402,6 +437,48 @@ export function HomePage() {
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">INTERACTIVE TOOLS</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Free Worksheet Generators</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Create custom worksheets instantly with our easy-to-use generators
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {generators.map((generator) => (
+              <Link
+                key={generator.name}
+                to={generator.link}
+                className={`bg-gradient-to-br ${generator.bgGradient} rounded-2xl p-8 shadow-lg hover:shadow-2xl transition group transform hover:-translate-y-1`}
+              >
+                <div className={`w-16 h-16 ${generator.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition`}>
+                  <generator.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition">{generator.name}</h3>
+                <p className="text-gray-700 mb-4 text-sm leading-relaxed">{generator.description}</p>
+                <div className="flex items-center text-orange-600 font-semibold text-sm">
+                  <span>Try Now</span>
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition" />
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              to="/generators"
+              className="inline-flex items-center space-x-2 bg-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg"
+            >
+              <span>View All Generators</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>
