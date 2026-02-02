@@ -1,6 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Download, Printer, Play } from 'lucide-react';
+import { RelatedGenerators } from '../../components/RelatedGenerators';
+
+const tracingPracticeGenerators = [
+  { name: 'Alphabet Tracing Generator', slug: 'alphabet-tracing' },
+  { name: 'Name Tracing Worksheets', slug: 'name-tracing' },
+  { name: 'Telling Time Worksheet Generator', slug: 'telling-time' },
+  { name: 'Picture Coloring and Tracing Worksheet', slug: 'picture-tracing' },
+  { name: 'Sentence Tracing Practice Worksheet', slug: 'sentence-tracing' },
+  { name: 'Word Tracing Practice Worksheet Maker', slug: 'word-tracing' },
+];
 
 export default function AlphabetTracingGenerator() {
   const [title, setTitle] = useState('Alphabet Tracing Practice');
@@ -389,6 +399,11 @@ export default function AlphabetTracingGenerator() {
             </div>
           </div>
         </div>
+
+        <RelatedGenerators
+          generators={tracingPracticeGenerators}
+          currentSlug="alphabet-tracing"
+        />
       </div>
     </div>
   );
