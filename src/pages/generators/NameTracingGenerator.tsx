@@ -83,9 +83,9 @@ export function NameTracingGenerator() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-          <Link to="/" className="hover:text-pink-600 transition">Home</Link>
+          <Link to="/" className="hover:text-orange-500 transition">Home</Link>
           <ChevronRight className="w-4 h-4" />
-          <Link to="/generators" className="hover:text-pink-600 transition">Worksheet Generator</Link>
+          <Link to="/generators" className="hover:text-orange-500 transition">Worksheet Generator</Link>
           <ChevronRight className="w-4 h-4" />
           <span className="text-gray-900 font-medium">Name Tracing Worksheets</span>
         </div>
@@ -101,7 +101,7 @@ export function NameTracingGenerator() {
               onClick={() => setActiveNavTab('generator')}
               className={`px-8 py-3 font-semibold transition rounded-full ${
                 activeNavTab === 'generator'
-                  ? 'bg-pink-600 text-white shadow-md'
+                  ? 'bg-orange-500 text-white shadow-md'
                   : 'bg-transparent text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -111,7 +111,7 @@ export function NameTracingGenerator() {
               onClick={() => setActiveNavTab('theme')}
               className={`px-8 py-3 font-semibold transition rounded-full ${
                 activeNavTab === 'theme'
-                  ? 'bg-pink-600 text-white shadow-md'
+                  ? 'bg-orange-500 text-white shadow-md'
                   : 'bg-transparent text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -129,17 +129,17 @@ export function NameTracingGenerator() {
           >
             <span>How to make</span>
             <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-              activeNavTab === 'howto' ? 'bg-white' : 'bg-pink-600'
+              activeNavTab === 'howto' ? 'bg-white' : 'bg-orange-500'
             }`}>
               <Play className={`w-4 h-4 ${
-                activeNavTab === 'howto' ? 'text-pink-600' : 'text-white'
+                activeNavTab === 'howto' ? 'text-orange-500' : 'text-white'
               }`} fill="currentColor" />
             </div>
           </button>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-purple-50 rounded-2xl shadow-sm p-8">
+          <div className="lg:col-span-2 bg-orange-50 rounded-2xl shadow-sm p-8">
             {activeNavTab === 'generator' ? (
               <>
                 <h2 className="text-lg font-bold text-gray-900 mb-6">Worksheet Settings</h2>
@@ -153,7 +153,7 @@ export function NameTracingGenerator() {
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
+                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition"
                       placeholder="Enter worksheet title"
                     />
                   </div>
@@ -164,7 +164,7 @@ export function NameTracingGenerator() {
                         type="checkbox"
                         checked={showName}
                         onChange={(e) => setShowName(e.target.checked)}
-                        className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                       />
                       <span className="text-gray-900 font-medium">Show Name</span>
                     </label>
@@ -173,7 +173,7 @@ export function NameTracingGenerator() {
                         type="checkbox"
                         checked={showDate}
                         onChange={(e) => setShowDate(e.target.checked)}
-                        className="w-4 h-4 text-pink-600 border-gray-300 rounded focus:ring-pink-500"
+                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                       />
                       <span className="text-gray-900 font-medium">Show Date</span>
                     </label>
@@ -187,7 +187,7 @@ export function NameTracingGenerator() {
                         type="text"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
+                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition"
                         placeholder="Enter text to trace"
                       />
                     </div>
@@ -195,7 +195,7 @@ export function NameTracingGenerator() {
                       <select
                         value={selectedFont}
                         onChange={(e) => setSelectedFont(e.target.value)}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition appearance-none"
+                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition appearance-none"
                       >
                         {fonts.map((font) => (
                           <option key={font} value={font}>{font}</option>
@@ -212,7 +212,7 @@ export function NameTracingGenerator() {
                       <select
                         value={fontSize}
                         onChange={(e) => setFontSize(Number(e.target.value))}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition appearance-none"
+                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition appearance-none"
                       >
                         {[30, 40, 50, 60, 70, 80].map((size) => (
                           <option key={size} value={size}>{size}</option>
@@ -251,7 +251,7 @@ export function NameTracingGenerator() {
                       <select
                         value={lines}
                         onChange={(e) => setLines(Number(e.target.value))}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition appearance-none"
+                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition appearance-none"
                       >
                         {[5, 6, 7, 8, 9, 10].map((num) => (
                           <option key={num} value={num}>{num}</option>
@@ -266,7 +266,7 @@ export function NameTracingGenerator() {
                       <select
                         value={spacing}
                         onChange={(e) => setSpacing(Number(e.target.value))}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition appearance-none"
+                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition appearance-none"
                       >
                         {[1, 2, 3, 4, 5].map((num) => (
                           <option key={num} value={num}>{num}</option>
@@ -284,7 +284,7 @@ export function NameTracingGenerator() {
                         name="columns"
                         checked={columns === 1}
                         onChange={() => setColumns(1)}
-                        className="w-4 h-4 text-pink-600 border-gray-300 focus:ring-pink-500"
+                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
                       />
                       <span className="text-gray-900 font-medium">1 column</span>
                     </label>
@@ -294,7 +294,7 @@ export function NameTracingGenerator() {
                         name="columns"
                         checked={columns === 2}
                         onChange={() => setColumns(2)}
-                        className="w-4 h-4 text-pink-600 border-gray-300 focus:ring-pink-500"
+                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
                       />
                       <span className="text-gray-900 font-medium">2 columns</span>
                     </label>
@@ -304,7 +304,7 @@ export function NameTracingGenerator() {
                         name="columns"
                         checked={columns === 3}
                         onChange={() => setColumns(3)}
-                        className="w-4 h-4 text-pink-600 border-gray-300 focus:ring-pink-500"
+                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
                       />
                       <span className="text-gray-900 font-medium">3 columns</span>
                     </label>
@@ -313,13 +313,13 @@ export function NameTracingGenerator() {
                   <div className="flex space-x-4 pt-4">
                     <button
                       onClick={handleReset}
-                      className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 text-pink-600 rounded-lg hover:bg-purple-100 transition font-semibold"
+                      className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 text-orange-500 rounded-lg hover:bg-orange-100 transition font-semibold"
                     >
                       <span>Reset</span>
                     </button>
                     <button
                       onClick={handleGenerate}
-                      className="flex-1 flex items-center justify-center space-x-2 px-6 py-4 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition font-semibold shadow-lg"
+                      className="flex-1 flex items-center justify-center space-x-2 px-6 py-4 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold shadow-lg"
                     >
                       <RefreshCw className="w-5 h-5" />
                       <span>Generate Tracing</span>
@@ -338,8 +338,8 @@ export function NameTracingGenerator() {
                       onClick={() => setSelectedTheme(theme)}
                       className={`relative border-2 rounded-lg p-4 transition-all ${
                         selectedTheme.id === theme.id
-                          ? 'border-pink-600 bg-pink-50'
-                          : 'border-gray-200 hover:border-pink-300'
+                          ? 'border-orange-500 bg-orange-50'
+                          : 'border-gray-200 hover:border-orange-300'
                       }`}
                     >
                       <div
@@ -362,7 +362,7 @@ export function NameTracingGenerator() {
                       </div>
                       <p className="text-sm font-semibold text-gray-900">{theme.name}</p>
                       {selectedTheme.id === theme.id && (
-                        <div className="absolute top-2 right-2 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center">
+                        <div className="absolute top-2 right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
@@ -493,7 +493,7 @@ export function NameTracingGenerator() {
                   <div className="space-y-3">
                     <button
                       onClick={downloadWorksheet}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition font-semibold shadow-md"
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold shadow-md"
                     >
                       <Download className="w-5 h-5" />
                       <span>Download Worksheet</span>
@@ -501,7 +501,7 @@ export function NameTracingGenerator() {
 
                     <button
                       onClick={handlePrint}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-pink-600 text-pink-600 rounded-full hover:bg-pink-50 transition font-semibold"
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-full hover:bg-orange-50 transition font-semibold"
                     >
                       <Printer className="w-5 h-5" />
                       <span>Print</span>
