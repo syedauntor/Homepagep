@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Filter } from 'lucide-react';
+import { ShoppingCart, Filter, Search } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useCart, Product } from '../contexts/CartContext';
 
@@ -9,6 +9,7 @@ export default function ShopPage() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [categories, setCategories] = useState<string[]>([]);
   const { addToCart } = useCart();
 
@@ -17,12 +18,24 @@ export default function ShopPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory === 'all') {
-      setFilteredProducts(products);
-    } else {
-      setFilteredProducts(products.filter((p) => p.category === selectedCategory));
+    let filtered = products;
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter((p) => p.category === selectedCategory);
     }
-  }, [selectedCategory, products]);
+
+    if (searchQuery.trim() !== '') {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (p) =>
+          p.title.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query)
+      );
+    }
+
+    setFilteredProducts(filtered);
+  }, [selectedCategory, searchQuery, products]);
 
   async function fetchProducts() {
     try {
@@ -71,6 +84,27 @@ export default function ShopPage() {
           </p>
         </div>
 
+        <div className="max-w-2xl mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search for printables..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors text-gray-900"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+
         {categories.length > 0 && (
           <div className="mb-8 flex items-center justify-center gap-4 flex-wrap">
             <div className="flex items-center gap-2">
@@ -107,9 +141,26 @@ export default function ShopPage() {
           <div className="text-center py-12">
             <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              No products available yet
+              {searchQuery || selectedCategory !== 'all'
+                ? 'No products found'
+                : 'No products available yet'}
             </h3>
-            <p className="text-gray-500">Check back soon for new printables!</p>
+            <p className="text-gray-500">
+              {searchQuery || selectedCategory !== 'all'
+                ? 'Try adjusting your search or filters'
+                : 'Check back soon for new printables!'}
+            </p>
+            {(searchQuery || selectedCategory !== 'all') && (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('all');
+                }}
+                className="mt-4 text-orange-600 hover:text-orange-700 font-medium"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
