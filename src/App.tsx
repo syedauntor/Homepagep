@@ -12,6 +12,7 @@ import { SubtractionGenerator } from './pages/generators/SubtractionGenerator';
 import { NameTracingGenerator } from './pages/generators/NameTracingGenerator';
 import AlphabetTracingGenerator from './pages/generators/AlphabetTracingGenerator';
 import CategoryPage from './pages/CategoryPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
         <Footer />
