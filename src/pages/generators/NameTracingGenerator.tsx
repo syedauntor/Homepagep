@@ -416,8 +416,8 @@ export function NameTracingGenerator() {
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
                           borderStyle: selectedTheme.borderStyle,
-                          height: '1050px',
-                          minHeight: '1050px'
+                          height: '100%',
+                          minHeight: '100%'
                         }}
                       >
                         {selectedTheme.decoration && (
