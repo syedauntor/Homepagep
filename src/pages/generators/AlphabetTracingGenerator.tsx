@@ -491,8 +491,8 @@ export default function AlphabetTracingGenerator() {
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
                           borderStyle: selectedTheme.borderStyle,
-                          height: '100%',
-                          minHeight: '100%'
+                          height: '1050px',
+                          minHeight: '1050px'
                         }}
                       >
                         {selectedTheme.decoration && (
