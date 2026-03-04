@@ -92,13 +92,30 @@ export function NameTracingColoringGenerator() {
     const processedName = name.slice(0, 10);
     const displayName = letterCase === 'uppercase' ? processedName.toUpperCase() : processedName.toLowerCase();
     const letters = displayName.split('');
-    const letterWidth = 70;
-    const totalWidth = Math.max(10 * letterWidth, 700);
-    const startX = (totalWidth - letters.length * letterWidth) / 2;
+    const letterWidth = 50;
+    const spaceWidth = 30;
+
+    const getLetterX = (index: number) => {
+      let x = 0;
+      for (let i = 0; i < index; i++) {
+        x += letters[i] === ' ' ? spaceWidth : letterWidth;
+      }
+      return x;
+    };
+
+    let totalWidth = 0;
+    letters.forEach(letter => {
+      totalWidth += letter === ' ' ? spaceWidth : letterWidth;
+    });
+    totalWidth = Math.max(totalWidth, 700);
+
+    const startX = (totalWidth - letters.reduce((acc, letter) => acc + (letter === ' ' ? spaceWidth : letterWidth), 0)) / 2;
     const containerHeight = 120;
 
     const renderDirectionalArrows = (letter: string, index: number) => {
-      const x = startX + index * letterWidth + letterWidth / 2;
+      const letterX = getLetterX(index);
+      const currentLetterWidth = letter === ' ' ? spaceWidth : letterWidth;
+      const x = startX + letterX + currentLetterWidth / 2;
       const arrowColor = '#EF4444';
 
       const upperLetter = letter.toUpperCase();
@@ -138,8 +155,10 @@ export function NameTracingColoringGenerator() {
     };
 
     const renderGuidelineBox = (letter: string, index: number) => {
-      const x = startX + index * letterWidth;
-      const boxWidth = letterWidth - 5;
+      const letterX = getLetterX(index);
+      const currentLetterWidth = letter === ' ' ? spaceWidth : letterWidth;
+      const x = startX + letterX;
+      const boxWidth = currentLetterWidth - 5;
       const boxHeight = 75;
       const boxY = containerHeight - boxHeight - 15;
 
@@ -190,23 +209,27 @@ export function NameTracingColoringGenerator() {
                   <polygon points="0 0, 10 3, 0 6" fill="#EF4444" />
                 </marker>
               </defs>
-              {letters.map((letter, index) => (
-                <text
-                  key={index}
-                  x={startX + index * letterWidth + letterWidth / 2}
-                  y={60}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  style={{
-                    fontFamily: "'Codystar', cursive",
-                    fontSize: '90px',
-                    fill: textColor,
-                    fontWeight: '400',
-                  }}
-                >
-                  {letter}
-                </text>
-              ))}
+              {letters.map((letter, index) => {
+                const letterX = getLetterX(index);
+                const currentLetterWidth = letter === ' ' ? spaceWidth : letterWidth;
+                return (
+                  <text
+                    key={index}
+                    x={startX + letterX + currentLetterWidth / 2}
+                    y={60}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    style={{
+                      fontFamily: "'Codystar', cursive",
+                      fontSize: '90px',
+                      fill: textColor,
+                      fontWeight: '400',
+                    }}
+                  >
+                    {letter}
+                  </text>
+                );
+              })}
             </svg>
           </div>
         </div>
@@ -221,25 +244,29 @@ export function NameTracingColoringGenerator() {
                     {`@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');`}
                   </style>
                 </defs>
-                {letters.map((letter, index) => (
-                  <text
-                    key={index}
-                    x={startX + index * letterWidth + letterWidth / 2}
-                    y={60}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    style={{
-                      fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway', sans-serif",
-                      fontSize: '90px',
-                      fill: textColor,
-                      fillOpacity: '0.3',
-                      fontWeight: '400',
-                      fontStyle: tracingStyle === 'name-cursive-trace' ? 'italic' : 'normal',
-                    }}
-                  >
-                    {letter}
-                  </text>
-                ))}
+                {letters.map((letter, index) => {
+                  const letterX = getLetterX(index);
+                  const currentLetterWidth = letter === ' ' ? spaceWidth : letterWidth;
+                  return (
+                    <text
+                      key={index}
+                      x={startX + letterX + currentLetterWidth / 2}
+                      y={60}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      style={{
+                        fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway', sans-serif",
+                        fontSize: '90px',
+                        fill: textColor,
+                        fillOpacity: '0.3',
+                        fontWeight: '400',
+                        fontStyle: tracingStyle === 'name-cursive-trace' ? 'italic' : 'normal',
+                      }}
+                    >
+                      {letter}
+                    </text>
+                  );
+                })}
               </svg>
             </div>
           </div>
@@ -255,25 +282,29 @@ export function NameTracingColoringGenerator() {
                     {`@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');`}
                   </style>
                 </defs>
-                {letters.map((letter, index) => (
-                  <text
-                    key={index}
-                    x={startX + index * letterWidth + letterWidth / 2}
-                    y={60}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    style={{
-                      fontFamily: "'Lilita One', cursive",
-                      fontSize: '90px',
-                      fill: 'none',
-                      stroke: textColor,
-                      strokeWidth: '2',
-                      fontWeight: '400',
-                    }}
-                  >
-                    {letter}
-                  </text>
-                ))}
+                {letters.map((letter, index) => {
+                  const letterX = getLetterX(index);
+                  const currentLetterWidth = letter === ' ' ? spaceWidth : letterWidth;
+                  return (
+                    <text
+                      key={index}
+                      x={startX + letterX + currentLetterWidth / 2}
+                      y={60}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      style={{
+                        fontFamily: "'Lilita One', cursive",
+                        fontSize: '90px',
+                        fill: 'none',
+                        stroke: textColor,
+                        strokeWidth: '2',
+                        fontWeight: '400',
+                      }}
+                    >
+                      {letter}
+                    </text>
+                  );
+                })}
               </svg>
             </div>
           </div>
