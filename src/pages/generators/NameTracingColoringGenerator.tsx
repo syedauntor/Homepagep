@@ -213,6 +213,11 @@ export function NameTracingColoringGenerator() {
             <p className="text-xs font-medium text-gray-700 mb-1">Trace the letters</p>
             <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: `${containerHeight}px` }}>
               <svg width="100%" height={containerHeight} viewBox={`0 0 ${totalWidth} ${containerHeight}`} preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <style>
+                    {`@import url('https://fonts.googleapis.com/css2?family=Codystar&display=swap');`}
+                  </style>
+                </defs>
                 {letters.map((letter, index) => (
                   <text
                     key={index}
@@ -221,7 +226,7 @@ export function NameTracingColoringGenerator() {
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
-                      fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : 'Arial, sans-serif',
+                      fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Codystar', cursive",
                       fontSize: '52px',
                       fill: 'none',
                       stroke: '#c0c0c0',
