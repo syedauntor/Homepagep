@@ -82,7 +82,7 @@ export default function ProductDetailPage() {
       {/* Breadcrumb Navigation */}
       <div className="bg-gradient-to-r from-orange-100 to-amber-100 py-6 border-b-2 border-orange-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-2 text-sm mb-2">
+          <nav className="flex items-center gap-2 text-sm">
             <Link to="/" className="flex items-center gap-1 text-orange-600 hover:text-orange-700 transition-colors">
               <Home className="w-4 h-4" />
             </Link>
@@ -93,7 +93,6 @@ export default function ProductDetailPage() {
             <ChevronRight className="w-4 h-4 text-gray-400" />
             <span className="text-gray-700 font-medium">{product.title}</span>
           </nav>
-          <h1 className="text-4xl font-bold text-gray-900 leading-tight">{product.title}</h1>
         </div>
       </div>
 
@@ -187,9 +186,10 @@ export default function ProductDetailPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
-              {/* Reviews */}
+              {/* Title and Reviews */}
               <div className="bg-white rounded-3xl shadow-xl p-6">
-                <div className="flex items-center justify-between mb-4">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">{product.title}</h1>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star key={star} className="w-5 h-5 fill-orange-400 text-orange-400" />
