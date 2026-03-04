@@ -16,11 +16,11 @@ export default function ProductDetailPage() {
 
   // Demo images - you can replace these with actual product images
   const productImages = [
-    product?.image_url || '/h1.jpg',
-    '/h2.jpg',
-    '/h3.jpg',
-    '/h4.jpg',
-    '/h5.jpg'
+    product?.image_url || '/2p.jpg',
+    '/3p.jpg',
+    '/4p.jpg',
+    '/5p.jpg',
+    '/6p.jpg'
   ];
 
   useEffect(() => {
