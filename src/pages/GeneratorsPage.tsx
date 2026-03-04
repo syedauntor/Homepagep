@@ -1,4 +1,4 @@
-import { FileText, Sparkles, PuzzleIcon } from 'lucide-react';
+import { FileText, Sparkles, Puzzle as PuzzleIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function GeneratorsPage() {
