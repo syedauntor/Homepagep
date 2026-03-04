@@ -380,15 +380,35 @@ export function NameTracingColoringGenerator() {
                       className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition"
                       placeholder="Enter worksheet title"
                     />
-                    <label className="flex items-center space-x-2 cursor-pointer mt-2">
-                      <input
-                        type="checkbox"
-                        checked={showTitleUnderline}
-                        onChange={(e) => setShowTitleUnderline(e.target.checked)}
-                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-gray-900 font-medium text-sm">Title underline</span>
-                    </label>
+                    <div className="flex gap-6 mt-2">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showTitleUnderline}
+                          onChange={(e) => setShowTitleUnderline(e.target.checked)}
+                          className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                        />
+                        <span className="text-gray-900 font-medium text-sm">Title underline</span>
+                      </label>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={letterCase === 'uppercase'}
+                          onChange={(e) => setLetterCase(e.target.checked ? 'uppercase' : 'lowercase')}
+                          className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                        />
+                        <span className="text-gray-900 font-medium text-sm">Uppercase</span>
+                      </label>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={letterCase === 'lowercase'}
+                          onChange={(e) => setLetterCase(e.target.checked ? 'lowercase' : 'uppercase')}
+                          className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                        />
+                        <span className="text-gray-900 font-medium text-sm">Lowercase</span>
+                      </label>
+                    </div>
                   </div>
 
                   <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Name</h2>
@@ -437,27 +457,6 @@ export function NameTracingColoringGenerator() {
                         className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex gap-6 mt-4">
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={letterCase === 'uppercase'}
-                        onChange={(e) => setLetterCase(e.target.checked ? 'uppercase' : 'lowercase')}
-                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-gray-900 font-medium text-sm">Uppercase</span>
-                    </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={letterCase === 'lowercase'}
-                        onChange={(e) => setLetterCase(e.target.checked ? 'lowercase' : 'uppercase')}
-                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-gray-900 font-medium text-sm">Lowercase</span>
-                    </label>
                   </div>
 
                   <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Style</h2>
