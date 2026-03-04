@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, ArrowLeft, Check } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Check, Home, ChevronRight, FileText, Package } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useCart, Product } from '../contexts/CartContext';
 
@@ -67,61 +67,111 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-white">
+      {/* Breadcrumb Navigation */}
+      <div className="bg-gradient-to-r from-orange-100 to-amber-100 py-6 border-b-2 border-orange-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center gap-2 text-sm mb-2">
+            <Link to="/" className="flex items-center gap-1 text-orange-600 hover:text-orange-700 transition-colors">
+              <Home className="w-4 h-4" />
+            </Link>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <Link to="/shop" className="text-orange-600 hover:text-orange-700 transition-colors">
+              Shop
+            </Link>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-700 font-medium">{product.title}</span>
+          </nav>
+          <h1 className="text-4xl font-bold text-gray-900 leading-tight">{product.title}</h1>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link
-          to="/shop"
-          className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 mb-8 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Shop
-        </Link>
-
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="grid md:grid-cols-2 gap-8 p-8">
-            <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden">
-              {product.image_url ? (
-                <img
-                  src={product.image_url}
-                  alt={product.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <ShoppingCart className="w-24 h-24 text-gray-300" />
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-8">
+              {/* Product Image */}
+              <div className="aspect-[4/3] bg-gradient-to-br from-orange-50 to-amber-50 relative">
+                {product.image_url ? (
+                  <img
+                    src={product.image_url}
+                    alt={product.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Package className="w-32 h-32 text-orange-300" />
+                  </div>
+                )}
+                <div className="absolute top-6 right-6 flex gap-3">
+                  <span className="bg-white/95 backdrop-blur-sm text-orange-600 px-4 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    {product.file_type}
+                  </span>
                 </div>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex items-start justify-between mb-4">
-                <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
-                <span className="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full">
-                  {product.file_type}
-                </span>
               </div>
 
-              <div className="mb-6">
-                <span className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
-                  {product.category}
-                </span>
-              </div>
-
-              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                {product.description}
-              </p>
-
-              <div className="mt-auto">
+              {/* Product Details */}
+              <div className="p-8">
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-orange-600">
-                    ${product.price.toFixed(2)}
+                  <span className="inline-block bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 px-4 py-2 rounded-full text-sm font-semibold capitalize">
+                    {product.category}
                   </span>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="prose max-w-none">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">About This Product</h2>
+                  <p className="text-gray-700 text-lg leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+
+                {/* Features */}
+                <div className="mt-8 p-6 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border-2 border-orange-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Check className="w-6 h-6 text-orange-500" />
+                    What You'll Get
+                  </h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0 mt-1" />
+                      <span className="font-medium">Instant digital download after purchase</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0 mt-1" />
+                      <span className="font-medium">High-quality {product.file_type} file ready to print</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0 mt-1" />
+                      <span className="font-medium">Print unlimited copies for personal or classroom use</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0 mt-1" />
+                      <span className="font-medium">Perfect for home learning and teaching</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8">
+              {/* Price & Add to Cart */}
+              <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
+                <div className="text-center mb-6">
+                  <div className="text-5xl font-bold text-orange-500 mb-2">
+                    ${product.price.toFixed(2)}
+                  </div>
+                  <p className="text-gray-600 text-sm">One-time payment</p>
+                </div>
+
+                <div className="space-y-3">
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 bg-orange-500 text-white px-8 py-4 rounded-xl hover:bg-orange-600 transition-colors flex items-center justify-center gap-3 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-4 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-3 text-lg font-bold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
                     disabled={added}
                   >
                     {added ? (
@@ -138,28 +188,31 @@ export default function ProductDetailPage() {
                   </button>
                   <Link
                     to="/cart"
-                    className="bg-gray-100 text-gray-700 px-8 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center text-lg font-semibold"
+                    className="w-full bg-gray-100 text-gray-700 px-6 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center text-lg font-semibold"
                   >
                     View Cart
                   </Link>
                 </div>
+              </div>
 
-                <div className="mt-8 p-6 bg-orange-50 rounded-xl">
-                  <h3 className="font-semibold text-gray-900 mb-3">What You'll Get:</h3>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0" />
-                      Instant download after purchase
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0" />
-                      High-quality {product.file_type} file
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-5 h-5 text-orange-500 flex-shrink-0" />
-                      Print unlimited copies for personal use
-                    </li>
-                  </ul>
+              {/* Quick Info */}
+              <div className="bg-white rounded-3xl shadow-xl p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 pb-3 border-b-2 border-gray-200">
+                  Quick Info
+                </h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="text-gray-600 font-medium">Format:</span>
+                    <span className="text-gray-900 font-bold">{product.file_type}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="text-gray-600 font-medium">Category:</span>
+                    <span className="text-gray-900 font-bold capitalize">{product.category}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-600 font-medium">Delivery:</span>
+                    <span className="text-orange-600 font-bold">Instant</span>
+                  </div>
                 </div>
               </div>
             </div>
