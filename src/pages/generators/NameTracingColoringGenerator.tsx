@@ -195,9 +195,7 @@ export function NameTracingColoringGenerator() {
                   style={{
                     fontFamily: "'Codystar', cursive",
                     fontSize: '90px',
-                    fill: 'none',
-                    stroke: textColor,
-                    strokeWidth: '3.5',
+                    fill: textColor,
                     fontWeight: '400',
                   }}
                 >
@@ -228,10 +226,8 @@ export function NameTracingColoringGenerator() {
                     style={{
                       fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway', sans-serif",
                       fontSize: '90px',
-                      fill: 'none',
-                      stroke: textColor,
-                      strokeWidth: '3.5',
-                      strokeOpacity: '0.6',
+                      fill: textColor,
+                      fillOpacity: '0.6',
                       fontWeight: '400',
                       fontStyle: tracingStyle === 'name-cursive-trace' ? 'italic' : 'normal',
                     }}
