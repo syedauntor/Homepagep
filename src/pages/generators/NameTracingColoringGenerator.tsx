@@ -92,8 +92,8 @@ export function NameTracingColoringGenerator() {
     const processedName = name.slice(0, 10);
     const displayName = letterCase === 'uppercase' ? processedName.toUpperCase() : processedName.toLowerCase();
     const letters = displayName.split('');
-    const letterWidth = 58;
-    const spaceWidth = 40;
+    const letterWidth = 65;
+    const spaceWidth = 45;
 
     const getLetterX = (index: number) => {
       let x = 0;
