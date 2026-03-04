@@ -175,34 +175,34 @@ export function NameTracingColoringGenerator() {
       <div className="space-y-1">
         <div>
           <p className="text-xs font-medium text-gray-700 mb-1">My name is</p>
-          <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: `${containerHeight}px` }}>
-            <svg width="100%" height={containerHeight} viewBox={`0 0 ${totalWidth} ${containerHeight}`} preserveAspectRatio="xMidYMid meet">
+          <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: '220px' }}>
+            <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
               <defs>
+                <style>
+                  {`@import url('https://fonts.googleapis.com/css2?family=Codystar&display=swap');`}
+                </style>
                 <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
                   <polygon points="0 0, 10 3, 0 6" fill="#EF4444" />
                 </marker>
               </defs>
-              {letters.map((letter, index) => renderGuidelineBox(letter, index))}
               {letters.map((letter, index) => (
-                <g key={index}>
-                  {renderDirectionalArrows(letter, index)}
-                  <text
-                    x={index * letterWidth + letterWidth / 2}
-                    y={containerHeight - 33}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    style={{
-                      fontFamily: 'Arial, sans-serif',
-                      fontSize: '52px',
-                      fill: 'none',
-                      stroke: '#c0c0c0',
-                      strokeWidth: '2',
-                      fontWeight: '500',
-                    }}
-                  >
-                    {letter}
-                  </text>
-                </g>
+                <text
+                  key={index}
+                  x={index * letterWidth + letterWidth / 2}
+                  y={110}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  style={{
+                    fontFamily: "'Codystar', cursive",
+                    fontSize: '90px',
+                    fill: 'none',
+                    stroke: textColor,
+                    strokeWidth: '3.5',
+                    fontWeight: '400',
+                  }}
+                >
+                  {letter}
+                </text>
               ))}
             </svg>
           </div>
@@ -211,27 +211,27 @@ export function NameTracingColoringGenerator() {
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace') && (
           <div>
             <p className="text-xs font-medium text-gray-700 mb-1">Trace the letters</p>
-            <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: `${containerHeight}px` }}>
-              <svg width="100%" height={containerHeight} viewBox={`0 0 ${totalWidth} ${containerHeight}`} preserveAspectRatio="xMidYMid meet">
+            <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: '220px' }}>
+              <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
                 <defs>
                   <style>
-                    {`@import url('https://fonts.googleapis.com/css2?family=Codystar&display=swap');`}
+                    {`@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');`}
                   </style>
                 </defs>
                 {letters.map((letter, index) => (
                   <text
                     key={index}
                     x={index * letterWidth + letterWidth / 2}
-                    y={containerHeight / 2}
+                    y={110}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
-                      fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Codystar', cursive",
-                      fontSize: '52px',
+                      fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway', sans-serif",
+                      fontSize: '90px',
                       fill: 'none',
-                      stroke: '#c0c0c0',
-                      strokeWidth: '1.5',
-                      strokeDasharray: tracingStyle === 'name-cursive-trace' ? 'none' : '8 4',
+                      stroke: textColor,
+                      strokeWidth: '3.5',
+                      strokeOpacity: '0.6',
                       fontWeight: '400',
                       fontStyle: tracingStyle === 'name-cursive-trace' ? 'italic' : 'normal',
                     }}
@@ -249,6 +249,11 @@ export function NameTracingColoringGenerator() {
             <p className="text-xs font-medium text-gray-700 mb-1">Color the letters</p>
             <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1" style={{ minHeight: '220px' }}>
               <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <style>
+                    {`@import url('https://fonts.googleapis.com/css2?family=Changa+One&display=swap');`}
+                  </style>
+                </defs>
                 {letters.map((letter, index) => (
                   <text
                     key={index}
@@ -257,12 +262,12 @@ export function NameTracingColoringGenerator() {
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
-                      fontFamily: 'Arial Black, sans-serif',
+                      fontFamily: "'Changa One', cursive",
                       fontSize: '90px',
                       fill: 'none',
                       stroke: textColor,
                       strokeWidth: '3.5',
-                      fontWeight: '900',
+                      fontWeight: '400',
                     }}
                   >
                     {letter}
