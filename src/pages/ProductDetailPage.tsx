@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, ArrowLeft, Check, Home, ChevronRight, FileText, Package } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Check, Home, ChevronRight, FileText, Package, Star, Tag, BookOpen, Ticket } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useCart, Product } from '../contexts/CartContext';
 
@@ -10,7 +10,18 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [couponCode, setCouponCode] = useState('');
   const { addToCart } = useCart();
+
+  // Demo images - you can replace these with actual product images
+  const productImages = [
+    product?.image_url || '/h1.jpg',
+    '/h2.jpg',
+    '/h3.jpg',
+    '/h4.jpg',
+    '/h5.jpg'
+  ];
 
   useEffect(() => {
     if (id) {
@@ -91,24 +102,41 @@ export default function ProductDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-8">
-              {/* Product Image */}
+              {/* Product Image Gallery */}
               <div className="aspect-[4/3] bg-gradient-to-br from-orange-50 to-amber-50 relative">
-                {product.image_url ? (
-                  <img
-                    src={product.image_url}
-                    alt={product.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Package className="w-32 h-32 text-orange-300" />
-                  </div>
-                )}
+                <img
+                  src={productImages[selectedImage]}
+                  alt={`${product.title} - Image ${selectedImage + 1}`}
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute top-6 right-6 flex gap-3">
                   <span className="bg-white/95 backdrop-blur-sm text-orange-600 px-4 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center gap-2">
                     <FileText className="w-4 h-4" />
                     {product.file_type}
                   </span>
+                </div>
+              </div>
+
+              {/* Image Thumbnails */}
+              <div className="p-4 bg-gray-50 border-t border-gray-200">
+                <div className="flex gap-3 overflow-x-auto">
+                  {productImages.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                        selectedImage === index
+                          ? 'border-orange-500 ring-2 ring-orange-200'
+                          : 'border-gray-300 hover:border-orange-300'
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -158,9 +186,21 @@ export default function ProductDetailPage() {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky top-8 space-y-6">
+              {/* Reviews */}
+              <div className="bg-white rounded-3xl shadow-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="w-5 h-5 fill-orange-400 text-orange-400" />
+                    ))}
+                  </div>
+                  <span className="text-gray-600 text-sm font-medium">4.8 (1.9k ratings)</span>
+                </div>
+              </div>
+
               {/* Price & Add to Cart */}
-              <div className="bg-white rounded-3xl shadow-xl p-6 mb-6">
+              <div className="bg-white rounded-3xl shadow-xl p-6">
                 <div className="text-center mb-6">
                   <div className="text-5xl font-bold text-orange-500 mb-2">
                     ${product.price.toFixed(2)}
@@ -195,23 +235,80 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
+              {/* Coupon Code */}
+              <div className="bg-white rounded-3xl shadow-xl p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Ticket className="w-5 h-5 text-orange-500" />
+                  Have a Coupon Code?
+                </h3>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Enter code"
+                    className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none"
+                  />
+                  <button className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold">
+                    Apply
+                  </button>
+                </div>
+              </div>
+
               {/* Quick Info */}
               <div className="bg-white rounded-3xl shadow-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 pb-3 border-b-2 border-gray-200">
                   Quick Info
                 </h3>
                 <div className="space-y-4 text-sm">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Format:</span>
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <FileText className="w-4 h-4" />
+                      Format:
+                    </div>
                     <span className="text-gray-900 font-bold">{product.file_type}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Category:</span>
+
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <Package className="w-4 h-4" />
+                      Category:
+                    </div>
                     <span className="text-gray-900 font-bold capitalize">{product.category}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-gray-600 font-medium">Delivery:</span>
-                    <span className="text-orange-600 font-bold">Instant</span>
+
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <BookOpen className="w-4 h-4" />
+                      Pages:
+                    </div>
+                    <span className="text-gray-900 font-bold">42</span>
+                  </div>
+
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <Tag className="w-4 h-4" />
+                      Tags:
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Multiplication
+                      </span>
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Math
+                      </span>
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Worksheets
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="py-3">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <Check className="w-4 h-4" />
+                      Delivery:
+                    </div>
+                    <span className="text-orange-600 font-bold">Instant Digital Download</span>
                   </div>
                 </div>
               </div>
