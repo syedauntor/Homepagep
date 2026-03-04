@@ -88,9 +88,9 @@ export function NameTracingColoringGenerator() {
 
   const renderNameSection = () => {
     const letters = name.split('');
-    const letterWidth = 60;
-    const totalWidth = letters.length * letterWidth;
-    const containerHeight = 100;
+    const letterWidth = 70;
+    const totalWidth = Math.max(letters.length * letterWidth, 400);
+    const containerHeight = 120;
 
     const renderDirectionalArrows = (letter: string, index: number) => {
       const x = index * letterWidth + letterWidth / 2;
@@ -101,63 +101,103 @@ export function NameTracingColoringGenerator() {
       if (upperLetter === 'A') {
         return (
           <g>
-            <path d={`M ${x - 15} ${containerHeight - 20} L ${x} ${containerHeight - 55}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
-            <path d={`M ${x} ${containerHeight - 55} L ${x + 15} ${containerHeight - 20}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
-            <path d={`M ${x - 10} ${containerHeight - 40} L ${x + 10} ${containerHeight - 40}`} stroke={arrowColor} strokeWidth="2" fill="none" />
+            <path d={`M ${x - 15} ${containerHeight - 20} L ${x} ${containerHeight - 60}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x} ${containerHeight - 60} L ${x + 15} ${containerHeight - 20}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x - 10} ${containerHeight - 42} L ${x + 10} ${containerHeight - 42}`} stroke={arrowColor} strokeWidth="2" fill="none" />
           </g>
         );
       } else if (upperLetter === 'M') {
         return (
           <g>
-            <path d={`M ${x - 18} ${containerHeight - 20} L ${x - 18} ${containerHeight - 55}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
-            <path d={`M ${x - 18} ${containerHeight - 55} L ${x} ${containerHeight - 35}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
-            <path d={`M ${x} ${containerHeight - 35} L ${x + 18} ${containerHeight - 55}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
-            <path d={`M ${x + 18} ${containerHeight - 55} L ${x + 18} ${containerHeight - 20}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x - 18} ${containerHeight - 20} L ${x - 18} ${containerHeight - 60}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x - 18} ${containerHeight - 60} L ${x} ${containerHeight - 35}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x} ${containerHeight - 35} L ${x + 18} ${containerHeight - 60}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x + 18} ${containerHeight - 60} L ${x + 18} ${containerHeight - 20}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
           </g>
         );
-      } else if (/[BCDEFGHKLMNPRTU]/.test(upperLetter)) {
+      } else if (/[BCDEFGHKLNPRTU]/.test(upperLetter)) {
         return (
           <g>
-            <path d={`M ${x - 5} ${containerHeight - 55} L ${x - 5} ${containerHeight - 20}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <path d={`M ${x - 5} ${containerHeight - 60} L ${x - 5} ${containerHeight - 20}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
           </g>
         );
       } else if (/[O]/.test(upperLetter)) {
         return (
           <g>
-            <circle cx={x} cy={containerHeight - 37} r="18" stroke={arrowColor} strokeWidth="2" fill="none" strokeDasharray="3 3" />
-            <path d={`M ${x} ${containerHeight - 55} L ${x + 3} ${containerHeight - 52}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+            <circle cx={x} cy={containerHeight - 40} r="20" stroke={arrowColor} strokeWidth="2" fill="none" strokeDasharray="3 3" />
+            <path d={`M ${x} ${containerHeight - 60} L ${x + 3} ${containerHeight - 57}`} stroke={arrowColor} strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
           </g>
         );
       }
       return null;
     };
 
+    const renderGuidelineBox = (letter: string, index: number) => {
+      const x = index * letterWidth;
+      const boxWidth = letterWidth - 5;
+      const boxHeight = 75;
+      const boxY = containerHeight - boxHeight - 15;
+
+      return (
+        <g key={`guideline-${index}`}>
+          <rect
+            x={x + 2}
+            y={boxY}
+            width={boxWidth}
+            height={boxHeight}
+            fill="none"
+            stroke="#d1d5db"
+            strokeWidth="1"
+          />
+          <line
+            x1={x + 2}
+            y1={boxY + boxHeight / 3}
+            x2={x + boxWidth + 2}
+            y2={boxY + boxHeight / 3}
+            stroke="#d1d5db"
+            strokeWidth="1"
+            strokeDasharray="2 2"
+          />
+          <line
+            x1={x + 2}
+            y1={boxY + (boxHeight / 3) * 2}
+            x2={x + boxWidth + 2}
+            y2={boxY + (boxHeight / 3) * 2}
+            stroke="#d1d5db"
+            strokeWidth="1"
+            strokeDasharray="2 2"
+          />
+        </g>
+      );
+    };
+
     return (
       <div className="space-y-1">
         <div>
           <p className="text-xs font-medium text-gray-700 mb-1">My name is</p>
-          <div className="border-2 border-gray-900 rounded p-2 bg-white" style={{ minHeight: `${containerHeight}px` }}>
+          <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: `${containerHeight}px` }}>
             <svg width="100%" height={containerHeight} viewBox={`0 0 ${totalWidth} ${containerHeight}`} preserveAspectRatio="xMidYMid meet">
               <defs>
                 <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
                   <polygon points="0 0, 10 3, 0 6" fill="#EF4444" />
                 </marker>
               </defs>
+              {letters.map((letter, index) => renderGuidelineBox(letter, index))}
               {letters.map((letter, index) => (
                 <g key={index}>
                   {renderDirectionalArrows(letter, index)}
                   <text
                     x={index * letterWidth + letterWidth / 2}
-                    y={containerHeight - 25}
+                    y={containerHeight - 33}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
                       fontFamily: 'Arial, sans-serif',
-                      fontSize: '45px',
+                      fontSize: '52px',
                       fill: 'none',
-                      stroke: '#d1d5db',
+                      stroke: '#c0c0c0',
                       strokeWidth: '2',
-                      fontWeight: 'bold',
+                      fontWeight: '500',
                     }}
                   >
                     {letter}
@@ -171,7 +211,7 @@ export function NameTracingColoringGenerator() {
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace') && (
           <div>
             <p className="text-xs font-medium text-gray-700 mb-1">Trace the letters</p>
-            <div className="border-2 border-gray-900 rounded p-2 bg-white" style={{ minHeight: `${containerHeight}px` }}>
+            <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: `${containerHeight}px` }}>
               <svg width="100%" height={containerHeight} viewBox={`0 0 ${totalWidth} ${containerHeight}`} preserveAspectRatio="xMidYMid meet">
                 {letters.map((letter, index) => (
                   <text
@@ -182,11 +222,12 @@ export function NameTracingColoringGenerator() {
                     dominantBaseline="middle"
                     style={{
                       fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : 'Arial, sans-serif',
-                      fontSize: '45px',
+                      fontSize: '52px',
                       fill: 'none',
-                      stroke: '#d1d5db',
+                      stroke: '#c0c0c0',
                       strokeWidth: '1.5',
-                      fontWeight: tracingStyle === 'name-cursive-trace' ? 'normal' : 'normal',
+                      strokeDasharray: tracingStyle === 'name-cursive-trace' ? 'none' : '8 4',
+                      fontWeight: '400',
                       fontStyle: tracingStyle === 'name-cursive-trace' ? 'italic' : 'normal',
                     }}
                   >
@@ -201,22 +242,22 @@ export function NameTracingColoringGenerator() {
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-color') && (
           <div className="flex-1">
             <p className="text-xs font-medium text-gray-700 mb-1">Color the letters</p>
-            <div className="border-2 border-gray-900 rounded p-2 bg-white flex-1" style={{ minHeight: '200px' }}>
-              <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 200`} preserveAspectRatio="xMidYMid meet">
+            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1" style={{ minHeight: '220px' }}>
+              <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
                 {letters.map((letter, index) => (
                   <text
                     key={index}
                     x={index * letterWidth + letterWidth / 2}
-                    y={100}
+                    y={110}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
-                      fontFamily: 'Comic Sans MS, cursive',
-                      fontSize: '80px',
+                      fontFamily: 'Arial Black, sans-serif',
+                      fontSize: '90px',
                       fill: 'none',
                       stroke: textColor,
-                      strokeWidth: '3',
-                      fontWeight: 'bold',
+                      strokeWidth: '3.5',
+                      fontWeight: '900',
                     }}
                   >
                     {letter}
