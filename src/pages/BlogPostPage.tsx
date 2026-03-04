@@ -475,37 +475,39 @@ export function BlogPostPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl shadow-xl p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
-                  Relevant Products
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {products.map((product) => (
-                    <Link
-                      key={product.id}
-                      to={`/product/${product.id}`}
-                      className="group block"
-                    >
-                      <div className="rounded-xl overflow-hidden shadow-md mb-3">
-                        {product.image_url ? (
-                          <img
-                            src={product.image_url}
-                            alt={product.title}
-                            className="w-full h-[170px] object-cover group-hover:scale-110 transition duration-500"
-                          />
-                        ) : (
-                          <div className="w-full h-[170px] bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
-                            <ShoppingBag className="w-12 h-12 text-white opacity-60" />
-                          </div>
-                        )}
-                      </div>
-                      <h4 className="text-sm font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">
-                        {product.title}
-                      </h4>
-                    </Link>
-                  ))}
+              {products.length > 0 && (
+                <div className="bg-white rounded-3xl shadow-xl p-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
+                    Relevant Products
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {products.map((product) => (
+                      <Link
+                        key={product.id}
+                        to={`/product/${product.id}`}
+                        className="group block"
+                      >
+                        <div className="rounded-xl overflow-hidden shadow-md mb-3">
+                          {product.image_url ? (
+                            <img
+                              src={product.image_url}
+                              alt={product.title}
+                              className="w-full h-[170px] object-cover group-hover:scale-110 transition duration-500"
+                            />
+                          ) : (
+                            <div className="w-full h-[170px] bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
+                              <ShoppingBag className="w-12 h-12 text-white opacity-60" />
+                            </div>
+                          )}
+                        </div>
+                        <h4 className="text-sm font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">
+                          {product.title}
+                        </h4>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="bg-white rounded-3xl shadow-xl p-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
