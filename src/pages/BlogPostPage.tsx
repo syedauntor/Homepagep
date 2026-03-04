@@ -106,7 +106,7 @@ export function BlogPostPage() {
       .select('*')
       .eq('is_active', true)
       .order('created_at', { ascending: false })
-      .limit(6);
+      .limit(4);
 
     if (data) setProducts(data);
   }
@@ -486,20 +486,20 @@ export function BlogPostPage() {
                       to={`/product/${product.id}`}
                       className="group block"
                     >
-                      <div className="rounded-xl overflow-hidden shadow-md mb-2">
+                      <div className="rounded-xl overflow-hidden shadow-md mb-3">
                         {product.image_url ? (
                           <img
                             src={product.image_url}
                             alt={product.title}
-                            className="w-full h-32 object-cover group-hover:scale-110 transition duration-500"
+                            className="w-full h-40 object-cover group-hover:scale-110 transition duration-500"
                           />
                         ) : (
-                          <div className="w-full h-32 bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
-                            <ShoppingBag className="w-10 h-10 text-white opacity-60" />
+                          <div className="w-full h-40 bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
+                            <ShoppingBag className="w-12 h-12 text-white opacity-60" />
                           </div>
                         )}
                       </div>
-                      <h4 className="text-xs font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">
+                      <h4 className="text-sm font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">
                         {product.title}
                       </h4>
                     </Link>
