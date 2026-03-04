@@ -10,6 +10,7 @@ export function BlogPostPage() {
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
   const [popularPosts, setPopularPosts] = useState<BlogPost[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [previousPost, setPreviousPost] = useState<BlogPost | null>(null);
   const [nextPost, setNextPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
@@ -101,14 +102,27 @@ export function BlogPostPage() {
   }
 
   async function fetchProducts() {
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(4);
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+        .limit(4);
 
-    if (data) setProducts(data);
+      if (error) {
+        console.error('Error fetching products:', error);
+        setProductsLoading(false);
+        return;
+      }
+
+      console.log('Fetched products:', data);
+      if (data) setProducts(data);
+    } catch (error) {
+      console.error('Exception fetching products:', error);
+    } finally {
+      setProductsLoading(false);
+    }
   }
 
   function formatDate(dateString: string) {
@@ -475,7 +489,7 @@ export function BlogPostPage() {
                 </div>
               </div>
 
-              {products.length > 0 && (
+              {!productsLoading && products.length > 0 && (
                 <div className="bg-white rounded-3xl shadow-xl p-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
                     Relevant Products
