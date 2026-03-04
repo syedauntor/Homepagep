@@ -491,10 +491,10 @@ export function BlogPostPage() {
                           <img
                             src={product.image_url}
                             alt={product.title}
-                            className="w-full h-40 object-cover group-hover:scale-110 transition duration-500"
+                            className="w-full h-[170px] object-cover group-hover:scale-110 transition duration-500"
                           />
                         ) : (
-                          <div className="w-full h-40 bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
+                          <div className="w-full h-[170px] bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
                             <ShoppingBag className="w-12 h-12 text-white opacity-60" />
                           </div>
                         )}
