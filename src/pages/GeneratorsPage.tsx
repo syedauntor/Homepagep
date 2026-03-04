@@ -12,6 +12,7 @@ export function GeneratorsPage() {
     tracingPractice: [
       { name: 'Alphabet Tracing Generator', slug: 'alphabet-tracing' },
       { name: 'Name Tracing Worksheets', slug: 'name-tracing' },
+      { name: 'Name Tracing & Coloring Worksheets', slug: 'name-tracing-coloring' },
       { name: 'Telling Time Worksheet Generator', slug: 'telling-time' },
       { name: 'Picture Coloring and Tracing Worksheet', slug: 'picture-tracing' },
       { name: 'Sentence Tracing Practice Worksheet', slug: 'sentence-tracing' },
