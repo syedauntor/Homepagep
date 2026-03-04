@@ -33,6 +33,7 @@ export function Footer() {
               <li><Link to="/generators" className="hover:text-orange-500 transition">All Generators</Link></li>
               <li><Link to="/generators#math" className="hover:text-orange-500 transition">Math Generators</Link></li>
               <li><Link to="/generators#tracing" className="hover:text-orange-500 transition">Tracing Practice</Link></li>
+              <li><Link to="/generators/alphabet-tracing" className="hover:text-orange-500 transition">Alphabet Tracing Generator</Link></li>
               <li><Link to="/generators#activities" className="hover:text-orange-500 transition">Activity Generators</Link></li>
             </ul>
           </div>

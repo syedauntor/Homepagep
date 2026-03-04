@@ -530,8 +530,8 @@ export default function AlphabetTracingGenerator() {
                                     style={{
                                       fontFamily: fontStyle,
                                       fontSize: `${fontSize}px`,
-                                      color: letterColor,
-                                      opacity: 0.3,
+                                      color: idx === 0 ? letterColor : 'transparent',
+                                      opacity: idx === 0 ? 1 : 0.3,
                                       WebkitTextStroke: `1px ${letterColor}`,
                                       paintOrder: 'stroke fill',
                                       lineHeight: '1',
