@@ -40,6 +40,7 @@ export function NameTracingColoringGenerator() {
   const [fontSize, setFontSize] = useState(7);
   const [textColor, setTextColor] = useState('#000000');
   const [tracingStyle, setTracingStyle] = useState<TracingStyle>('name-trace-color');
+  const [letterCase, setLetterCase] = useState<'uppercase' | 'lowercase'>('uppercase');
   const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
   const [selectedTheme, setSelectedTheme] = useState<Theme>(themes[0]);
   const [hasGenerated, setHasGenerated] = useState(false);
@@ -58,6 +59,7 @@ export function NameTracingColoringGenerator() {
     setFontSize(7);
     setTextColor('#000000');
     setTracingStyle('name-trace-color');
+    setLetterCase('uppercase');
     setTitle('Name Tracing Practice');
     setShowName(true);
     setShowDate(true);
@@ -87,13 +89,16 @@ export function NameTracingColoringGenerator() {
   };
 
   const renderNameSection = () => {
-    const letters = name.split('');
+    const processedName = name.slice(0, 10);
+    const displayName = letterCase === 'uppercase' ? processedName.toUpperCase() : processedName.toLowerCase();
+    const letters = displayName.split('');
     const letterWidth = 70;
-    const totalWidth = Math.max(letters.length * letterWidth, 400);
+    const totalWidth = Math.max(10 * letterWidth, 700);
+    const startX = (totalWidth - letters.length * letterWidth) / 2;
     const containerHeight = 120;
 
     const renderDirectionalArrows = (letter: string, index: number) => {
-      const x = index * letterWidth + letterWidth / 2;
+      const x = startX + index * letterWidth + letterWidth / 2;
       const arrowColor = '#EF4444';
 
       const upperLetter = letter.toUpperCase();
@@ -133,7 +138,7 @@ export function NameTracingColoringGenerator() {
     };
 
     const renderGuidelineBox = (letter: string, index: number) => {
-      const x = index * letterWidth;
+      const x = startX + index * letterWidth;
       const boxWidth = letterWidth - 5;
       const boxHeight = 75;
       const boxY = containerHeight - boxHeight - 15;
@@ -172,11 +177,11 @@ export function NameTracingColoringGenerator() {
     };
 
     return (
-      <div className="flex-1 space-y-1 flex flex-col">
-        <div className="flex-1 flex flex-col">
+      <div className="space-y-3 flex flex-col" style={{ height: '100%' }}>
+        <div className="flex-1 flex flex-col min-h-0">
           <p className="text-xl font-bold text-gray-900 mb-2">My name is</p>
-          <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1 flex items-center">
-            <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 160`} preserveAspectRatio="xMidYMid meet">
+          <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1 flex items-center justify-center">
+            <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 120`} preserveAspectRatio="xMidYMid meet">
               <defs>
                 <style>
                   {`@import url('https://fonts.googleapis.com/css2?family=Codystar&display=swap');`}
@@ -188,8 +193,8 @@ export function NameTracingColoringGenerator() {
               {letters.map((letter, index) => (
                 <text
                   key={index}
-                  x={index * letterWidth + letterWidth / 2}
-                  y={80}
+                  x={startX + index * letterWidth + letterWidth / 2}
+                  y={60}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   style={{
@@ -207,10 +212,10 @@ export function NameTracingColoringGenerator() {
         </div>
 
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace') && (
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-h-0">
             <p className="text-xl font-bold text-gray-900 mb-2">Trace the letters</p>
-            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1 flex items-center">
-              <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 160`} preserveAspectRatio="xMidYMid meet">
+            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1 flex items-center justify-center">
+              <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 120`} preserveAspectRatio="xMidYMid meet">
                 <defs>
                   <style>
                     {`@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');`}
@@ -219,15 +224,15 @@ export function NameTracingColoringGenerator() {
                 {letters.map((letter, index) => (
                   <text
                     key={index}
-                    x={index * letterWidth + letterWidth / 2}
-                    y={80}
+                    x={startX + index * letterWidth + letterWidth / 2}
+                    y={60}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
                       fontFamily: tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway', sans-serif",
                       fontSize: '90px',
                       fill: textColor,
-                      fillOpacity: '0.6',
+                      fillOpacity: '0.3',
                       fontWeight: '400',
                       fontStyle: tracingStyle === 'name-cursive-trace' ? 'italic' : 'normal',
                     }}
@@ -241,10 +246,10 @@ export function NameTracingColoringGenerator() {
         )}
 
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-color') && (
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-h-0">
             <p className="text-xl font-bold text-gray-900 mb-2">Color the letters</p>
-            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1 flex items-center">
-              <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 160`} preserveAspectRatio="xMidYMid meet">
+            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1 flex items-center justify-center">
+              <svg width="100%" height="100%" viewBox={`0 0 ${totalWidth} 120`} preserveAspectRatio="xMidYMid meet">
                 <defs>
                   <style>
                     {`@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');`}
@@ -253,8 +258,8 @@ export function NameTracingColoringGenerator() {
                 {letters.map((letter, index) => (
                   <text
                     key={index}
-                    x={index * letterWidth + letterWidth / 2}
-                    y={80}
+                    x={startX + index * letterWidth + letterWidth / 2}
+                    y={60}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
@@ -432,6 +437,31 @@ export function NameTracingColoringGenerator() {
                         className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 focus:outline-none transition"
                       />
                     </div>
+                  </div>
+
+                  <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Letter Case</h2>
+
+                  <div className="flex gap-4 mb-6">
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="letterCase"
+                        checked={letterCase === 'uppercase'}
+                        onChange={() => setLetterCase('uppercase')}
+                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
+                      />
+                      <span className="text-gray-900 font-medium">Uppercase</span>
+                    </label>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="letterCase"
+                        checked={letterCase === 'lowercase'}
+                        onChange={() => setLetterCase('lowercase')}
+                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
+                      />
+                      <span className="text-gray-900 font-medium">Lowercase</span>
+                    </label>
                   </div>
 
                   <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Style</h2>
