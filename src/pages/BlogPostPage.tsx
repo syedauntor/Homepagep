@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send } from 'lucide-react';
-import { supabase, BlogPost } from '../lib/supabase';
+import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
+import { supabase, BlogPost, Product } from '../lib/supabase';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -9,6 +9,7 @@ export function BlogPostPage() {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [recentPosts, setRecentPosts] = useState<BlogPost[]>([]);
   const [popularPosts, setPopularPosts] = useState<BlogPost[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [previousPost, setPreviousPost] = useState<BlogPost | null>(null);
   const [nextPost, setNextPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,6 +19,7 @@ export function BlogPostPage() {
     if (id) {
       fetchPost();
       fetchSidebarPosts();
+      fetchProducts();
       window.scrollTo(0, 0);
     }
   }, [id]);
@@ -96,6 +98,17 @@ export function BlogPostPage() {
 
     if (recent) setRecentPosts(recent);
     if (popular) setPopularPosts(popular);
+  }
+
+  async function fetchProducts() {
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(6);
+
+    if (data) setProducts(data);
   }
 
   function formatDate(dateString: string) {
@@ -459,6 +472,38 @@ export function BlogPostPage() {
                   <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full font-semibold transition shadow-md">
                     <Search className="w-5 h-5" />
                   </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl shadow-xl p-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
+                  Relevant Products
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {products.map((product) => (
+                    <Link
+                      key={product.id}
+                      to={`/product/${product.id}`}
+                      className="group block"
+                    >
+                      <div className="rounded-xl overflow-hidden shadow-md mb-2">
+                        {product.image_url ? (
+                          <img
+                            src={product.image_url}
+                            alt={product.title}
+                            className="w-full h-32 object-cover group-hover:scale-110 transition duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-32 bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
+                            <ShoppingBag className="w-10 h-10 text-white opacity-60" />
+                          </div>
+                        )}
+                      </div>
+                      <h4 className="text-xs font-bold text-gray-900 group-hover:text-orange-500 transition line-clamp-2 leading-snug">
+                        {product.title}
+                      </h4>
+                    </Link>
+                  ))}
                 </div>
               </div>
 
