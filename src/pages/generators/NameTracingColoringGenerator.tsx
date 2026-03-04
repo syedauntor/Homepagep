@@ -174,9 +174,9 @@ export function NameTracingColoringGenerator() {
     return (
       <div className="space-y-1">
         <div>
-          <p className="text-xs font-medium text-gray-700 mb-1">My name is</p>
-          <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: '220px' }}>
-            <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
+          <p className="text-lg font-bold text-gray-900 mb-2">My name is</p>
+          <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: '160px' }}>
+            <svg width="100%" height="160" viewBox={`0 0 ${totalWidth} 160`} preserveAspectRatio="xMidYMid meet">
               <defs>
                 <style>
                   {`@import url('https://fonts.googleapis.com/css2?family=Codystar&display=swap');`}
@@ -189,7 +189,7 @@ export function NameTracingColoringGenerator() {
                 <text
                   key={index}
                   x={index * letterWidth + letterWidth / 2}
-                  y={110}
+                  y={80}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   style={{
@@ -208,9 +208,9 @@ export function NameTracingColoringGenerator() {
 
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace') && (
           <div>
-            <p className="text-xs font-medium text-gray-700 mb-1">Trace the letters</p>
-            <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: '220px' }}>
-              <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
+            <p className="text-lg font-bold text-gray-900 mb-2">Trace the letters</p>
+            <div className="border-2 border-gray-900 rounded p-3 bg-white" style={{ minHeight: '160px' }}>
+              <svg width="100%" height="160" viewBox={`0 0 ${totalWidth} 160`} preserveAspectRatio="xMidYMid meet">
                 <defs>
                   <style>
                     {`@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');`}
@@ -220,7 +220,7 @@ export function NameTracingColoringGenerator() {
                   <text
                     key={index}
                     x={index * letterWidth + letterWidth / 2}
-                    y={110}
+                    y={80}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
@@ -242,9 +242,9 @@ export function NameTracingColoringGenerator() {
 
         {(tracingStyle === 'name-trace-color' || tracingStyle === 'name-color') && (
           <div className="flex-1">
-            <p className="text-xs font-medium text-gray-700 mb-1">Color the letters</p>
-            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1" style={{ minHeight: '220px' }}>
-              <svg width="100%" height="220" viewBox={`0 0 ${totalWidth} 220`} preserveAspectRatio="xMidYMid meet">
+            <p className="text-lg font-bold text-gray-900 mb-2">Color the letters</p>
+            <div className="border-2 border-gray-900 rounded p-3 bg-white flex-1" style={{ minHeight: '160px' }}>
+              <svg width="100%" height="160" viewBox={`0 0 ${totalWidth} 160`} preserveAspectRatio="xMidYMid meet">
                 <defs>
                   <style>
                     {`@import url('https://fonts.googleapis.com/css2?family=Changa+One&display=swap');`}
@@ -254,7 +254,7 @@ export function NameTracingColoringGenerator() {
                   <text
                     key={index}
                     x={index * letterWidth + letterWidth / 2}
-                    y={110}
+                    y={80}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     style={{
