@@ -439,28 +439,24 @@ export function NameTracingColoringGenerator() {
                     </div>
                   </div>
 
-                  <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Letter Case</h2>
-
-                  <div className="flex gap-4 mb-6">
-                    <label className="flex items-center space-x-3 cursor-pointer">
+                  <div className="flex gap-6 mt-4">
+                    <label className="flex items-center space-x-2 cursor-pointer">
                       <input
-                        type="radio"
-                        name="letterCase"
+                        type="checkbox"
                         checked={letterCase === 'uppercase'}
-                        onChange={() => setLetterCase('uppercase')}
-                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
+                        onChange={(e) => setLetterCase(e.target.checked ? 'uppercase' : 'lowercase')}
+                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                       />
-                      <span className="text-gray-900 font-medium">Uppercase</span>
+                      <span className="text-gray-900 font-medium text-sm">Uppercase</span>
                     </label>
-                    <label className="flex items-center space-x-3 cursor-pointer">
+                    <label className="flex items-center space-x-2 cursor-pointer">
                       <input
-                        type="radio"
-                        name="letterCase"
+                        type="checkbox"
                         checked={letterCase === 'lowercase'}
-                        onChange={() => setLetterCase('lowercase')}
-                        className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
+                        onChange={(e) => setLetterCase(e.target.checked ? 'lowercase' : 'uppercase')}
+                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                       />
-                      <span className="text-gray-900 font-medium">Lowercase</span>
+                      <span className="text-gray-900 font-medium text-sm">Lowercase</span>
                     </label>
                   </div>
 
