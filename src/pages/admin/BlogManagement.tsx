@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, CreditCard as Edit, Trash2, Search, Eye } from 'lucide-react';
+import { RichTextEditor } from '../../components/RichTextEditor';
+import { ImageUploader } from '../../components/ImageUploader';
+import { SEOFields } from '../../components/SEOFields';
 
 interface BlogPost {
   id: string;
@@ -9,6 +12,11 @@ interface BlogPost {
   excerpt: string;
   author: string;
   image_url: string | null;
+  featured_image: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string | null;
+  slug: string | null;
   views: number;
   category_id: string | null;
   created_at: string;
@@ -32,6 +40,11 @@ export default function BlogManagement() {
     excerpt: '',
     author: '',
     image_url: '',
+    featured_image: '',
+    seo_title: '',
+    seo_description: '',
+    seo_keywords: '',
+    slug: '',
     category_id: '',
   });
 
@@ -74,6 +87,11 @@ export default function BlogManagement() {
         excerpt: formData.excerpt,
         author: formData.author || 'Admin',
         image_url: formData.image_url || null,
+        featured_image: formData.featured_image || null,
+        seo_title: formData.seo_title || null,
+        seo_description: formData.seo_description || null,
+        seo_keywords: formData.seo_keywords || null,
+        slug: formData.slug || null,
         category_id: formData.category_id || null,
       };
 
@@ -108,6 +126,11 @@ export default function BlogManagement() {
       excerpt: post.excerpt,
       author: post.author,
       image_url: post.image_url || '',
+      featured_image: post.featured_image || '',
+      seo_title: post.seo_title || '',
+      seo_description: post.seo_description || '',
+      seo_keywords: post.seo_keywords || '',
+      slug: post.slug || '',
       category_id: post.category_id || '',
     });
     setShowForm(true);
@@ -137,6 +160,11 @@ export default function BlogManagement() {
       excerpt: '',
       author: '',
       image_url: '',
+      featured_image: '',
+      seo_title: '',
+      seo_description: '',
+      seo_keywords: '',
+      slug: '',
       category_id: '',
     });
     setEditingPost(null);
@@ -194,11 +222,11 @@ export default function BlogManagement() {
 
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+          <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto p-6">
             <h2 className="text-2xl font-bold text-slate-900 mb-6">
               {editingPost ? 'Edit Blog Post' : 'Add New Blog Post'}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Title
@@ -225,16 +253,20 @@ export default function BlogManagement() {
                 />
               </div>
 
+              <ImageUploader
+                label="Featured Image"
+                value={formData.featured_image}
+                onChange={(url) => setFormData({ ...formData, featured_image: url })}
+                placeholder="Upload or enter featured image URL"
+              />
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Content
+                  Content (WordPress-style Editor)
                 </label>
-                <textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  required
-                  rows={12}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent font-mono text-sm"
+                <RichTextEditor
+                  content={formData.content}
+                  onChange={(content) => setFormData({ ...formData, content })}
                 />
               </div>
 
@@ -273,27 +305,39 @@ export default function BlogManagement() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Image URL
+                  Thumbnail Image URL (for blog list)
                 </label>
                 <input
                   type="url"
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+                  placeholder="Optional: Different image for blog listing"
                 />
               </div>
+
+              <SEOFields
+                seoTitle={formData.seo_title}
+                seoDescription={formData.seo_description}
+                seoKeywords={formData.seo_keywords}
+                slug={formData.slug}
+                onSeoTitleChange={(value) => setFormData({ ...formData, seo_title: value })}
+                onSeoDescriptionChange={(value) => setFormData({ ...formData, seo_description: value })}
+                onSeoKeywordsChange={(value) => setFormData({ ...formData, seo_keywords: value })}
+                onSlugChange={(value) => setFormData({ ...formData, slug: value })}
+              />
 
               <div className="flex gap-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800 transition-colors"
+                  className="flex-1 bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition-colors font-medium"
                 >
-                  {editingPost ? 'Update' : 'Create'}
+                  {editingPost ? 'Update Post' : 'Publish Post'}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 bg-slate-200 text-slate-900 py-2 rounded-lg hover:bg-slate-300 transition-colors"
+                  className="flex-1 bg-slate-200 text-slate-900 py-3 rounded-lg hover:bg-slate-300 transition-colors font-medium"
                 >
                   Cancel
                 </button>

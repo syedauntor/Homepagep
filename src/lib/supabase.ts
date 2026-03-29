@@ -15,6 +15,11 @@ export interface BlogPost {
   excerpt: string;
   author: string;
   image_url: string | null;
+  featured_image: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string | null;
+  slug: string | null;
   views: number;
   category_id: string | null;
   created_at: string;
