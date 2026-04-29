@@ -163,19 +163,26 @@ export function AdditionGenerator() {
     .page {
       width: 210mm;
       height: 297mm;
-      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) calc(8mm + 40px)' : '12mm 15mm 48px'};
+      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) 0' : '12mm 15mm 0'};
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
       ${borderStyle}
     }
-    .header { text-align: center; margin-bottom: 0; }
-    .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 16px; }
-    .problems { display: flex; flex-direction: column; flex: 1; padding: 20px 0 0 0; }
+    .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
+    .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
+    .problems { flex: 1; padding: 0; overflow: hidden; }
     .problem-row { margin-bottom: 0; }
-    .footer { position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; font-size: 11px; color: #6b7280; padding: 6px 0 8px; background: #fff; }
+    .footer {
+      position: fixed;
+      bottom: 0; left: 0; width: 100%;
+      text-align: center; font-size: 11px; color: #6b7280;
+      padding: 5px 0 10px;
+      background: #fff;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -196,22 +203,25 @@ export function AdditionGenerator() {
   <script>
     window.onload = function() {
       var page = document.querySelector('.page');
-      var problems = document.querySelector('.problems');
+      var header = document.querySelector('.header');
       var footer = document.querySelector('.footer');
       var rows = document.querySelectorAll('.problem-row');
-      if (rows.length > 1 && page && problems && footer) {
-        var pageH = page.clientHeight;
-        var headerH = document.querySelector('.header').offsetHeight;
+      if (rows.length > 0 && page && header && footer) {
+        var pageH = page.offsetHeight;
+        var headerH = header.offsetHeight;
         var footerH = footer.offsetHeight;
         var pagePadT = parseFloat(getComputedStyle(page).paddingTop);
-        var pagePadB = parseFloat(getComputedStyle(page).paddingBottom);
-        var problemsPadT = 20;
+        /* no bottom padding — footer is fixed, so reserve its height */
+        var problemsTopGap = 16; /* gap between name-date and first problem */
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
-        var available = pageH - pagePadT - pagePadB - headerH - footerH - problemsPadT;
+        var available = pageH - pagePadT - headerH - footerH - problemsTopGap;
+        /* distribute gap evenly: n rows need n gaps (after each row incl. last) */
         var gap = (available - totalRowH) / rows.length;
-        if (gap < 0) gap = 4;
+        if (gap < 4) gap = 4;
         rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
+        /* push problems container down by problemsTopGap */
+        document.querySelector('.problems').style.paddingTop = problemsTopGap + 'px';
       }
       window.print();
       window.onafterprint = function() { window.close(); };
