@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Download, Printer, Eye, RefreshCw, ChevronRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RelatedGenerators } from '../../components/RelatedGenerators';
@@ -52,19 +52,6 @@ export function AdditionGenerator() {
   const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
   const [selectedTheme, setSelectedTheme] = useState<Theme>(themes[0]);
   const worksheetRef = useRef<HTMLDivElement>(null);
-  const problemsAreaRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (orientation !== 'vertical' || !problemsAreaRef.current) return;
-    const container = problemsAreaRef.current;
-    const rows = container.querySelectorAll<HTMLElement>('.preview-problem-row');
-    if (rows.length === 0) return;
-    const containerH = container.clientHeight;
-    let totalRowH = 0;
-    rows.forEach(r => { totalRowH += r.offsetHeight; });
-    const gap = (containerH - totalRowH) / rows.length;
-    rows.forEach(r => { r.style.marginBottom = Math.max(gap, 4) + 'px'; });
-  }, [problems, orientation, showProblemNumber, activeTab]);
 
   const generateProblems = () => {
     const newProblems: Problem[] = [];
@@ -189,8 +176,8 @@ export function AdditionGenerator() {
     .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
-    .problems { flex: 1; padding-top: 16px; overflow: hidden; }
-    .problems-wrapper { ${isVertical ? 'width:100%;' : 'width:75%; margin-left:auto; margin-right:auto;'} }
+    .problems { flex: 1; padding-top: 16px; overflow: hidden; ${isVertical ? 'display:flex; flex-direction:column; justify-content:space-between;' : ''} }
+    .problems-wrapper { ${isVertical ? 'width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;' : 'width:75%; margin-left:auto; margin-right:auto;'} }
     .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
     .problem-col { width: 33.33%; }
     .footer {
@@ -216,7 +203,7 @@ export function AdditionGenerator() {
       <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
     </div>
   </div>
-  <script>
+  ${!isVertical ? `<script>
     window.onload = function() {
       var page = document.querySelector('.page');
       var header = document.querySelector('.header');
@@ -240,7 +227,9 @@ export function AdditionGenerator() {
       window.print();
       window.onafterprint = function() { window.close(); };
     }
-  <\/script>
+  <\/script>` : `<script>
+    window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }
+  <\/script>`}
 </body>
 </html>`;
 
@@ -574,7 +563,7 @@ export function AdditionGenerator() {
                           </div>
                         </div>
 
-                        <div ref={orientation === 'vertical' ? problemsAreaRef : undefined} className={`worksheet-problems flex-1 flex flex-col py-6 mt-10 ${orientation === 'vertical' ? '' : 'justify-between'}`}>
+                        <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-10">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -608,7 +597,7 @@ export function AdditionGenerator() {
                         ) : (
                           <>
                             {Array.from({ length: 5 }, (_, rowIndex) => (
-                              <div key={rowIndex} className="preview-problem-row flex justify-between w-full">
+                              <div key={rowIndex} className="flex justify-between w-full">
                                 {[0, 1, 2, 3].map((colIndex) => {
                                   const index = rowIndex * 4 + colIndex;
                                   if (index >= problems.length) return <div key={colIndex} className="invisible"><div className="inline-block min-w-[90px]"><div className="text-2xl text-right pr-1">0</div><div className="text-2xl text-right pr-1">+ 0</div><div className="border-t-2 border-gray-900 mt-1 pt-2"></div></div></div>;
