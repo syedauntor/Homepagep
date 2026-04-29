@@ -175,6 +175,7 @@ export function AdditionGenerator() {
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
     .problems { flex: 1; padding: 0; overflow: hidden; }
     .problem-row { margin-bottom: 0; }
+    .last-row { margin-bottom: 0 !important; }
     .footer {
       position: fixed;
       bottom: 18px; left: 0; width: 100%;
@@ -217,11 +218,10 @@ export function AdditionGenerator() {
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
         var footerOffset = 18; /* matches footer bottom: 18px */
         var available = pageH - pagePadT - headerH - footerH - footerOffset - problemsTopGap - 8;
-        /* distribute gap evenly: n rows need n gaps (after each row incl. last) */
-        var gap = (available - totalRowH) / rows.length;
+        var gapCount = rows.length > 1 ? rows.length - 1 : 1;
+        var gap = (available - totalRowH) / gapCount;
         if (gap < 4) gap = 4;
-        rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
-        /* push problems container down by problemsTopGap */
+        for (var i = 0; i < rows.length - 1; i++) { rows[i].style.marginBottom = gap + 'px'; }
         document.querySelector('.problems').style.paddingTop = problemsTopGap + 'px';
       }
       window.print();
