@@ -114,12 +114,12 @@ export function SubtractionGenerator() {
       ? Array.from({ length: rowCount }, (_, rowIndex) => {
           const cols = [0, 1].map((colIndex) => {
             const index = rowIndex * 2 + colIndex;
-            if (index >= problems.length) return '<div style="width:47%"></div>';
+            if (index >= problems.length) return '<div class="problem-col"></div>';
             const p = problems[index];
             const answerPart = displayAnswers
               ? `<span style="font-weight:bold;color:#ea580c">${p.answer}</span>`
               : `<span style="display:inline-block;width:80px;border-bottom:2px solid #d1d5db"></span>`;
-            return `<div style="width:47%;text-align:left">
+            return `<div class="problem-col" style="text-align:left">
               <div style="display:flex;align-items:center;gap:12px;font-size:20px">
                 ${showProblemNumber ? `<span style="color:#9ca3af;font-size:14px">${index + 1}.</span>` : ''}
                 <span>${p.num1}</span><span>&#8722;</span><span>${p.num2}</span><span>=</span>${answerPart}
@@ -180,7 +180,8 @@ export function SubtractionGenerator() {
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
     .problems { flex: 1; padding: 0; overflow: hidden; }
     .problems-wrapper { width: 80%; margin-left: auto; margin-right: auto; }
-    .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
+    .problem-row { margin-bottom: 0; display: flex; }
+    .problem-col { width: 50%; }
     .footer {
       flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
