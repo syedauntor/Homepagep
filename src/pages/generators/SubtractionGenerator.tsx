@@ -114,7 +114,7 @@ export function SubtractionGenerator() {
       ? Array.from({ length: rowCount }, (_, rowIndex) => {
           const cols = [0, 1].map((colIndex) => {
             const index = rowIndex * 2 + colIndex;
-            if (index >= problems.length) return '<div style="width:42%"></div>';
+            if (index >= problems.length) return '<div style="width:47%"></div>';
             const p = problems[index];
             const answerPart = displayAnswers
               ? `<span style="font-weight:bold;color:#ea580c">${p.answer}</span>`
@@ -178,8 +178,8 @@ export function SubtractionGenerator() {
     .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
-    .problems { flex: 1; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .problems-wrapper { display: inline-flex; flex-direction: column; min-width: 70%; }
+    .problems { flex: 1; padding: 0; overflow: hidden; }
+    .problems-wrapper { width: 80%; margin-left: auto; margin-right: auto; }
     .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
     .footer {
       flex-shrink: 0;
