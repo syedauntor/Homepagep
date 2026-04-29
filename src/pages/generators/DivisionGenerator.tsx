@@ -577,7 +577,7 @@ export function DivisionGenerator() {
                               ))}
                             </>
                           ) : (
-                            <>
+                            <div style={{ width: '75%', margin: '0 auto' }}>
                               {Array.from({ length: 5 }, (_, rowIndex) => (
                                 <div key={rowIndex} className="flex justify-between w-full">
                                   {[0, 1, 2, 3].map((colIndex) => {
@@ -610,7 +610,7 @@ export function DivisionGenerator() {
                                   })}
                                 </div>
                               ))}
-                            </>
+                            </div>
                           )}
                         </div>
 
