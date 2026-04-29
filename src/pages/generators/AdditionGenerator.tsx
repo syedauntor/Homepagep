@@ -162,23 +162,20 @@ export function AdditionGenerator() {
     html, body { margin: 0; padding: 0; font-family: sans-serif; }
     .page {
       width: 210mm;
-      min-height: 297mm;
-      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px)' : '12mm 15mm'};
+      height: 297mm;
+      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) calc(8mm + 40px)' : '12mm 15mm 48px'};
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
       ${borderStyle}
     }
-    @media print {
-      .page { min-height: 100%; }
-    }
     .header { text-align: center; margin-bottom: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 24px; }
-    .problems { display: block; flex: 1; padding: 32px 0 0 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 16px; }
+    .problems { display: flex; flex-direction: column; flex: 1; padding: 20px 0 0 0; }
     .problem-row { margin-bottom: 0; }
-    .footer { text-align: center; font-size: 11px; color: #6b7280; margin-top: auto; padding-top: 12px; flex-shrink: 0; }
+    .footer { position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; font-size: 11px; color: #6b7280; padding: 6px 0 8px; background: #fff; }
   </style>
 </head>
 <body>
@@ -208,7 +205,7 @@ export function AdditionGenerator() {
         var footerH = footer.offsetHeight;
         var pagePadT = parseFloat(getComputedStyle(page).paddingTop);
         var pagePadB = parseFloat(getComputedStyle(page).paddingBottom);
-        var problemsPadT = 16;
+        var problemsPadT = 20;
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
         var available = pageH - pagePadT - pagePadB - headerH - footerH - problemsPadT;
