@@ -144,7 +144,8 @@ export function NameTracingColoringGenerator() {
     }
     .header { text-align: center; flex-shrink: 0; }
     .header h1 { font-size: 28px; font-weight: 900; color: #111; margin: 0; ${showTitleUnderline ? 'border-bottom:2px solid #111;padding-bottom:8px;' : ''} }
-    .name-date { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-top: 10px; margin-bottom: 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-top: 20px; margin-bottom: 0; gap: 24px; }
+    .name-date span { border-bottom: 1.5px solid #9ca3af; flex: 1; padding-bottom: 2px; }
     .sections { flex: 1; display: flex; flex-direction: column; gap: 16px; padding-top: 16px; overflow: hidden; }
     .footer {
       flex-shrink: 0;
@@ -158,8 +159,8 @@ export function NameTracingColoringGenerator() {
     <div class="header">
       <h1>${title}</h1>
       <div class="name-date">
-        ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
-        ${showDate ? '<span>Date: _________________________</span>' : ''}
+        ${showName ? '<span>Name: </span>' : '<span></span>'}
+        ${showDate ? '<span>Date: </span>' : ''}
       </div>
     </div>
     <div class="sections">
@@ -752,10 +753,10 @@ export function NameTracingColoringGenerator() {
                           <h1 className={`text-3xl font-black text-gray-900 tracking-tight mb-2 ${showTitleUnderline ? 'border-b-2 border-gray-900 pb-2' : ''}`}>
                             {title}
                           </h1>
-                          <div className="flex justify-between text-sm text-gray-600 mt-3">
-                            {showName && <span>Name: _________________________</span>}
+                          <div className="flex justify-between text-sm text-gray-600 mt-5 gap-6">
+                            {showName && <span className="flex-1 border-b border-gray-400 pb-0.5">Name: </span>}
                             {!showName && <span></span>}
-                            {showDate && <span>Date: _________________________</span>}
+                            {showDate && <span className="flex-1 border-b border-gray-400 pb-0.5">Date: </span>}
                           </div>
                         </div>
 
