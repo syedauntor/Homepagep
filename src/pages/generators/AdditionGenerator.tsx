@@ -122,7 +122,7 @@ export function AdditionGenerator() {
               </div>
             </div>`;
           });
-          return `<div class="problem-row${isLast ? ' last-row' : ''}" style="display:flex;justify-content:space-between">${cols.join('')}</div>`;
+          return `<div class="problem-row${isLast ? ' last-row' : ''}">${cols.join('')}</div>`;
         }).join('')
       : Array.from({ length: rowCount }, (_, rowIndex) => {
           const isLast = rowIndex === rowCount - 1;
@@ -175,8 +175,9 @@ export function AdditionGenerator() {
     .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
-    .problems { flex: 1; padding: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
-    .problem-row { margin-bottom: 0; width: 88%; margin-left: auto; margin-right: auto; }
+    .problems { flex: 1; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .problems-wrapper { display: inline-flex; flex-direction: column; min-width: 70%; }
+    .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
     .footer {
       flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
@@ -194,7 +195,7 @@ export function AdditionGenerator() {
         ${showDate ? '<span>Date: _________________________</span>' : ''}
       </div>
     </div>
-    <div class="problems">${problemsHtml}</div>
+    <div class="problems"><div class="problems-wrapper">${problemsHtml}</div></div>
     <div class="footer">
       <p style="margin:0">Find more educational worksheets at PrintAndUse.com</p>
       <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
