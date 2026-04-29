@@ -144,7 +144,7 @@ export function NameTracingColoringGenerator() {
     }
     .header { text-align: center; flex-shrink: 0; }
     .header h1 { font-size: 28px; font-weight: 900; color: #111; margin: 0; ${showTitleUnderline ? 'border-bottom:2px solid #111;padding-bottom:8px;' : ''} }
-    .name-date { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-bottom: 12px; }
+    .name-date { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-top: 10px; margin-bottom: 0; }
     .sections { flex: 1; display: flex; flex-direction: column; gap: 16px; padding-top: 16px; overflow: hidden; }
     .footer {
       flex-shrink: 0;
@@ -156,11 +156,11 @@ export function NameTracingColoringGenerator() {
 <body>
   <div class="page">
     <div class="header">
+      <h1>${title}</h1>
       <div class="name-date">
         ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
         ${showDate ? '<span>Date: _________________________</span>' : ''}
       </div>
-      <h1>${title}</h1>
     </div>
     <div class="sections">
       ${nameSection}
@@ -492,27 +492,6 @@ export function NameTracingColoringGenerator() {
                 <h2 className="text-lg font-bold text-gray-900 mb-6">Header Options</h2>
 
                 <div className="space-y-6">
-                  <div className="flex items-center space-x-6">
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={showName}
-                        onChange={(e) => setShowName(e.target.checked)}
-                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-gray-900 font-medium">Name</span>
-                    </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={showDate}
-                        onChange={(e) => setShowDate(e.target.checked)}
-                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-gray-900 font-medium">Date</span>
-                    </label>
-                  </div>
-
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Worksheet Title
@@ -553,6 +532,27 @@ export function NameTracingColoringGenerator() {
                         <span className="text-gray-900 font-medium text-sm">Lowercase</span>
                       </label>
                     </div>
+                  </div>
+
+                  <div className="flex items-center space-x-6">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showName}
+                        onChange={(e) => setShowName(e.target.checked)}
+                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                      />
+                      <span className="text-gray-900 font-medium">Show Name</span>
+                    </label>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showDate}
+                        onChange={(e) => setShowDate(e.target.checked)}
+                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                      />
+                      <span className="text-gray-900 font-medium">Show Date</span>
+                    </label>
                   </div>
 
                   <h2 className="text-lg font-bold text-gray-900 mt-8 mb-4">Name</h2>
@@ -749,14 +749,14 @@ export function NameTracingColoringGenerator() {
                           </>
                         )}
                         <div className="text-center -mt-[10px]">
-                          <div className="flex justify-between text-sm text-gray-600 mb-4">
+                          <h1 className={`text-3xl font-black text-gray-900 tracking-tight mb-2 ${showTitleUnderline ? 'border-b-2 border-gray-900 pb-2' : ''}`}>
+                            {title}
+                          </h1>
+                          <div className="flex justify-between text-sm text-gray-600 mt-3">
                             {showName && <span>Name: _________________________</span>}
                             {!showName && <span></span>}
                             {showDate && <span>Date: _________________________</span>}
                           </div>
-                          <h1 className={`text-3xl font-black text-gray-900 tracking-tight mb-2 ${showTitleUnderline ? 'border-b-2 border-gray-900 pb-2' : ''}`}>
-                            {title}
-                          </h1>
                         </div>
 
                         <div className="flex-1 flex flex-col py-6 mt-[15px]">
