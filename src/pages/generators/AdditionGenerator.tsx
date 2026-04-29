@@ -178,7 +178,7 @@ export function AdditionGenerator() {
     .problems { flex: 1; padding: 0; overflow: hidden; }
     .problems-wrapper { width: 75%; margin-left: auto; margin-right: auto; }
     .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
-    .problem-col { width: 45%; }
+    .problem-col { width: 33.33%; }
     .footer {
       flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
