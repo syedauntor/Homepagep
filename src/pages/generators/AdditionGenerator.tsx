@@ -102,8 +102,12 @@ export function AdditionGenerator() {
 
     const displayAnswers = showAnswersOverride !== undefined ? showAnswersOverride : (activeTab === 'answer');
 
+    const colsPerRow = orientation === 'horizontal' ? 2 : 4;
+    const rowCount = Math.ceil(problems.length / colsPerRow);
+
     const problemsHtml = orientation === 'horizontal'
-      ? Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => {
+      ? Array.from({ length: rowCount }, (_, rowIndex) => {
+          const isLast = rowIndex === rowCount - 1;
           const cols = [0, 1].map((colIndex) => {
             const index = rowIndex * 2 + colIndex;
             if (index >= problems.length) return '<div style="width:47%"></div>';
@@ -118,9 +122,10 @@ export function AdditionGenerator() {
               </div>
             </div>`;
           });
-          return `<div style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
+          return `<div class="problem-row${isLast ? ' last-row' : ''}" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
         }).join('')
-      : Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => {
+      : Array.from({ length: rowCount }, (_, rowIndex) => {
+          const isLast = rowIndex === rowCount - 1;
           const cols = [0, 1, 2, 3].map((colIndex) => {
             const index = rowIndex * 4 + colIndex;
             if (index >= problems.length) return '<div></div>';
@@ -139,7 +144,7 @@ export function AdditionGenerator() {
               </div>
             </div>`;
           });
-          return `<div style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
+          return `<div class="problem-row${isLast ? ' last-row' : ''}" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
         }).join('');
 
     const borderStyle = selectedTheme.id !== 'blank'
@@ -158,17 +163,18 @@ export function AdditionGenerator() {
     .page {
       width: 210mm;
       height: 297mm;
-      padding: 12mm 15mm;
+      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px)' : '12mm 15mm'};
       display: flex;
       flex-direction: column;
       position: relative;
+      overflow: hidden;
       ${borderStyle}
-      ${selectedTheme.id !== 'blank' ? 'padding: calc(12mm + 12px) calc(15mm + 12px);' : ''}
     }
     .header { text-align: center; margin-bottom: 16px; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; }
-    .problems { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0 15px 0; overflow: hidden; }
+    .problems { display: block; padding: 16px 0 0 0; }
+    .problem-row { margin-bottom: 0; }
     .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 0; flex-shrink: 0; }
   </style>
 </head>
@@ -188,7 +194,28 @@ export function AdditionGenerator() {
     </div>
   </div>
   <script>
-    window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }
+    window.onload = function() {
+      var page = document.querySelector('.page');
+      var problems = document.querySelector('.problems');
+      var footer = document.querySelector('.footer');
+      var rows = document.querySelectorAll('.problem-row');
+      if (rows.length > 1 && page && problems && footer) {
+        var pageH = page.clientHeight;
+        var headerH = document.querySelector('.header').offsetHeight;
+        var footerH = footer.offsetHeight;
+        var pagePadT = parseFloat(getComputedStyle(page).paddingTop);
+        var pagePadB = parseFloat(getComputedStyle(page).paddingBottom);
+        var problemsPadT = 16;
+        var totalRowH = 0;
+        rows.forEach(function(r) { totalRowH += r.offsetHeight; });
+        var available = pageH - pagePadT - pagePadB - headerH - footerH - problemsPadT;
+        var gap = (available - totalRowH) / rows.length;
+        if (gap < 0) gap = 4;
+        rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
+      }
+      window.print();
+      window.onafterprint = function() { window.close(); };
+    }
   </script>
 </body>
 </html>`;
