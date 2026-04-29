@@ -101,24 +101,26 @@ export function NameTracingColoringGenerator() {
       </svg>`;
     };
 
-    const sectionStyle = 'flex:1;display:flex;flex-direction:column;min-height:0';
-    const boxStyle = 'border:2px solid #111;border-radius:4px;padding:12px;background:white;flex:1;display:flex;align-items:center;justify-content:center';
+    const hasTrace = tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace';
+    const hasColor = tracingStyle === 'name-trace-color' || tracingStyle === 'name-color';
+    const sectionCount = 1 + (hasTrace ? 1 : 0) + (hasColor ? 1 : 0);
+    const sectionMaxH = sectionCount === 1 ? '78%' : sectionCount === 2 ? '44%' : '29%';
 
-    const nameSection = `<div style="${sectionStyle}">
-      <p style="font-size:18px;font-weight:700;color:#111;margin:0 0 8px 0">My name is</p>
-      <div style="${boxStyle}">${buildSvg("'Codystar',cursive", textColor, '1', 'none', '0')}</div>
+    const nameSection = `<div class="section" style="max-height:${sectionMaxH}">
+      <p>My name is</p>
+      <div class="box">${buildSvg("'Codystar',cursive", textColor, '1', 'none', '0')}</div>
     </div>`;
 
-    const traceSection = (tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace')
-      ? `<div style="${sectionStyle}">
-          <p style="font-size:18px;font-weight:700;color:#111;margin:0 0 8px 0">Trace the letters</p>
-          <div style="${boxStyle}">${buildSvg(tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway',sans-serif", textColor, '0.3', 'none', '0')}</div>
+    const traceSection = hasTrace
+      ? `<div class="section" style="max-height:${sectionMaxH}">
+          <p>Trace the letters</p>
+          <div class="box">${buildSvg(tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway',sans-serif", textColor, '0.3', 'none', '0')}</div>
         </div>` : '';
 
-    const colorSection = (tracingStyle === 'name-trace-color' || tracingStyle === 'name-color')
-      ? `<div style="${sectionStyle}">
-          <p style="font-size:18px;font-weight:700;color:#111;margin:0 0 8px 0">Color the letters</p>
-          <div style="${boxStyle}">${buildSvg("'Lilita One',cursive", 'none', '1', textColor, '2')}</div>
+    const colorSection = hasColor
+      ? `<div class="section" style="max-height:${sectionMaxH}">
+          <p>Color the letters</p>
+          <div class="box">${buildSvg("'Lilita One',cursive", 'none', '1', textColor, '2')}</div>
         </div>` : '';
 
     const html = `<!DOCTYPE html>
@@ -146,7 +148,10 @@ export function NameTracingColoringGenerator() {
     .header h1 { font-size: 28px; font-weight: 900; color: #111; margin: 0; ${showTitleUnderline ? 'border-bottom:2px solid #111;padding-bottom:8px;' : ''} }
     .name-date { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-top: 20px; margin-bottom: 0; gap: 24px; }
     .name-date span { border-bottom: 1.5px solid #9ca3af; flex: 1; padding-bottom: 2px; }
-    .sections { flex: 1; display: flex; flex-direction: column; gap: 16px; padding-top: 16px; overflow: hidden; }
+    .sections { flex: 1; display: flex; flex-direction: column; gap: 16px; padding-top: 16px; padding-bottom: 16px; overflow: hidden; justify-content: center; }
+    .section { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+    .section p { font-size: 18px; font-weight: 700; color: #111; margin: 0 0 6px 0; flex-shrink: 0; }
+    .box { border: 2px solid #111; border-radius: 4px; padding: 10px; background: white; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; overflow: hidden; }
     .footer {
       flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
