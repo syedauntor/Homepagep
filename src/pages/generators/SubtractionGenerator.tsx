@@ -156,6 +156,7 @@ export function SubtractionGenerator() {
       ? `border:${selectedTheme.borderWidth} ${selectedTheme.borderStyle} ${selectedTheme.borderColor};`
       : '';
 
+    const isVertical = orientation === 'vertical';
     const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -179,8 +180,8 @@ export function SubtractionGenerator() {
     .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
-    .problems { flex: 1; padding: 0; overflow: hidden; }
-    .problems-wrapper { width: 75%; margin-left: auto; margin-right: auto; }
+    .problems { flex: 1; padding-top: 16px; overflow: hidden; ${isVertical ? 'display:flex; flex-direction:column; justify-content:space-between;' : ''} }
+    .problems-wrapper { ${isVertical ? 'width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;' : 'width:75%; margin-left:auto; margin-right:auto;'} }
     .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
     .problem-col { width: 33.33%; }
     .footer {
@@ -206,7 +207,7 @@ export function SubtractionGenerator() {
       <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
     </div>
   </div>
-  <script>
+  ${!isVertical ? `<script>
     window.onload = function() {
       var page = document.querySelector('.page');
       var header = document.querySelector('.header');
@@ -230,7 +231,9 @@ export function SubtractionGenerator() {
       window.print();
       window.onafterprint = function() { window.close(); };
     }
-  </script>
+  <\/script>` : `<script>
+    window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }
+  <\/script>`}
 </body>
 </html>`;
 
