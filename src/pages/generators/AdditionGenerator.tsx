@@ -567,20 +567,20 @@ export function AdditionGenerator() {
           }
 
           html, body {
-            width: 210mm;
-            height: 297mm;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+            width: 210mm !important;
+            height: 297mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
           }
 
           body * {
-            visibility: hidden;
+            visibility: hidden !important;
           }
 
           .worksheet-content,
           .worksheet-content * {
-            visibility: visible;
+            visibility: visible !important;
           }
 
           .worksheet-content {
@@ -593,10 +593,9 @@ export function AdditionGenerator() {
             padding: 12mm 15mm !important;
             box-shadow: none !important;
             transform: none !important;
-            page-break-after: avoid !important;
-            page-break-before: avoid !important;
-            page-break-inside: avoid !important;
             box-sizing: border-box !important;
+            overflow: hidden !important;
+            background: white !important;
           }
 
           .worksheet-content > div {
@@ -623,19 +622,17 @@ export function AdditionGenerator() {
 
           .preview-scale {
             transform: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
           }
 
           .preview-container {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            background: white !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
             padding: 0 !important;
             margin: 0 !important;
-            box-shadow: none !important;
-            overflow: hidden !important;
           }
         }
       `}</style>
