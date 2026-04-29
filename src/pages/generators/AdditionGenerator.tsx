@@ -152,23 +152,24 @@ export function AdditionGenerator() {
   <meta charset="utf-8">
   <title>${title}</title>
   <style>
-    @page { size: A4 portrait; margin: 12mm 15mm; }
+    @page { size: A4 portrait; margin: 0; }
     * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     html, body { margin: 0; padding: 0; font-family: sans-serif; }
     .page {
-      width: 100%;
-      min-height: calc(297mm - 24mm);
+      width: 210mm;
+      height: 297mm;
+      padding: 12mm 15mm;
       display: flex;
       flex-direction: column;
       position: relative;
       ${borderStyle}
-      padding: ${selectedTheme.id !== 'blank' ? '12px' : '0'};
+      ${selectedTheme.id !== 'blank' ? 'padding: calc(12mm + 12px) calc(15mm + 12px);' : ''}
     }
     .header { text-align: center; margin-bottom: 16px; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; }
-    .problems { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0; }
-    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 8px; margin-top: auto; }
+    .problems { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0; overflow: hidden; }
+    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 8px; flex-shrink: 0; }
   </style>
 </head>
 <body>
