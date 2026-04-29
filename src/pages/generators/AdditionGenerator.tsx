@@ -147,7 +147,8 @@ export function AdditionGenerator() {
           return `<div class="problem-row${isLast ? ' last-row' : ''}" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
         }).join('');
 
-    const borderStyle = selectedTheme.id !== 'blank'
+    const hasBorder = selectedTheme.id !== 'blank';
+    const borderStyle = hasBorder
       ? `border:${selectedTheme.borderWidth} ${selectedTheme.borderStyle} ${selectedTheme.borderColor};`
       : '';
 
@@ -157,17 +158,18 @@ export function AdditionGenerator() {
   <meta charset="utf-8">
   <title>${title}</title>
   <style>
-    @page { size: A4 portrait; margin: 0; }
+    @page { size: A4 portrait; margin: ${hasBorder ? '10mm' : '0'}; }
     * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    html, body { margin: 0; padding: 0; font-family: sans-serif; }
+    html, body { margin: 0; padding: 0; font-family: sans-serif; background: #000; }
     .page {
-      width: 210mm;
-      height: 297mm;
-      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) 0' : '12mm 15mm 0'};
+      width: ${hasBorder ? '190mm' : '210mm'};
+      height: ${hasBorder ? '277mm' : '297mm'};
+      padding: 12mm 15mm 0;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
+      background: #fff;
       ${borderStyle}
     }
     .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
@@ -526,18 +528,20 @@ export function AdditionGenerator() {
               </div>
             ) : (
               <div>
-                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '700px' }}>
+                <div className="preview-container flex items-center justify-center overflow-hidden" style={{ height: '700px', background: selectedTheme.id !== 'blank' ? '#111' : '#e5e7eb' }}>
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
-                      className="worksheet-content bg-white shadow-xl p-8"
+                      className="worksheet-content bg-white shadow-xl"
+                      style={{ padding: selectedTheme.id !== 'blank' ? '0' : '12mm 15mm' }}
                     >
                       <div
-                        className="flex flex-col relative p-8"
+                        className="flex flex-col relative"
                         style={{
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
                           borderStyle: selectedTheme.borderStyle,
+                          padding: selectedTheme.id !== 'blank' ? '12mm 15mm' : '0',
                           height: '100%',
                           minHeight: '100%'
                         }}
@@ -676,7 +680,6 @@ export function AdditionGenerator() {
         .worksheet-content {
           width: 210mm;
           height: 297mm;
-          padding: 12mm 15mm;
           box-sizing: border-box;
         }
 
