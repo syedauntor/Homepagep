@@ -126,7 +126,7 @@ export function SubtractionGenerator() {
               </div>
             </div>`;
           });
-          return `<div class="problem-row${rowIndex === rowCount - 1 ? ' last-row' : ''}" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
+          return `<div class="problem-row" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
         }).join('')
       : Array.from({ length: rowCount }, (_, rowIndex) => {
           const cols = [0, 1, 2, 3].map((colIndex) => {
@@ -147,7 +147,7 @@ export function SubtractionGenerator() {
               </div>
             </div>`;
           });
-          return `<div class="problem-row${rowIndex === rowCount - 1 ? ' last-row' : ''}" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
+          return `<div class="problem-row" style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
         }).join('');
 
     const borderStyle = selectedTheme.id !== 'blank'
@@ -178,7 +178,6 @@ export function SubtractionGenerator() {
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
     .problems { flex: 1; padding: 0; overflow: hidden; }
     .problem-row { margin-bottom: 0; }
-    .last-row { margin-bottom: 0 !important; }
     .footer {
       position: fixed;
       bottom: 18px; left: 0; width: 100%;
@@ -220,10 +219,9 @@ export function SubtractionGenerator() {
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
         var available = pageH - pagePadT - headerH - footerH - footerOffset - problemsTopGap - 8;
-        var gapCount = rows.length > 1 ? rows.length - 1 : 1;
-        var gap = (available - totalRowH) / gapCount;
+        var gap = (available - totalRowH) / rows.length;
         if (gap < 4) gap = 4;
-        for (var i = 0; i < rows.length - 1; i++) { rows[i].style.marginBottom = gap + 'px'; }
+        rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
         document.querySelector('.problems').style.paddingTop = problemsTopGap + 'px';
       }
       window.print();
