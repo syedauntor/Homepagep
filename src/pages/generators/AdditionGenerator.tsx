@@ -162,7 +162,7 @@ export function AdditionGenerator() {
     html, body { margin: 0; padding: 0; font-family: sans-serif; }
     .page {
       width: 210mm;
-      height: 297mm;
+      min-height: 297mm;
       padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px)' : '12mm 15mm'};
       display: flex;
       flex-direction: column;
@@ -170,12 +170,15 @@ export function AdditionGenerator() {
       overflow: hidden;
       ${borderStyle}
     }
-    .header { text-align: center; margin-bottom: 6px; }
+    @media print {
+      .page { min-height: 100%; }
+    }
+    .header { text-align: center; margin-bottom: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 10px; }
-    .problems { display: block; padding: 6px 0 0 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 24px; }
+    .problems { display: block; flex: 1; padding: 32px 0 0 0; }
     .problem-row { margin-bottom: 0; }
-    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 0; flex-shrink: 0; }
+    .footer { text-align: center; font-size: 11px; color: #6b7280; margin-top: auto; padding-top: 12px; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -522,7 +525,7 @@ export function AdditionGenerator() {
                       className="worksheet-content bg-white shadow-xl p-8"
                     >
                       <div
-                        className="flex flex-col justify-between relative p-8"
+                        className="flex flex-col relative p-8"
                         style={{
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
@@ -539,16 +542,16 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center -mt-[10px]">
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
-                        <div className="flex justify-between text-base text-gray-600">
-                          {showName && <span>Name: _________________________</span>}
-                          {!showName && <span></span>}
-                          {showDate && <span>Date: _________________________</span>}
+                        <div className="text-center">
+                          <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
+                          <div className="flex justify-between text-base text-gray-600 mt-6">
+                            {showName && <span>Name: _________________________</span>}
+                            {!showName && <span></span>}
+                            {showDate && <span>Date: _________________________</span>}
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-[15px]">
+                        <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-10">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -617,7 +620,7 @@ export function AdditionGenerator() {
                         )}
                       </div>
 
-                        <div className="worksheet-footer text-center text-xs text-gray-500 py-[15px]">
+                        <div className="worksheet-footer text-center text-xs text-gray-500 mt-auto pt-4">
                           <p>Find more educational worksheets at PrintAndUse.com</p>
                           <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                         </div>
