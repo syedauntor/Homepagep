@@ -164,7 +164,7 @@ export function AdditionGenerator() {
     .page {
       width: ${hasBorder ? '190mm' : '210mm'};
       height: ${hasBorder ? '277mm' : '297mm'};
-      padding: 12mm 15mm 0;
+      padding: 12mm 15mm 10mm;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -178,11 +178,9 @@ export function AdditionGenerator() {
     .problems { flex: 1; padding: 0; overflow: hidden; }
     .problem-row { margin-bottom: 0; }
     .footer {
-      position: fixed;
-      bottom: 18px; left: 0; width: 100%;
+      flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
       padding: 0;
-      background: #fff;
       line-height: 1.8;
     }
   </style>
@@ -209,21 +207,18 @@ export function AdditionGenerator() {
       var footer = document.querySelector('.footer');
       var rows = document.querySelectorAll('.problem-row');
       if (rows.length > 0 && page && header && footer) {
-        var pageH = page.offsetHeight;
+        var pageH = page.clientHeight;
         var headerH = header.offsetHeight;
         var footerH = footer.offsetHeight;
         var pagePadT = parseFloat(getComputedStyle(page).paddingTop);
-        /* no bottom padding — footer is fixed, so reserve its height */
-        var problemsTopGap = 16; /* gap between name-date and first problem */
+        var pagePadB = parseFloat(getComputedStyle(page).paddingBottom);
+        var problemsTopGap = 16;
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
-        var footerOffset = 18; /* matches footer bottom: 18px */
-        var available = pageH - pagePadT - headerH - footerH - footerOffset - problemsTopGap - 8;
-        /* distribute gap evenly: n rows need n gaps (after each row incl. last) */
+        var available = pageH - pagePadT - pagePadB - headerH - footerH - problemsTopGap;
         var gap = (available - totalRowH) / rows.length;
         if (gap < 4) gap = 4;
         rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
-        /* push problems container down by problemsTopGap */
         document.querySelector('.problems').style.paddingTop = problemsTopGap + 'px';
       }
       window.print();
@@ -528,7 +523,7 @@ export function AdditionGenerator() {
               </div>
             ) : (
               <div>
-                <div className="preview-container flex items-center justify-center overflow-hidden" style={{ height: '700px', background: selectedTheme.id !== 'blank' ? '#111' : '#e5e7eb' }}>
+                <div className="preview-container flex items-center justify-center overflow-hidden" style={{ height: '700px', background: selectedTheme.id !== 'blank' ? `${selectedTheme.borderColor}22` : '#e5e7eb' }}>
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
