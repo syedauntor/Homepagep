@@ -170,12 +170,12 @@ export function AdditionGenerator() {
       overflow: hidden;
       ${borderStyle}
     }
-    .header { text-align: center; margin-bottom: 6px; }
+    .header { text-align: center; margin-bottom: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 10px; }
-    .problems { display: block; padding: 6px 0 0 0; }
-    .problem-row { margin-bottom: 0; }
-    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 0; flex-shrink: 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; }
+    .problems-and-footer { display: flex; flex-direction: column; justify-content: space-between; flex: 1; margin-top: 15px; }
+    .problem-row { }
+    .footer { text-align: center; font-size: 11px; color: #6b7280; }
   </style>
 </head>
 <body>
@@ -187,32 +187,16 @@ export function AdditionGenerator() {
         ${showDate ? '<span>Date: _________________________</span>' : ''}
       </div>
     </div>
-    <div class="problems">${problemsHtml}</div>
-    <div class="footer">
-      <p style="margin:0">Find more educational worksheets at PrintAndUse.com</p>
-      <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
+    <div class="problems-and-footer">
+      ${problemsHtml}
+      <div class="footer">
+        <p style="margin:0">Find more educational worksheets at PrintAndUse.com</p>
+        <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
+      </div>
     </div>
   </div>
   <script>
     window.onload = function() {
-      var page = document.querySelector('.page');
-      var problems = document.querySelector('.problems');
-      var footer = document.querySelector('.footer');
-      var rows = document.querySelectorAll('.problem-row');
-      if (rows.length > 1 && page && problems && footer) {
-        var pageH = page.clientHeight;
-        var headerH = document.querySelector('.header').offsetHeight;
-        var footerH = footer.offsetHeight;
-        var pagePadT = parseFloat(getComputedStyle(page).paddingTop);
-        var pagePadB = parseFloat(getComputedStyle(page).paddingBottom);
-        var problemsPadT = 16;
-        var totalRowH = 0;
-        rows.forEach(function(r) { totalRowH += r.offsetHeight; });
-        var available = pageH - pagePadT - pagePadB - headerH - footerH - problemsPadT;
-        var gap = (available - totalRowH) / rows.length;
-        if (gap < 0) gap = 4;
-        rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
-      }
       window.print();
       window.onafterprint = function() { window.close(); };
     }
@@ -541,14 +525,14 @@ export function AdditionGenerator() {
                         )}
                         <div className="text-center -mt-[10px]">
                         <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
-                        <div className="flex justify-between text-base text-gray-600">
+                        <div className="flex justify-between text-gray-600" style={{ fontSize: '15px' }}>
                           {showName && <span>Name: _________________________</span>}
                           {!showName && <span></span>}
                           {showDate && <span>Date: _________________________</span>}
                         </div>
                       </div>
 
-                      <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-[15px]">
+                      <div className="worksheet-problems-and-footer flex-1 flex flex-col justify-between mt-[15px]">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -615,12 +599,11 @@ export function AdditionGenerator() {
                             ))}
                           </>
                         )}
-                      </div>
-
-                        <div className="worksheet-footer text-center text-xs text-gray-500 py-[15px]">
+                        <div className="worksheet-footer text-center text-xs text-gray-500">
                           <p>Find more educational worksheets at PrintAndUse.com</p>
                           <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                         </div>
+                      </div>
                       </div>
                     </div>
                   </div>
