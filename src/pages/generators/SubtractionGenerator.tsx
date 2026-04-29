@@ -179,7 +179,7 @@ export function SubtractionGenerator() {
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
     .problems { flex: 1; padding: 0; overflow: hidden; }
-    .problems-wrapper { width: 75%; margin-left: auto; margin-right: 0; }
+    .problems-wrapper { width: 75%; margin-left: auto; margin-right: auto; }
     .problem-row { margin-bottom: 0; display: flex; justify-content: space-between; }
     .problem-col { width: 45%; }
     .footer {
