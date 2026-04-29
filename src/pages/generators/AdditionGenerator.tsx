@@ -170,22 +170,22 @@ export function AdditionGenerator() {
       overflow: hidden;
       ${borderStyle}
     }
-    .header { text-align: center; margin-bottom: 6px; }
-    .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 10px; }
-    .problems { display: block; padding: 6px 0 0 0; }
+    .header { text-align: center; flex-shrink: 0; }
+    .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; flex-shrink: 0; margin-top: 10px; }
+    .problems { display: block; overflow: hidden; flex-shrink: 0; }
     .problem-row { margin-bottom: 0; }
-    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 0; flex-shrink: 0; }
+    .footer { text-align: center; font-size: 11px; color: #6b7280; flex-shrink: 0; margin-top: 0; }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="header">
       <h1>${title}</h1>
-      <div class="name-date">
-        ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
-        ${showDate ? '<span>Date: _________________________</span>' : ''}
-      </div>
+    </div>
+    <div class="name-date">
+      ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
+      ${showDate ? '<span>Date: _________________________</span>' : ''}
     </div>
     <div class="problems">${problemsHtml}</div>
     <div class="footer">
@@ -196,22 +196,25 @@ export function AdditionGenerator() {
   <script>
     window.onload = function() {
       var page = document.querySelector('.page');
-      var problems = document.querySelector('.problems');
+      var header = document.querySelector('.header');
+      var nameDate = document.querySelector('.name-date');
       var footer = document.querySelector('.footer');
       var rows = document.querySelectorAll('.problem-row');
-      if (rows.length > 1 && page && problems && footer) {
-        var pageH = page.clientHeight;
-        var headerH = document.querySelector('.header').offsetHeight;
+      if (rows.length > 0 && page && header && footer) {
+        var style = getComputedStyle(page);
+        var padT = parseFloat(style.paddingTop);
+        var padB = parseFloat(style.paddingBottom);
+        var pageInnerH = page.clientHeight - padT - padB;
+        var headerH = header.offsetHeight;
+        var nameDateH = nameDate ? nameDate.offsetHeight + 10 : 0;
         var footerH = footer.offsetHeight;
-        var pagePadT = parseFloat(getComputedStyle(page).paddingTop);
-        var pagePadB = parseFloat(getComputedStyle(page).paddingBottom);
-        var problemsPadT = 16;
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
-        var available = pageH - pagePadT - pagePadB - headerH - footerH - problemsPadT;
+        var available = pageInnerH - headerH - nameDateH - footerH;
         var gap = (available - totalRowH) / rows.length;
-        if (gap < 0) gap = 4;
+        if (gap < 4) gap = 4;
         rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
+        document.querySelector('.problems').style.paddingTop = gap + 'px';
       }
       window.print();
       window.onafterprint = function() { window.close(); };
