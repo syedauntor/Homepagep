@@ -10,6 +10,7 @@ import { GeneratorsPage } from './pages/GeneratorsPage';
 import { AdditionGenerator } from './pages/generators/AdditionGenerator';
 import { SubtractionGenerator } from './pages/generators/SubtractionGenerator';
 import { MultiplicationGenerator } from './pages/generators/MultiplicationGenerator';
+import { DivisionGenerator } from './pages/generators/DivisionGenerator';
 import { NameTracingGenerator } from './pages/generators/NameTracingGenerator';
 import { NameTracingColoringGenerator } from './pages/generators/NameTracingColoringGenerator';
 import AlphabetTracingGenerator from './pages/generators/AlphabetTracingGenerator';
@@ -56,6 +57,7 @@ function App() {
                     <Route path="/generator/addition" element={<AdditionGenerator />} />
                     <Route path="/generator/subtraction" element={<SubtractionGenerator />} />
                     <Route path="/generator/multiplication" element={<MultiplicationGenerator />} />
+                    <Route path="/generator/division" element={<DivisionGenerator />} />
                     <Route path="/generator/alphabet-tracing" element={<AlphabetTracingGenerator />} />
                     <Route path="/generator/name-tracing" element={<NameTracingGenerator />} />
                     <Route path="/generator/name-tracing-coloring" element={<NameTracingColoringGenerator />} />
