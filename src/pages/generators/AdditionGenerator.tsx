@@ -424,7 +424,7 @@ export function AdditionGenerator() {
                         </div>
                       </div>
 
-                      <div className="flex-1 flex flex-col justify-between py-6 mt-[15px]">
+                      <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-[15px]">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -558,7 +558,7 @@ export function AdditionGenerator() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 10mm 15mm;
+            margin: 0;
           }
 
           * {
@@ -567,8 +567,11 @@ export function AdditionGenerator() {
           }
 
           html, body {
+            width: 210mm;
+            height: 297mm;
             margin: 0;
             padding: 0;
+            overflow: hidden;
           }
 
           body * {
@@ -584,18 +587,20 @@ export function AdditionGenerator() {
             position: fixed !important;
             left: 0 !important;
             top: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
+            width: 210mm !important;
+            height: 297mm !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 12mm 15mm !important;
             box-shadow: none !important;
             transform: none !important;
+            page-break-after: avoid !important;
+            page-break-before: avoid !important;
+            page-break-inside: avoid !important;
+            box-sizing: border-box !important;
           }
 
           .worksheet-content > div {
-            width: 100% !important;
             height: 100% !important;
-            padding: 0 !important;
             display: flex !important;
             flex-direction: column !important;
             position: relative !important;
@@ -606,7 +611,14 @@ export function AdditionGenerator() {
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            padding-bottom: 4px !important;
+            text-align: center !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: white !important;
+          }
+
+          .worksheet-problems {
+            padding-bottom: 28px !important;
           }
 
           .preview-scale {
@@ -617,8 +629,8 @@ export function AdditionGenerator() {
             position: fixed !important;
             left: 0 !important;
             top: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
+            width: 210mm !important;
+            height: 297mm !important;
             background: white !important;
             padding: 0 !important;
             margin: 0 !important;
