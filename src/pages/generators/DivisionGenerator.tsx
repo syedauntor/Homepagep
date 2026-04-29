@@ -247,15 +247,15 @@ export function DivisionGenerator() {
         </div>
 
         <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Division Generator</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">Division Generator</h1>
           <p className="text-gray-600">Keep it to 20 items or less</p>
         </div>
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-wrap justify-between items-center gap-3 mb-6 md:mb-8">
           <div className="flex space-x-1 bg-white border-2 border-gray-200 rounded-full p-1 shadow-sm">
             <button
               onClick={() => setActiveNavTab('generator')}
-              className={`px-8 py-3 font-semibold transition rounded-full ${
+              className={`px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold transition rounded-full ${
                 activeNavTab === 'generator'
                   ? 'bg-orange-500 text-white shadow-md'
                   : 'bg-transparent text-gray-700 hover:bg-gray-50'
@@ -265,7 +265,7 @@ export function DivisionGenerator() {
             </button>
             <button
               onClick={() => setActiveNavTab('theme')}
-              className={`px-8 py-3 font-semibold transition rounded-full ${
+              className={`px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold transition rounded-full ${
                 activeNavTab === 'theme'
                   ? 'bg-orange-500 text-white shadow-md'
                   : 'bg-transparent text-gray-700 hover:bg-gray-50'
@@ -277,24 +277,24 @@ export function DivisionGenerator() {
 
           <button
             onClick={() => setActiveNavTab('howto')}
-            className={`px-8 py-3 font-semibold transition rounded-full flex items-center space-x-2 ${
+            className={`px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold transition rounded-full flex items-center space-x-2 ${
               activeNavTab === 'howto'
                 ? 'bg-pink-600 text-white shadow-md'
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
             <span>How to make</span>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+            <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
               activeNavTab === 'howto' ? 'bg-white' : 'bg-orange-500'
             }`}>
-              <Play className={`w-4 h-4 ${
+              <Play className={`w-3 h-3 sm:w-4 sm:h-4 ${
                 activeNavTab === 'howto' ? 'text-orange-500' : 'text-white'
               }`} fill="currentColor" />
             </div>
           </button>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-orange-50 rounded-2xl shadow-sm p-8">
             {activeNavTab === 'generator' ? (
               <>
@@ -674,6 +674,14 @@ export function DivisionGenerator() {
         .preview-container {
           padding: 10px 5px;
           position: relative;
+        }
+        @media (max-width: 640px) {
+          .preview-scale { transform: scale(0.32); }
+          .preview-container { height: 440px !important; }
+        }
+        @media (min-width: 641px) and (max-width: 1023px) {
+          .preview-scale { transform: scale(0.44); }
+          .preview-container { height: 580px !important; }
         }
       `}</style>
     </div>

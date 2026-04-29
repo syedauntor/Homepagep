@@ -163,48 +163,48 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-20">
+      <section className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="text-center lg:text-left">
               <div className="inline-flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm mb-6">
                 <Sparkles className="w-5 h-5 text-orange-500" />
                 <span className="text-gray-700 font-medium">Spark Creativity & Fun</span>
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 Free Downloadable <span className="text-orange-500">Activity Books</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
                 Welcome to our website where you can download tons of free printable activity books, coloring pages, puzzles, and more for kids and adults!
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-center lg:items-start">
                 <Link
                   to="/blog"
-                  className="bg-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg inline-flex items-center space-x-2"
+                  className="w-full sm:w-auto bg-orange-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg inline-flex items-center justify-center space-x-2"
                 >
                   <span>Explore Resources</span>
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   to="/generators"
-                  className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition border-2 border-orange-500 inline-flex items-center space-x-2"
+                  className="w-full sm:w-auto bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition border-2 border-orange-500 inline-flex items-center justify-center space-x-2"
                 >
                   <span>View Generators</span>
                 </Link>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-4 md:gap-6">
               {categories.map((category) => (
                 <Link
                   key={category.name}
                   to={category.link}
-                  className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition group"
+                  className="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-lg hover:shadow-2xl transition group"
                 >
-                  <div className={`w-20 h-20 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition`}>
-                    <category.icon className="w-10 h-10 text-white" />
+                  <div className={`w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br ${category.color} rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition`}>
+                    <category.icon className="w-7 h-7 md:w-10 md:h-10 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">{category.name}</h3>
+                  <h3 className="text-sm md:text-lg font-bold text-gray-900">{category.name}</h3>
                 </Link>
               ))}
             </div>
@@ -214,15 +214,15 @@ export function HomePage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">ABOUT US</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Your Trusted Partner in Engaging Education</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Your Trusted Partner in Engaging Education</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               We believe that every child deserves access to fun, engaging, and effective learning resources.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {features.map((feature) => (
               <div key={feature.title} className={`${feature.bgColor} rounded-3xl p-8 hover:shadow-xl transition`}>
                 <div className={`w-16 h-16 ${feature.color} rounded-2xl flex items-center justify-center mb-6`}>
@@ -244,17 +244,17 @@ export function HomePage() {
         <>
           <section className="py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-10 md:mb-16">
                 <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">FRESH CONTENT</p>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Latest Blog Posts</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Latest Blog Posts</h2>
+                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
                   Discover our newest resources and creative ideas for learning and fun
                 </p>
               </div>
 
               {latestPosts.length > 0 && (
                 <>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 mb-12">
                     {latestPosts.map((post) => (
                       <Link
                         key={post.id}
@@ -315,15 +315,15 @@ export function HomePage() {
             </div>
           </section>
 
-          <section className="py-20 bg-white">
+          <section className="py-12 md:py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">OUR TEAM</p>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Meet Our Amazing Team</h2>
-              <p className="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Meet Our Amazing Team</h2>
+              <p className="text-lg md:text-xl text-gray-600 mb-10 md:mb-16 max-w-3xl mx-auto">
                 Passionate educators and designers creating amazing resources
               </p>
 
-              <div className="grid md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
                 {team.map((member) => (
                   <div key={member.name} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
                     <div className={`w-32 h-32 bg-gradient-to-br ${member.color} rounded-full mx-auto mb-6`}></div>
@@ -348,16 +348,16 @@ export function HomePage() {
 
           <section className="py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-10 md:mb-16">
                 <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">MOST POPULAR</p>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Explore Our Most Read Blog Posts</h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Explore Our Most Read Blog Posts</h2>
+                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
                   Dive into our most engaging and helpful content
                 </p>
               </div>
 
               {popularPosts.length > 0 && (
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 mb-12">
                   {popularPosts.map((post) => (
                     <Link
                       key={post.id}
@@ -411,15 +411,15 @@ export function HomePage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">EXPLORE BY CATEGORY</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Popular Blog Categories</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Popular Blog Categories</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               Find exactly what you're looking for in our organized collections
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {exploreCategories.map((category) => (
               <Link
                 key={category.name}
@@ -443,15 +443,15 @@ export function HomePage() {
 
       <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <p className="text-orange-500 font-semibold text-sm uppercase tracking-wide mb-4">INTERACTIVE TOOLS</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Free Worksheet Generators</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Free Worksheet Generators</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               Create custom worksheets instantly with our easy-to-use generators
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {generators.map((generator) => (
               <Link
                 key={generator.name}
@@ -483,19 +483,19 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gradient-to-r from-orange-500 to-amber-500 py-16">
+      <section className="bg-gradient-to-r from-orange-500 to-amber-500 py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Subscribe for Daily Updates</h2>
-          <p className="text-xl text-orange-50 mb-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Subscribe for Daily Updates</h2>
+          <p className="text-lg md:text-xl text-orange-50 mb-8">
             Get the latest activity books and resources delivered to your inbox
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-2xl mx-auto">
             <input
               type="email"
               placeholder="Enter your email address"
               className="flex-1 px-6 py-4 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
             />
-            <button className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition inline-flex items-center justify-center space-x-2">
+            <button className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition inline-flex items-center justify-center space-x-2 whitespace-nowrap">
               <span>Subscribe</span>
               <Mail className="w-5 h-5" />
             </button>

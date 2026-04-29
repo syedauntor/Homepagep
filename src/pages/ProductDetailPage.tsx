@@ -96,10 +96,142 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+          {/* Sidebar - shown first on mobile */}
+          <div className="lg:col-span-1 lg:order-2">
+            <div className="sticky top-8 space-y-4 md:space-y-6">
+              {/* Title and Reviews */}
+              <div className="bg-white rounded-3xl shadow-xl p-5 md:p-6">
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">{product.title}</h1>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="w-5 h-5 fill-orange-400 text-orange-400" />
+                    ))}
+                  </div>
+                  <span className="text-gray-600 text-sm font-medium">4.8 (1.9k ratings)</span>
+                </div>
+              </div>
+
+              {/* Price & Add to Cart */}
+              <div className="bg-white rounded-3xl shadow-xl p-5 md:p-6">
+                <div className="text-center mb-6">
+                  <div className="text-4xl md:text-5xl font-bold text-orange-500 mb-2">
+                    ${product.price.toFixed(2)}
+                  </div>
+                  <p className="text-gray-600 text-sm">One-time payment</p>
+                </div>
+
+                <div className="space-y-3">
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-4 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-3 text-lg font-bold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+                    disabled={added}
+                  >
+                    {added ? (
+                      <>
+                        <Check className="w-6 h-6" />
+                        Added to Cart!
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-6 h-6" />
+                        Add to Cart
+                      </>
+                    )}
+                  </button>
+                  <Link
+                    to="/cart"
+                    className="w-full bg-gray-100 text-gray-700 px-6 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center text-lg font-semibold"
+                  >
+                    View Cart
+                  </Link>
+                </div>
+              </div>
+
+              {/* Coupon Code */}
+              <div className="bg-white rounded-3xl shadow-xl p-5 md:p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Ticket className="w-5 h-5 text-orange-500" />
+                  Have a Coupon Code?
+                </h3>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    placeholder="Enter code"
+                    className="flex-1 min-w-0 px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none"
+                  />
+                  <button className="flex-shrink-0 bg-orange-500 text-white px-4 md:px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold">
+                    Apply
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Info */}
+              <div className="bg-white rounded-3xl shadow-xl p-5 md:p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 pb-3 border-b-2 border-gray-200">
+                  Quick Info
+                </h3>
+                <div className="space-y-4 text-sm">
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <FileText className="w-4 h-4" />
+                      Format:
+                    </div>
+                    <span className="text-gray-900 font-bold">{product.file_type}</span>
+                  </div>
+
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <Package className="w-4 h-4" />
+                      Category:
+                    </div>
+                    <span className="text-gray-900 font-bold capitalize">{product.category}</span>
+                  </div>
+
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <BookOpen className="w-4 h-4" />
+                      Pages:
+                    </div>
+                    <span className="text-gray-900 font-bold">42</span>
+                  </div>
+
+                  <div className="py-3 border-b border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <Tag className="w-4 h-4" />
+                      Tags:
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Multiplication
+                      </span>
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Math
+                      </span>
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Worksheets
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="py-3">
+                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+                      <Check className="w-4 h-4" />
+                      Delivery:
+                    </div>
+                    <span className="text-orange-600 font-bold">Instant Digital Download</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Main Content */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 lg:order-1">
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-8">
               {/* Product Image Gallery */}
               <div className="aspect-[4/3] bg-gradient-to-br from-orange-50 to-amber-50 relative">
@@ -183,137 +315,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8 space-y-6">
-              {/* Title and Reviews */}
-              <div className="bg-white rounded-3xl shadow-xl p-6">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">{product.title}</h1>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="w-5 h-5 fill-orange-400 text-orange-400" />
-                    ))}
-                  </div>
-                  <span className="text-gray-600 text-sm font-medium">4.8 (1.9k ratings)</span>
-                </div>
-              </div>
-
-              {/* Price & Add to Cart */}
-              <div className="bg-white rounded-3xl shadow-xl p-6">
-                <div className="text-center mb-6">
-                  <div className="text-5xl font-bold text-orange-500 mb-2">
-                    ${product.price.toFixed(2)}
-                  </div>
-                  <p className="text-gray-600 text-sm">One-time payment</p>
-                </div>
-
-                <div className="space-y-3">
-                  <button
-                    onClick={handleAddToCart}
-                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-4 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center justify-center gap-3 text-lg font-bold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
-                    disabled={added}
-                  >
-                    {added ? (
-                      <>
-                        <Check className="w-6 h-6" />
-                        Added to Cart!
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="w-6 h-6" />
-                        Add to Cart
-                      </>
-                    )}
-                  </button>
-                  <Link
-                    to="/cart"
-                    className="w-full bg-gray-100 text-gray-700 px-6 py-4 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center text-lg font-semibold"
-                  >
-                    View Cart
-                  </Link>
-                </div>
-              </div>
-
-              {/* Coupon Code */}
-              <div className="bg-white rounded-3xl shadow-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Ticket className="w-5 h-5 text-orange-500" />
-                  Have a Coupon Code?
-                </h3>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    placeholder="Enter code"
-                    className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none"
-                  />
-                  <button className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors font-semibold">
-                    Apply
-                  </button>
-                </div>
-              </div>
-
-              {/* Quick Info */}
-              <div className="bg-white rounded-3xl shadow-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 pb-3 border-b-2 border-gray-200">
-                  Quick Info
-                </h3>
-                <div className="space-y-4 text-sm">
-                  <div className="py-3 border-b border-gray-100">
-                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
-                      <FileText className="w-4 h-4" />
-                      Format:
-                    </div>
-                    <span className="text-gray-900 font-bold">{product.file_type}</span>
-                  </div>
-
-                  <div className="py-3 border-b border-gray-100">
-                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
-                      <Package className="w-4 h-4" />
-                      Category:
-                    </div>
-                    <span className="text-gray-900 font-bold capitalize">{product.category}</span>
-                  </div>
-
-                  <div className="py-3 border-b border-gray-100">
-                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
-                      <BookOpen className="w-4 h-4" />
-                      Pages:
-                    </div>
-                    <span className="text-gray-900 font-bold">42</span>
-                  </div>
-
-                  <div className="py-3 border-b border-gray-100">
-                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
-                      <Tag className="w-4 h-4" />
-                      Tags:
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
-                        Multiplication
-                      </span>
-                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
-                        Math
-                      </span>
-                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold">
-                        Worksheets
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="py-3">
-                    <div className="flex items-center gap-2 text-gray-600 font-medium mb-2">
-                      <Check className="w-4 h-4" />
-                      Delivery:
-                    </div>
-                    <span className="text-orange-600 font-bold">Instant Digital Download</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

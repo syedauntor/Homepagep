@@ -35,23 +35,23 @@ export function GeneratorsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-10 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Worksheet Generators
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Create custom worksheets, activities, and educational materials in seconds.
             All generators are free to use and create print-ready PDFs.
           </p>
         </div>
 
-        <div className="space-y-16">
+        <div className="space-y-10 md:space-y-16">
           <section>
-            <div className="flex items-center space-x-3 mb-8">
-              <FileText className="w-8 h-8 text-orange-500" />
-              <h2 className="text-3xl font-bold text-gray-900">Math Generators</h2>
+            <div className="flex items-center space-x-3 mb-6 md:mb-8">
+              <FileText className="w-7 h-7 md:w-8 md:h-8 text-orange-500" />
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Math Generators</h2>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {generators.mathGenerator.map((generator) => (
                 <Link
                   key={generator.slug}
@@ -70,11 +70,11 @@ export function GeneratorsPage() {
           </section>
 
           <section>
-            <div className="flex items-center space-x-3 mb-8">
-              <Sparkles className="w-8 h-8 text-orange-500" />
-              <h2 className="text-3xl font-bold text-gray-900">Tracing Practice</h2>
+            <div className="flex items-center space-x-3 mb-6 md:mb-8">
+              <Sparkles className="w-7 h-7 md:w-8 md:h-8 text-orange-500" />
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Tracing Practice</h2>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {generators.tracingPractice.map((generator) => (
                 <Link
                   key={generator.slug}
@@ -93,11 +93,11 @@ export function GeneratorsPage() {
           </section>
 
           <section>
-            <div className="flex items-center space-x-3 mb-8">
-              <PuzzleIcon className="w-8 h-8 text-orange-500" />
-              <h2 className="text-3xl font-bold text-gray-900">Activity Generators</h2>
+            <div className="flex items-center space-x-3 mb-6 md:mb-8">
+              <PuzzleIcon className="w-7 h-7 md:w-8 md:h-8 text-orange-500" />
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Activity Generators</h2>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {generators.activityGenerator.map((generator) => (
                 <Link
                   key={generator.slug}

@@ -178,9 +178,9 @@ export function BlogPostPage() {
       </head>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '20px', paddingBottom: '48px' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+            <div className="bg-white rounded-3xl shadow-xl p-5 md:p-8 lg:p-12">
               <nav className="flex items-center space-x-2 text-sm mb-6">
                 <Link to="/" className="text-orange-500 hover:text-orange-600 flex items-center">
                   <Home className="w-4 h-4" />
@@ -197,7 +197,7 @@ export function BlogPostPage() {
                 {post.title}
               </h1>
 
-              <div className="flex items-center justify-between flex-wrap gap-6 mb-8 pb-8 border-b-2 border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-8 border-b-2 border-gray-100">
                 <div className="flex items-center space-x-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                     <User className="w-7 h-7 text-white" />
@@ -208,8 +208,8 @@ export function BlogPostPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-700 font-semibold mr-2">Share:</span>
+                <div className="flex items-center flex-wrap gap-2">
+                  <span className="text-gray-700 font-semibold mr-1">Share:</span>
                   <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
                     target="_blank"
@@ -495,7 +495,7 @@ export function BlogPostPage() {
                   <h3 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-gray-200">
                     Relevant Products
                   </h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {products.map((product) => (
                       <Link
                         key={product.id}
