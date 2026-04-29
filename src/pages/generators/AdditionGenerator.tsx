@@ -562,9 +562,9 @@ export function AdditionGenerator() {
 
                         <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-10">
                         {orientation === 'horizontal' ? (
-                          <div style={{ width: '75%', marginLeft: 'auto', marginRight: 'auto' }}>
+                          <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
-                              <div key={rowIndex} className="flex justify-between w-full">
+                              <div key={rowIndex} className="flex w-full" style={{ paddingLeft: '12.5%', paddingRight: '12.5%', justifyContent: 'space-between' }}>
                                 {[0, 1].map((colIndex) => {
                                   const index = rowIndex * 2 + colIndex;
                                   if (index >= problems.length) return <div key={colIndex} style={{ width: '33.33%' }}></div>;
@@ -590,7 +590,7 @@ export function AdditionGenerator() {
                                 })}
                               </div>
                             ))}
-                          </div>
+                          </>
                         ) : (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => (
