@@ -168,8 +168,8 @@ export function AdditionGenerator() {
     .header { text-align: center; margin-bottom: 16px; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; }
-    .problems { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0; overflow: hidden; }
-    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 8px; flex-shrink: 0; }
+    .problems { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0 15px 0; overflow: hidden; }
+    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 0; flex-shrink: 0; }
   </style>
 </head>
 <body>
