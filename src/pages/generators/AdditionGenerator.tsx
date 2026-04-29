@@ -177,11 +177,11 @@ export function AdditionGenerator() {
     .problem-row { margin-bottom: 0; }
     .footer {
       position: fixed;
-      bottom: 0; left: 0; width: 100%;
+      bottom: 10px; left: 0; width: 100%;
       text-align: center; font-size: 11px; color: #6b7280;
-      padding: 5px 0 10px;
+      padding: 0;
       background: #fff;
-      line-height: 1.6;
+      line-height: 1.8;
     }
   </style>
 </head>
@@ -215,7 +215,8 @@ export function AdditionGenerator() {
         var problemsTopGap = 16; /* gap between name-date and first problem */
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
-        var available = pageH - pagePadT - headerH - footerH - problemsTopGap;
+        var footerOffset = 10; /* matches footer bottom: 10px */
+        var available = pageH - pagePadT - headerH - footerH - footerOffset - problemsTopGap - 8;
         /* distribute gap evenly: n rows need n gaps (after each row incl. last) */
         var gap = (available - totalRowH) / rows.length;
         if (gap < 4) gap = 4;
