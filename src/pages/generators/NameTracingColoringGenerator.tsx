@@ -67,13 +67,125 @@ export function NameTracingColoringGenerator() {
     setHasGenerated(false);
   };
 
-  const handlePrint = () => {
-    window.print();
+  const openPrintWindow = () => {
+    const printWindow = window.open('', '_blank', 'width=900,height=1200');
+    if (!printWindow) return;
+
+    const borderStyle = selectedTheme.id !== 'blank'
+      ? `border:${selectedTheme.borderWidth} ${selectedTheme.borderStyle} ${selectedTheme.borderColor};`
+      : '';
+
+    const processedName = name.slice(0, 10);
+    const displayName = letterCase === 'uppercase' ? processedName.toUpperCase() : processedName.toLowerCase();
+
+    const letterWidth = 65;
+    const spaceWidth = 45;
+    const letters = displayName.split('');
+    let totalWidth = 0;
+    letters.forEach(l => { totalWidth += l === ' ' ? spaceWidth : letterWidth; });
+    totalWidth = Math.max(totalWidth, 700);
+    const startX = (totalWidth - letters.reduce((acc, l) => acc + (l === ' ' ? spaceWidth : letterWidth), 0)) / 2;
+
+    const buildSvg = (fontFamily: string, fillColor: string, fillOpacity: string, strokeColor: string, strokeWidth: string) => {
+      let x = startX;
+      const textEls = letters.map(l => {
+        const lx = x + (l === ' ' ? spaceWidth : letterWidth) / 2;
+        x += l === ' ' ? spaceWidth : letterWidth;
+        return `<text x="${lx}" y="60" text-anchor="middle" dominant-baseline="middle"
+          style="font-family:${fontFamily};font-size:90px;fill:${fillColor};fill-opacity:${fillOpacity};stroke:${strokeColor};stroke-width:${strokeWidth};font-weight:400">${l}</text>`;
+      }).join('');
+      return `<svg width="100%" height="100%" viewBox="0 0 ${totalWidth} 120" preserveAspectRatio="xMidYMid meet">
+        <defs><style>@import url('https://fonts.googleapis.com/css2?family=Codystar&family=Raleway&family=Lilita+One&display=swap');</style></defs>
+        ${textEls}
+      </svg>`;
+    };
+
+    const sectionStyle = 'flex:1;display:flex;flex-direction:column;min-height:0';
+    const boxStyle = 'border:2px solid #111;border-radius:4px;padding:12px;background:white;flex:1;display:flex;align-items:center;justify-content:center';
+
+    const nameSection = `<div style="${sectionStyle}">
+      <p style="font-size:18px;font-weight:700;color:#111;margin:0 0 8px 0">My name is</p>
+      <div style="${boxStyle}">${buildSvg("'Codystar',cursive", textColor, '1', 'none', '0')}</div>
+    </div>`;
+
+    const traceSection = (tracingStyle === 'name-trace-color' || tracingStyle === 'name-trace' || tracingStyle === 'name-cursive-trace')
+      ? `<div style="${sectionStyle}">
+          <p style="font-size:18px;font-weight:700;color:#111;margin:0 0 8px 0">Trace the letters</p>
+          <div style="${boxStyle}">${buildSvg(tracingStyle === 'name-cursive-trace' ? 'cursive' : "'Raleway',sans-serif", textColor, '0.3', 'none', '0')}</div>
+        </div>` : '';
+
+    const colorSection = (tracingStyle === 'name-trace-color' || tracingStyle === 'name-color')
+      ? `<div style="${sectionStyle}">
+          <p style="font-size:18px;font-weight:700;color:#111;margin:0 0 8px 0">Color the letters</p>
+          <div style="${boxStyle}">${buildSvg("'Lilita One',cursive", 'none', '1', textColor, '2')}</div>
+        </div>` : '';
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${title}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Codystar&family=Raleway&family=Lilita+One&display=swap" rel="stylesheet">
+  <style>
+    @page { size: A4 portrait; margin: 0; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { margin: 0; padding: 0; font-family: sans-serif; }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) 0' : '12mm 15mm 0'};
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      ${borderStyle}
+    }
+    .header { text-align: center; flex-shrink: 0; }
+    .header h1 { font-size: 28px; font-weight: 900; color: #111; margin: 0; ${showTitleUnderline ? 'border-bottom:2px solid #111;padding-bottom:8px;' : ''} }
+    .name-date { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-bottom: 12px; }
+    .sections { flex: 1; display: flex; flex-direction: column; gap: 16px; padding-top: 16px; overflow: hidden; }
+    .footer {
+      position: fixed;
+      bottom: 18px; left: 0; width: 100%;
+      text-align: center; font-size: 11px; color: #6b7280;
+      padding: 0; background: #fff; line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="name-date">
+        ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
+        ${showDate ? '<span>Date: _________________________</span>' : ''}
+      </div>
+      <h1>${title}</h1>
+    </div>
+    <div class="sections">
+      ${nameSection}
+      ${traceSection}
+      ${colorSection}
+    </div>
+    <div class="footer">
+      <p style="margin:0">Find more educational worksheets at PrintAndUse.com</p>
+      <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
+    </div>
+  </div>
+  <script>
+    window.onload = function() {
+      window.print();
+      window.onafterprint = function() { window.close(); };
+    }
+  </script>
+</body>
+</html>`;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
   };
 
-  const downloadWorksheet = () => {
-    window.print();
-  };
+  const handlePrint = () => openPrintWindow();
+  const downloadWorksheet = () => openPrintWindow();
 
   const getTracingStyleLabel = (style: TracingStyle) => {
     switch (style) {
@@ -693,76 +805,13 @@ export function NameTracingColoringGenerator() {
           padding: 12mm 15mm;
           box-sizing: border-box;
         }
-
         .preview-scale {
           transform: scale(0.52);
           transform-origin: center center;
         }
-
         .preview-container {
           padding: 10px 5px;
           position: relative;
-        }
-
-        @media print {
-          @page {
-            size: A4 portrait;
-            margin: 0;
-          }
-
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-
-          html, body {
-            width: 210mm;
-            height: 297mm;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-          }
-
-          body * {
-            visibility: hidden;
-          }
-
-          .worksheet-content,
-          .worksheet-content * {
-            visibility: visible;
-          }
-
-          .worksheet-content {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            margin: 0 !important;
-            padding: 12mm 15mm !important;
-            box-shadow: none !important;
-            transform: none !important;
-            page-break-after: avoid !important;
-            page-break-before: avoid !important;
-            page-break-inside: avoid !important;
-          }
-
-          .preview-scale {
-            transform: none !important;
-          }
-
-          .preview-container {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            background: white !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            box-shadow: none !important;
-            overflow: hidden !important;
-          }
         }
       `}</style>
     </div>

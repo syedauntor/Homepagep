@@ -143,13 +143,91 @@ export default function AlphabetTracingGenerator() {
     setLetters([]);
   };
 
-  const handlePrint = () => {
-    window.print();
+  const openPrintWindow = () => {
+    const printWindow = window.open('', '_blank', 'width=900,height=1200');
+    if (!printWindow) return;
+
+    const borderStyle = selectedTheme.id !== 'blank'
+      ? `border:${selectedTheme.borderWidth} ${selectedTheme.borderStyle} ${selectedTheme.borderColor};`
+      : '';
+
+    const cols = getGridColumns();
+    const letterCellStyle = [
+      'display:flex;gap:4px;align-items:center;justify-content:flex-start;padding:4px 0;',
+      showGuideLines ? 'border-bottom:1px dashed #d1d5db;' : '',
+    ].join('');
+
+    const letterSpans = (letter: string) =>
+      Array.from({ length: repetitions }).map((_, idx) =>
+        `<span style="font-family:'${fontStyle}',cursive;font-size:${fontSize}px;color:${idx === 0 ? letterColor : 'transparent'};opacity:${idx === 0 ? 1 : 0.3};-webkit-text-stroke:1px ${letterColor};paint-order:stroke fill;line-height:1">${letter}</span>`
+      ).join('');
+
+    const cellsHtml = letters.map(l =>
+      `<div style="${letterCellStyle}">${letterSpans(l)}</div>`
+    ).join('');
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${title}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Codystar&family=Raleway+Dots&display=swap" rel="stylesheet">
+  <style>
+    @page { size: A4 portrait; margin: 0; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { margin: 0; padding: 0; font-family: sans-serif; }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) 0' : '12mm 15mm 0'};
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      ${borderStyle}
+    }
+    .header { text-align: center; flex-shrink: 0; }
+    .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; }
+    .grid { flex: 1; display: grid; grid-template-columns: repeat(${cols}, 1fr); gap: 0 16px; padding-top: 16px; overflow: hidden; align-content: start; }
+    .footer {
+      position: fixed;
+      bottom: 18px; left: 0; width: 100%;
+      text-align: center; font-size: 11px; color: #6b7280;
+      padding: 0; background: #fff; line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>${title}</h1>
+      <div class="name-date">
+        ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
+        ${showDate ? '<span>Date: _________________________</span>' : ''}
+      </div>
+    </div>
+    <div class="grid">${cellsHtml}</div>
+    <div class="footer">
+      <p style="margin:0">Find more educational worksheets at PrintAndUse.com</p>
+      <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
+    </div>
+  </div>
+  <script>
+    window.onload = function() {
+      window.print();
+      window.onafterprint = function() { window.close(); };
+    }
+  </script>
+</body>
+</html>`;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
   };
 
-  const downloadWorksheet = () => {
-    window.print();
-  };
+  const handlePrint = () => openPrintWindow();
+  const downloadWorksheet = () => openPrintWindow();
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -591,76 +669,13 @@ export default function AlphabetTracingGenerator() {
           padding: 12mm 15mm;
           box-sizing: border-box;
         }
-
         .preview-scale {
           transform: scale(0.52);
           transform-origin: center center;
         }
-
         .preview-container {
           padding: 10px 5px;
           position: relative;
-        }
-
-        @media print {
-          @page {
-            size: A4 portrait;
-            margin: 0;
-          }
-
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-
-          html, body {
-            width: 210mm;
-            height: 297mm;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-          }
-
-          body * {
-            visibility: hidden;
-          }
-
-          .worksheet-content,
-          .worksheet-content * {
-            visibility: visible;
-          }
-
-          .worksheet-content {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            margin: 0 !important;
-            padding: 12mm 15mm !important;
-            box-shadow: none !important;
-            transform: none !important;
-            page-break-after: avoid !important;
-            page-break-before: avoid !important;
-            page-break-inside: avoid !important;
-          }
-
-          .preview-scale {
-            transform: none !important;
-          }
-
-          .preview-container {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            background: white !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            box-shadow: none !important;
-            overflow: hidden !important;
-          }
         }
       `}</style>
     </div>
