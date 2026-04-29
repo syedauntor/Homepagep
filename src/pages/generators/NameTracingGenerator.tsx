@@ -75,7 +75,8 @@ export function NameTracingGenerator() {
     const printWindow = window.open('', '_blank', 'width=900,height=1200');
     if (!printWindow) return;
 
-    const borderStyle = selectedTheme.id !== 'blank'
+    const hasBorder = selectedTheme.id !== 'blank';
+    const borderStyle = hasBorder
       ? `border:${selectedTheme.borderWidth} ${selectedTheme.borderStyle} ${selectedTheme.borderColor};`
       : '';
 
@@ -97,17 +98,18 @@ export function NameTracingGenerator() {
   <title>${title}</title>
   <link href="https://fonts.googleapis.com/css2?family=Codystar&family=Raleway+Dots&display=swap" rel="stylesheet">
   <style>
-    @page { size: A4 portrait; margin: 0; }
+    @page { size: A4 portrait; margin: ${hasBorder ? '10mm' : '0'}; }
     * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    html, body { margin: 0; padding: 0; font-family: sans-serif; }
+    html, body { margin: 0; padding: 0; font-family: sans-serif; background: #000; }
     .page {
-      width: 210mm;
-      height: 297mm;
-      padding: ${selectedTheme.id !== 'blank' ? 'calc(12mm + 12px) calc(15mm + 12px) 0' : '12mm 15mm 0'};
+      width: ${hasBorder ? '190mm' : '210mm'};
+      height: ${hasBorder ? '277mm' : '297mm'};
+      padding: 12mm 15mm 10mm;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
+      background: #fff;
       ${borderStyle}
     }
     .header { text-align: center; flex-shrink: 0; }
@@ -116,10 +118,9 @@ export function NameTracingGenerator() {
     .problems { flex: 1; overflow: hidden; }
     .trace-row { margin-bottom: 0; }
     .footer {
-      position: fixed;
-      bottom: 18px; left: 0; width: 100%;
+      flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
-      padding: 0; background: #fff; line-height: 1.8;
+      padding: 0; line-height: 1.8;
     }
   </style>
 </head>
@@ -498,18 +499,20 @@ export function NameTracingGenerator() {
               </div>
             ) : (
               <div>
-                <div className="preview-container bg-gray-100 flex items-center justify-center overflow-hidden" style={{ height: '700px' }}>
+                <div className="preview-container flex items-center justify-center overflow-hidden" style={{ height: '700px', background: selectedTheme.id !== 'blank' ? `${selectedTheme.borderColor}22` : '#e5e7eb' }}>
                   <div className="preview-scale">
                     <div
                       ref={worksheetRef}
-                      className="worksheet-content bg-white shadow-xl p-8"
+                      className="worksheet-content bg-white shadow-xl"
+                      style={{ padding: selectedTheme.id !== 'blank' ? '0' : '12mm 15mm' }}
                     >
                       <div
-                        className="flex flex-col justify-between relative p-8"
+                        className="flex flex-col justify-between relative"
                         style={{
                           borderColor: selectedTheme.borderColor,
                           borderWidth: selectedTheme.borderWidth,
                           borderStyle: selectedTheme.borderStyle,
+                          padding: selectedTheme.id !== 'blank' ? '12mm 15mm' : '0',
                           height: '100%',
                           minHeight: '100%'
                         }}
@@ -617,7 +620,6 @@ export function NameTracingGenerator() {
         .worksheet-content {
           width: 210mm;
           height: 297mm;
-          padding: 12mm 15mm;
           box-sizing: border-box;
         }
         .preview-scale {
