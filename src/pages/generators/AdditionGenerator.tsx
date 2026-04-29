@@ -96,13 +96,109 @@ export function AdditionGenerator() {
     setProblems([]);
   };
 
-  const handlePrint = () => {
-    window.print();
+  const openPrintWindow = (showAnswersOverride?: boolean) => {
+    const printWindow = window.open('', '_blank', 'width=900,height=1200');
+    if (!printWindow) return;
+
+    const displayAnswers = showAnswersOverride !== undefined ? showAnswersOverride : (activeTab === 'answer');
+
+    const problemsHtml = orientation === 'horizontal'
+      ? Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => {
+          const cols = [0, 1].map((colIndex) => {
+            const index = rowIndex * 2 + colIndex;
+            if (index >= problems.length) return '<div style="width:47%"></div>';
+            const p = problems[index];
+            const answerPart = displayAnswers
+              ? `<span style="font-weight:bold;color:#ea580c">${p.answer}</span>`
+              : `<span style="display:inline-block;width:80px;border-bottom:2px solid #d1d5db"></span>`;
+            return `<div style="width:47%;text-align:left">
+              <div style="display:flex;align-items:center;gap:12px;font-size:20px">
+                ${showProblemNumber ? `<span style="color:#9ca3af;font-size:14px">${index + 1}.</span>` : ''}
+                <span>${p.num1}</span><span>+</span><span>${p.num2}</span><span>=</span>${answerPart}
+              </div>
+            </div>`;
+          });
+          return `<div style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
+        }).join('')
+      : Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => {
+          const cols = [0, 1, 2, 3].map((colIndex) => {
+            const index = rowIndex * 4 + colIndex;
+            if (index >= problems.length) return '<div></div>';
+            const p = problems[index];
+            const answerPart = displayAnswers
+              ? `<div style="font-size:24px;font-weight:bold;color:#ea580c;border-top:2px solid #111;margin-top:4px;padding-top:4px;text-align:right;padding-right:4px">${p.answer}</div>`
+              : `<div style="border-top:2px solid #111;margin-top:4px;padding-top:8px"></div>`;
+            return `<div>
+              ${showProblemNumber ? `<div style="color:#9ca3af;font-size:14px;margin-bottom:4px">${index + 1}.</div>` : ''}
+              <div style="min-width:90px;display:inline-block">
+                <div style="font-size:24px;text-align:right;padding-right:4px">${p.num1}</div>
+                <div style="font-size:24px;text-align:right;display:flex;justify-content:flex-end">
+                  <span style="margin-right:4px">+</span><span style="padding-right:4px">${p.num2}</span>
+                </div>
+                ${answerPart}
+              </div>
+            </div>`;
+          });
+          return `<div style="display:flex;justify-content:space-between;width:100%">${cols.join('')}</div>`;
+        }).join('');
+
+    const borderStyle = selectedTheme.id !== 'blank'
+      ? `border:${selectedTheme.borderWidth} ${selectedTheme.borderStyle} ${selectedTheme.borderColor};`
+      : '';
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>${title}</title>
+  <style>
+    @page { size: A4 portrait; margin: 12mm 15mm; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { margin: 0; padding: 0; font-family: sans-serif; }
+    .page {
+      width: 100%;
+      min-height: calc(297mm - 24mm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      ${borderStyle}
+      padding: ${selectedTheme.id !== 'blank' ? '12px' : '0'};
+    }
+    .header { text-align: center; margin-bottom: 16px; }
+    .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; }
+    .problems { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 16px 0; }
+    .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 8px; margin-top: auto; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>${title}</h1>
+      <div class="name-date">
+        ${showName ? '<span>Name: _________________________</span>' : '<span></span>'}
+        ${showDate ? '<span>Date: _________________________</span>' : ''}
+      </div>
+    </div>
+    <div class="problems">${problemsHtml}</div>
+    <div class="footer">
+      <p style="margin:0">Find more educational worksheets at PrintAndUse.com</p>
+      <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
+    </div>
+  </div>
+  <script>
+    window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }
+  </script>
+</body>
+</html>`;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
   };
 
-  const downloadWorksheet = () => {
-    window.print();
-  };
+  const handlePrint = () => openPrintWindow();
+  const downloadWorksheet = () => openPrintWindow(false);
+  const downloadAnswerKey = () => openPrintWindow(true);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -513,7 +609,7 @@ export function AdditionGenerator() {
                     </button>
 
                     <button
-                      onClick={downloadWorksheet}
+                      onClick={downloadAnswerKey}
                       className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-full hover:bg-orange-50 transition font-semibold"
                     >
                       <Download className="w-5 h-5" />
@@ -553,87 +649,6 @@ export function AdditionGenerator() {
         .preview-container {
           padding: 10px 5px;
           position: relative;
-        }
-
-        @media print {
-          @page {
-            size: A4 portrait;
-            margin: 0;
-          }
-
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-
-          html, body {
-            width: 210mm !important;
-            height: 297mm !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-          }
-
-          body * {
-            visibility: hidden !important;
-          }
-
-          .worksheet-content,
-          .worksheet-content * {
-            visibility: visible !important;
-          }
-
-          .worksheet-content {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
-            margin: 0 !important;
-            padding: 12mm 15mm !important;
-            box-shadow: none !important;
-            transform: none !important;
-            box-sizing: border-box !important;
-            overflow: hidden !important;
-            background: white !important;
-          }
-
-          .worksheet-content > div {
-            height: 100% !important;
-            display: flex !important;
-            flex-direction: column !important;
-            position: relative !important;
-          }
-
-          .worksheet-footer {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            text-align: center !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            background: white !important;
-          }
-
-          .worksheet-problems {
-            padding-bottom: 28px !important;
-          }
-
-          .preview-scale {
-            transform: none !important;
-            width: 0 !important;
-            height: 0 !important;
-            overflow: hidden !important;
-          }
-
-          .preview-container {
-            width: 0 !important;
-            height: 0 !important;
-            overflow: hidden !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
         }
       `}</style>
     </div>
