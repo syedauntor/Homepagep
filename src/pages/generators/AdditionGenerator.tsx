@@ -493,7 +493,7 @@ export function AdditionGenerator() {
                         )}
                       </div>
 
-                        <div className="text-center text-xs text-gray-500 py-[15px]">
+                        <div className="worksheet-footer text-center text-xs text-gray-500 py-[15px]">
                           <p>Find more educational worksheets at PrintAndUse.com</p>
                           <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                         </div>
@@ -558,7 +558,7 @@ export function AdditionGenerator() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0;
+            margin: 10mm 15mm;
           }
 
           * {
@@ -567,11 +567,8 @@ export function AdditionGenerator() {
           }
 
           html, body {
-            width: 210mm;
-            height: 297mm;
             margin: 0;
             padding: 0;
-            overflow: hidden;
           }
 
           body * {
@@ -587,15 +584,29 @@ export function AdditionGenerator() {
             position: fixed !important;
             left: 0 !important;
             top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
+            width: 100% !important;
+            height: 100% !important;
             margin: 0 !important;
-            padding: 12mm 15mm !important;
+            padding: 0 !important;
             box-shadow: none !important;
             transform: none !important;
-            page-break-after: avoid !important;
-            page-break-before: avoid !important;
-            page-break-inside: avoid !important;
+          }
+
+          .worksheet-content > div {
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            position: relative !important;
+          }
+
+          .worksheet-footer {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            padding-bottom: 4px !important;
           }
 
           .preview-scale {
@@ -606,8 +617,8 @@ export function AdditionGenerator() {
             position: fixed !important;
             left: 0 !important;
             top: 0 !important;
-            width: 210mm !important;
-            height: 297mm !important;
+            width: 100% !important;
+            height: 100% !important;
             background: white !important;
             padding: 0 !important;
             margin: 0 !important;
