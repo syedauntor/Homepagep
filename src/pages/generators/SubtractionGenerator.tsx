@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Download, Printer, Eye, RefreshCw, ChevronRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RelatedGenerators } from '../../components/RelatedGenerators';
@@ -52,6 +52,19 @@ export function SubtractionGenerator() {
   const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
   const [selectedTheme, setSelectedTheme] = useState<Theme>(themes[0]);
   const worksheetRef = useRef<HTMLDivElement>(null);
+  const problemsAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (orientation !== 'vertical' || !problemsAreaRef.current) return;
+    const container = problemsAreaRef.current;
+    const rows = container.querySelectorAll<HTMLElement>('.preview-problem-row');
+    if (rows.length === 0) return;
+    const containerH = container.clientHeight;
+    let totalRowH = 0;
+    rows.forEach(r => { totalRowH += r.offsetHeight; });
+    const gap = (containerH - totalRowH) / rows.length;
+    rows.forEach(r => { r.style.marginBottom = Math.max(gap, 4) + 'px'; });
+  }, [problems, orientation, showProblemNumber, activeTab]);
 
   const generateProblems = () => {
     const newProblems: Problem[] = [];
@@ -565,7 +578,7 @@ export function SubtractionGenerator() {
                         </div>
                       </div>
 
-                      <div className={`flex-1 flex flex-col py-6 mt-[15px] ${orientation === 'vertical' ? 'justify-evenly' : 'justify-between'}`}>
+                      <div ref={orientation === 'vertical' ? problemsAreaRef : undefined} className={`flex-1 flex flex-col py-6 mt-[15px] ${orientation === 'vertical' ? '' : 'justify-between'}`}>
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -599,7 +612,7 @@ export function SubtractionGenerator() {
                         ) : (
                           <>
                             {Array.from({ length: 5 }, (_, rowIndex) => (
-                              <div key={rowIndex} className="flex justify-between w-full">
+                              <div key={rowIndex} className="preview-problem-row flex justify-between w-full">
                                 {[0, 1, 2, 3].map((colIndex) => {
                                   const index = rowIndex * 4 + colIndex;
                                   if (index >= problems.length) return <div key={colIndex} className="invisible"><div className="inline-block min-w-[90px]"><div className="text-2xl text-right pr-1">0</div><div className="text-2xl text-right pr-1">- 0</div><div className="border-t-2 border-gray-900 mt-1 pt-2"></div></div></div>;
