@@ -565,15 +565,15 @@ export function SubtractionGenerator() {
 
                       <div className="flex-1 flex flex-col justify-between py-6 mt-[15px]">
                         {orientation === 'horizontal' ? (
-                          <>
+                          <div style={{ width: '75%', marginLeft: 'auto', marginRight: 'auto' }}>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
                               <div key={rowIndex} className="flex justify-between w-full">
                                 {[0, 1].map((colIndex) => {
                                   const index = rowIndex * 2 + colIndex;
-                                  if (index >= problems.length) return <div key={colIndex} className="w-[47%]"></div>;
+                                  if (index >= problems.length) return <div key={colIndex} style={{ width: '33.33%' }}></div>;
                                   const problem = problems[index];
                                   return (
-                                    <div key={index} className="text-left w-[47%]">
+                                    <div key={index} className="text-left" style={{ width: '33.33%' }}>
                                       <div className="flex items-center space-x-3 text-xl justify-start">
                                         {showProblemNumber && (
                                           <span className="text-gray-400 text-base">{index + 1}.</span>
@@ -593,7 +593,7 @@ export function SubtractionGenerator() {
                                 })}
                               </div>
                             ))}
-                          </>
+                          </div>
                         ) : (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => (
