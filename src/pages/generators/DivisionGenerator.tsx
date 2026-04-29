@@ -120,11 +120,11 @@ export function DivisionGenerator() {
           });
           return `<div class="problem-row${isLast ? ' last-row' : ''}">${cols.join('')}</div>`;
         }).join('')
-      : Array.from({ length: rowCount }, (_, rowIndex) => {
-          const isLast = rowIndex === rowCount - 1;
+      : Array.from({ length: 5 }, (_, rowIndex) => {
+          const isLast = rowIndex === 4;
           const cols = [0, 1, 2, 3].map((colIndex) => {
             const index = rowIndex * 4 + colIndex;
-            if (index >= problems.length) return '<div></div>';
+            if (index >= problems.length) return '<div style="visibility:hidden"><div style="min-width:90px;display:inline-block"><div style="font-size:24px;text-align:right;padding-right:4px">0</div><div style="font-size:24px;text-align:right;padding-right:4px">&divide; 0</div><div style="border-top:2px solid #111;margin-top:4px;padding-top:8px"></div></div></div>';
             const p = problems[index];
             const answerPart = displayAnswers
               ? `<div style="font-size:24px;font-weight:bold;color:#ea580c;border-top:2px solid #111;margin-top:4px;padding-top:4px;text-align:right;padding-right:4px">${p.answer}</div>`
@@ -578,11 +578,11 @@ export function DivisionGenerator() {
                             </>
                           ) : (
                             <>
-                              {Array.from({ length: Math.ceil(problems.length / 4) }, (_, rowIndex) => (
+                              {Array.from({ length: 5 }, (_, rowIndex) => (
                                 <div key={rowIndex} className="flex justify-between w-full">
                                   {[0, 1, 2, 3].map((colIndex) => {
                                     const index = rowIndex * 4 + colIndex;
-                                    if (index >= problems.length) return <div key={colIndex}></div>;
+                                    if (index >= problems.length) return <div key={colIndex} className="invisible"><div className="inline-block min-w-[90px]"><div className="text-2xl text-right pr-1">0</div><div className="text-2xl text-right pr-1">&divide; 0</div><div className="border-t-2 border-gray-900 mt-1 pt-2"></div></div></div>;
                                     const problem = problems[index];
                                     return (
                                       <div key={index}>
