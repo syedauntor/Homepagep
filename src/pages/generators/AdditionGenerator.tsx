@@ -170,10 +170,10 @@ export function AdditionGenerator() {
       overflow: hidden;
       ${borderStyle}
     }
-    .header { text-align: center; margin-bottom: 16px; }
+    .header { text-align: center; margin-bottom: 6px; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0 0 12px 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; }
-    .problems { display: block; padding: 16px 0 0 0; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 10px; }
+    .problems { display: block; padding: 6px 0 0 0; }
     .problem-row { margin-bottom: 0; }
     .footer { text-align: center; font-size: 11px; color: #6b7280; padding-top: 0; flex-shrink: 0; }
   </style>
