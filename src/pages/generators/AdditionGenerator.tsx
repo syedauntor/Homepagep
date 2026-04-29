@@ -115,14 +115,14 @@ export function AdditionGenerator() {
             const answerPart = displayAnswers
               ? `<span style="font-weight:bold;color:#ea580c">${p.answer}</span>`
               : `<span style="display:inline-block;width:80px;border-bottom:2px solid #d1d5db"></span>`;
-            return `<div style="width:42%;text-align:left">
+            return `<div style="width:47%;text-align:left">
               <div style="display:flex;align-items:center;gap:12px;font-size:20px">
                 ${showProblemNumber ? `<span style="color:#9ca3af;font-size:14px">${index + 1}.</span>` : ''}
                 <span>${p.num1}</span><span>+</span><span>${p.num2}</span><span>=</span>${answerPart}
               </div>
             </div>`;
           });
-          return `<div class="problem-row${isLast ? ' last-row' : ''}" style="display:flex;justify-content:center;gap:8%;width:100%">${cols.join('')}</div>`;
+          return `<div class="problem-row${isLast ? ' last-row' : ''}" style="display:flex;justify-content:space-between">${cols.join('')}</div>`;
         }).join('')
       : Array.from({ length: rowCount }, (_, rowIndex) => {
           const isLast = rowIndex === rowCount - 1;
@@ -175,8 +175,8 @@ export function AdditionGenerator() {
     .header { text-align: center; margin-bottom: 0; flex-shrink: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
     .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; margin-top: 20px; padding-bottom: 4px; }
-    .problems { flex: 1; padding: 0; overflow: hidden; }
-    .problem-row { margin-bottom: 0; }
+    .problems { flex: 1; padding: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+    .problem-row { margin-bottom: 0; width: 88%; margin-left: auto; margin-right: auto; }
     .footer {
       flex-shrink: 0;
       text-align: center; font-size: 11px; color: #6b7280;
