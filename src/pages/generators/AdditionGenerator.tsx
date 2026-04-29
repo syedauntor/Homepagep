@@ -172,7 +172,7 @@ export function AdditionGenerator() {
     }
     .header { text-align: center; flex-shrink: 0; }
     .header h1 { font-size: 32px; font-weight: 900; color: #111; margin: 0; }
-    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; flex-shrink: 0; margin-top: 20px; padding-bottom: 20px; }
+    .name-date { display: flex; justify-content: space-between; font-size: 15px; color: #4b5563; flex-shrink: 0; margin-top: 10px; }
     .problems { display: block; overflow: hidden; flex-shrink: 0; }
     .problem-row { margin-bottom: 0; }
     .footer { text-align: center; font-size: 11px; color: #6b7280; flex-shrink: 0; margin-top: 0; }
@@ -206,16 +206,15 @@ export function AdditionGenerator() {
         var padB = parseFloat(style.paddingBottom);
         var pageInnerH = page.clientHeight - padT - padB;
         var headerH = header.offsetHeight;
-        var nameDateH = nameDate ? nameDate.offsetHeight : 0;
+        var nameDateH = nameDate ? nameDate.offsetHeight + 10 : 0;
         var footerH = footer.offsetHeight;
         var totalRowH = 0;
         rows.forEach(function(r) { totalRowH += r.offsetHeight; });
         var available = pageInnerH - headerH - nameDateH - footerH;
-        var gap = (available - totalRowH) / (rows.length + 1);
+        var gap = (available - totalRowH) / rows.length;
         if (gap < 4) gap = 4;
         rows.forEach(function(r) { r.style.marginBottom = gap + 'px'; });
         document.querySelector('.problems').style.paddingTop = gap + 'px';
-        footer.style.marginTop = gap + 'px';
       }
       window.print();
       window.onafterprint = function() { window.close(); };
@@ -543,16 +542,16 @@ export function AdditionGenerator() {
                             <span className="absolute bottom-4 right-4 text-3xl">{selectedTheme.decoration.split('')[1] || selectedTheme.decoration.split('')[0]}</span>
                           </>
                         )}
-                        <div className="text-center">
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-0">{title}</h1>
-                        <div className="flex justify-between text-base text-gray-600 mt-5 pb-5">
+                        <div className="text-center -mt-[10px]">
+                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-4">{title}</h1>
+                        <div className="flex justify-between text-base text-gray-600">
                           {showName && <span>Name: _________________________</span>}
                           {!showName && <span></span>}
                           {showDate && <span>Date: _________________________</span>}
                         </div>
                       </div>
 
-                      <div className="worksheet-problems flex-1 flex flex-col justify-between">
+                      <div className="worksheet-problems flex-1 flex flex-col justify-between py-6 mt-[15px]">
                         {orientation === 'horizontal' ? (
                           <>
                             {Array.from({ length: Math.ceil(problems.length / 2) }, (_, rowIndex) => (
@@ -621,7 +620,7 @@ export function AdditionGenerator() {
                         )}
                       </div>
 
-                        <div className="worksheet-footer text-center text-xs text-gray-500">
+                        <div className="worksheet-footer text-center text-xs text-gray-500 py-[15px]">
                           <p>Find more educational worksheets at PrintAndUse.com</p>
                           <p>Copyright ©2025 - www.printanduse.com | All rights reserved</p>
                         </div>
