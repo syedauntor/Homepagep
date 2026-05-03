@@ -105,24 +105,24 @@ export function AllBlogPostsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
         <div className="bg-white rounded-2xl shadow-lg px-5 py-4">
-          <div className="flex flex-wrap gap-3 items-center justify-between">
-            {/* Search — smaller */}
-            <div className="relative w-64">
+          <div className="flex flex-wrap gap-3 items-center">
+            {/* Search — flex-1 grows to fill space */}
+            <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search posts..."
+                placeholder="Search posts by title, content, or author..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               />
             </div>
 
             {/* Sort + Category filters */}
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex gap-2 items-center">
               <button
                 onClick={() => setSortBy('latest')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 ${
+                className={`w-28 py-2.5 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-1.5 ${
                   sortBy === 'latest'
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -133,7 +133,7 @@ export function AllBlogPostsPage() {
               </button>
               <button
                 onClick={() => setSortBy('popular')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 ${
+                className={`w-28 py-2.5 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-1.5 ${
                   sortBy === 'popular'
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -146,11 +146,10 @@ export function AllBlogPostsPage() {
               {/* Category dropdown */}
               {categories.length > 0 && (
                 <>
-                  <div className="w-px h-6 bg-gray-200 mx-1" />
                   <div className="relative" ref={dropdownRef}>
                     <button
                       onClick={() => setDropdownOpen((o) => !o)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition border ${
+                      className={`w-28 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition border ${
                         selectedCategory
                           ? 'bg-gray-800 text-white border-gray-800'
                           : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
