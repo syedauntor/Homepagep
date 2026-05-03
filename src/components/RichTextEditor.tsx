@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -10,8 +10,9 @@ import {
   List, ListOrdered, Heading1, Heading2, Heading3,
   Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter,
   AlignRight, AlignJustify, Undo, Redo, Quote, Code, Minus,
-  Upload, Type, Maximize2, Minimize2, X
+  Upload, Type, Maximize2, Minimize2, X, Loader2
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface RichTextEditorProps {
   content: string;
@@ -50,6 +51,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
   const [wordCount, setWordCount] = useState(0);
   const [linkUrl, setLinkUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const linkInputRef = useRef<HTMLInputElement>(null);
 
   // Image dialog state
@@ -146,22 +148,32 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
     setEditingImageNode(null);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && editor) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const url = e.target?.result as string;
-        // Open dialog pre-filled with filename as alt suggestion
-        setEditingImageNode(null);
-        setImageDialogUrl(url);
-        setImageDialogAlt(file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '));
-        setShowImageDialog(true);
-        setTimeout(() => imageUrlRef.current?.focus(), 50);
-      };
-      reader.readAsDataURL(file);
-    }
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (!file || !editor) return;
+
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop() || 'jpg';
+      const filename = `blog/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from('blog-images')
+        .upload(filename, file, { upsert: false });
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('blog-images').getPublicUrl(filename);
+      const publicUrl = data.publicUrl;
+      const alt = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+
+      editor.chain().focus().setImage({ src: publicUrl, alt }).run();
+    } catch (err) {
+      console.error('Image upload failed:', err);
+      alert('Image upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleLinkSubmit = useCallback(() => {
@@ -299,8 +311,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
         <ToolbarButton onClick={openImageDialog} active={editor.isActive('image')} title="Insert / edit image">
           <ImageIcon size={15} />
         </ToolbarButton>
-        <ToolbarButton onClick={() => fileInputRef.current?.click()} title="Upload image from device">
-          <Upload size={15} />
+        <ToolbarButton onClick={() => !uploading && fileInputRef.current?.click()} title="Upload image from device" disabled={uploading}>
+          {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
         </ToolbarButton>
         <ToolbarButton onClick={openLinkInput} active={editor.isActive('link')} title="Insert / edit link">
           <LinkIcon size={15} />
