@@ -1,7 +1,61 @@
 import { BookOpen, Phone, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+
+interface MenuItem {
+  id: string;
+  label: string;
+  url: string;
+  target: string;
+  display_order: number;
+}
+
+function FooterLink({ item }: { item: MenuItem }) {
+  const isExternal = item.url.startsWith('http');
+  if (isExternal) {
+    return <a href={item.url} target={item.target} rel="noopener noreferrer" className="hover:text-orange-500 transition">{item.label}</a>;
+  }
+  return <Link to={item.url} className="hover:text-orange-500 transition">{item.label}</Link>;
+}
+
+const FALLBACK_QUICK: MenuItem[] = [
+  { id: '1', label: 'Home', url: '/', target: '_self', display_order: 1 },
+  { id: '2', label: 'Generators', url: '/generators', target: '_self', display_order: 2 },
+  { id: '3', label: 'Blog', url: '/blog', target: '_self', display_order: 3 },
+  { id: '4', label: 'About', url: '/about', target: '_self', display_order: 4 },
+  { id: '5', label: 'Contact', url: '/contact', target: '_self', display_order: 5 },
+];
+
+const FALLBACK_CATS: MenuItem[] = [
+  { id: '1', label: 'All Generators', url: '/generators', target: '_self', display_order: 1 },
+  { id: '2', label: 'Math Generators', url: '/generators#math', target: '_self', display_order: 2 },
+  { id: '3', label: 'Tracing Practice', url: '/generators#tracing', target: '_self', display_order: 3 },
+  { id: '4', label: 'Activity Generators', url: '/generators#activities', target: '_self', display_order: 4 },
+];
 
 export function Footer() {
+  const [quickLinks, setQuickLinks] = useState<MenuItem[]>([]);
+  const [catLinks, setCatLinks] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from('menu_items')
+      .select('id, label, url, target, display_order, menu_location')
+      .in('menu_location', ['footer_quick_links', 'footer_categories'])
+      .eq('is_active', true)
+      .order('display_order')
+      .then(({ data }) => {
+        if (data) {
+          setQuickLinks(data.filter((i: any) => i.menu_location === 'footer_quick_links'));
+          setCatLinks(data.filter((i: any) => i.menu_location === 'footer_categories'));
+        }
+      });
+  }, []);
+
+  const quick = quickLinks.length > 0 ? quickLinks : FALLBACK_QUICK;
+  const cats = catLinks.length > 0 ? catLinks : FALLBACK_CATS;
+
   return (
     <footer className="bg-gray-900 text-gray-300 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,22 +73,18 @@ export function Footer() {
           <div>
             <h3 className="text-white font-bold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/" className="hover:text-orange-500 transition">Home</Link></li>
-              <li><Link to="/generators" className="hover:text-orange-500 transition">Generators</Link></li>
-              <li><Link to="/blog" className="hover:text-orange-500 transition">Blog</Link></li>
-              <li><Link to="/about" className="hover:text-orange-500 transition">About</Link></li>
-              <li><Link to="/contact" className="hover:text-orange-500 transition">Contact</Link></li>
+              {quick.map(item => (
+                <li key={item.id}><FooterLink item={item} /></li>
+              ))}
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-bold text-lg mb-4">Generator Categories</h3>
             <ul className="space-y-2">
-              <li><Link to="/generators" className="hover:text-orange-500 transition">All Generators</Link></li>
-              <li><Link to="/generators#math" className="hover:text-orange-500 transition">Math Generators</Link></li>
-              <li><Link to="/generators#tracing" className="hover:text-orange-500 transition">Tracing Practice</Link></li>
-              <li><Link to="/generators/alphabet-tracing" className="hover:text-orange-500 transition">Alphabet Tracing Generator</Link></li>
-              <li><Link to="/generators#activities" className="hover:text-orange-500 transition">Activity Generators</Link></li>
+              {cats.map(item => (
+                <li key={item.id}><FooterLink item={item} /></li>
+              ))}
             </ul>
           </div>
 
@@ -60,8 +110,8 @@ export function Footer() {
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-center md:text-left">&copy; 2025 Print and Use. All rights reserved.</p>
           <div className="flex space-x-6">
-            <a href="#" className="hover:text-orange-500 transition">Privacy Policy</a>
-            <a href="#" className="hover:text-orange-500 transition">Terms of Use</a>
+            <Link to="/privacy-policy" className="hover:text-orange-500 transition">Privacy Policy</Link>
+            <Link to="/terms-of-use" className="hover:text-orange-500 transition">Terms of Use</Link>
           </div>
         </div>
       </div>

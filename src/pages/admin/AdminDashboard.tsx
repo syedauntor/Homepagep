@@ -12,19 +12,23 @@ import {
   X,
   Image as ImageIcon,
   Settings,
-  Users
+  Users,
+  LayoutTemplate,
+  Navigation
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const navItems = [
   { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/admin/products', icon: Package, label: 'Products' },
   { path: '/admin/blog', icon: FileText, label: 'Blog Posts' },
+  { path: '/admin/pages', icon: LayoutTemplate, label: 'Pages' },
+  { path: '/admin/products', icon: Package, label: 'Products' },
   { path: '/admin/categories', icon: FolderOpen, label: 'Categories' },
   { path: '/admin/media', icon: ImageIcon, label: 'Media Library' },
   { path: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
   { path: '/admin/messages', icon: MessageSquare, label: 'Messages' },
   { path: '/admin/authors', icon: Users, label: 'Authors & Team' },
+  { path: '/admin/menu', icon: Navigation, label: 'Menu' },
   { path: '/admin/settings', icon: Settings, label: 'Settings' },
 ];
 

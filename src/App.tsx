@@ -33,6 +33,9 @@ import MessagesView from './pages/admin/MessagesView';
 import ImageGallery from './pages/admin/ImageGallery';
 import SettingsPage from './pages/admin/SettingsPage';
 import AuthorsPage from './pages/admin/AuthorsPage';
+import PagesManagement from './pages/admin/PagesManagement';
+import MenuSettings from './pages/admin/MenuSettings';
+import { DynamicPage } from './pages/DynamicPage';
 
 function App() {
   return (
@@ -50,6 +53,8 @@ function App() {
               <Route path="messages" element={<MessagesView />} />
               <Route path="media" element={<ImageGallery />} />
               <Route path="authors" element={<AuthorsPage />} />
+              <Route path="pages" element={<PagesManagement />} />
+              <Route path="menu" element={<MenuSettings />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
 
@@ -78,6 +83,7 @@ function App() {
                     <Route path="/category/:slug" element={<CategoryPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/:slug" element={<DynamicPage />} />
                   </Routes>
                 </main>
                 <Footer />
