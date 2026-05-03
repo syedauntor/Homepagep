@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, CreditCard as Edit, Trash2, ChevronRight, FolderOpen, Folder } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, ChevronRight, FolderOpen, Folder, BookOpen, ShoppingBag } from 'lucide-react';
 
-interface Category {
+// ─── Blog Categories ─────────────────────────────────────────────────────────
+
+interface BlogCategory {
   id: string;
   name: string;
   slug: string;
   description: string | null;
   parent_id: string | null;
   position: number;
-  created_at: string;
 }
 
-interface FormData {
+interface BlogFormData {
   name: string;
   slug: string;
   description: string;
@@ -20,333 +21,389 @@ interface FormData {
   position: string;
 }
 
+// ─── Product Categories ───────────────────────────────────────────────────────
+
+interface ProductCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  position: number;
+}
+
+interface ProductFormData {
+  name: string;
+  slug: string;
+  description: string;
+  position: string;
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const generateSlug = (name: string) =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
 export default function CategoriesManagement() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [activeTab, setActiveTab] = useState<'blog' | 'product'>('blog');
+
+  return (
+    <div className="p-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">Categories Management</h1>
+        <p className="text-slate-600 mt-2">Manage blog and product categories</p>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit mb-8">
+        <button
+          onClick={() => setActiveTab('blog')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            activeTab === 'blog'
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          Blog Categories
+        </button>
+        <button
+          onClick={() => setActiveTab('product')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            activeTab === 'product'
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <ShoppingBag className="w-4 h-4" />
+          Product Categories
+        </button>
+      </div>
+
+      {activeTab === 'blog' ? <BlogCategoriesTab /> : <ProductCategoriesTab />}
+    </div>
+  );
+}
+
+// ─── Blog Categories Tab ──────────────────────────────────────────────────────
+
+function BlogCategoriesTab() {
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    slug: '',
-    description: '',
-    parent_id: '',
-    position: '0',
-  });
+  const [editing, setEditing] = useState<BlogCategory | null>(null);
+  const [form, setForm] = useState<BlogFormData>({ name: '', slug: '', description: '', parent_id: '', position: '0' });
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  useEffect(() => { load(); }, []);
 
-  const loadCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('position')
-        .order('name');
-
-      if (error) throw error;
-      setCategories(data || []);
-    } catch (error) {
-      console.error('Error loading categories:', error);
-    } finally {
-      setLoading(false);
-    }
+  const load = async () => {
+    setLoading(true);
+    const { data } = await supabase.from('categories').select('*').order('position').order('name');
+    setCategories(data || []);
+    setLoading(false);
   };
-
-  const generateSlug = (name: string) =>
-    name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const categoryData = {
-        name: formData.name,
-        slug: formData.slug || generateSlug(formData.name),
-        description: formData.description || null,
-        parent_id: formData.parent_id || null,
-        position: parseInt(formData.position) || 0,
-      };
-
-      if (editingCategory) {
-        const { error } = await supabase
-          .from('categories')
-          .update(categoryData)
-          .eq('id', editingCategory.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('categories').insert([categoryData]);
-        if (error) throw error;
-      }
-
-      resetForm();
-      loadCategories();
-    } catch (error) {
-      console.error('Error saving category:', error);
-      alert('Error saving category');
+    const payload = {
+      name: form.name,
+      slug: form.slug || generateSlug(form.name),
+      description: form.description || null,
+      parent_id: form.parent_id || null,
+      position: parseInt(form.position) || 0,
+    };
+    if (editing) {
+      await supabase.from('categories').update(payload).eq('id', editing.id);
+    } else {
+      await supabase.from('categories').insert([payload]);
     }
+    reset(); load();
   };
 
-  const handleEdit = (category: Category) => {
-    setEditingCategory(category);
-    setFormData({
-      name: category.name,
-      slug: category.slug,
-      description: category.description || '',
-      parent_id: category.parent_id || '',
-      position: String(category.position),
-    });
+  const handleEdit = (c: BlogCategory) => {
+    setEditing(c);
+    setForm({ name: c.name, slug: c.slug, description: c.description || '', parent_id: c.parent_id || '', position: String(c.position) });
     setShowForm(true);
   };
 
   const handleDelete = async (id: string) => {
-    const hasChildren = categories.some((c) => c.parent_id === id);
-    if (hasChildren) {
-      alert('Cannot delete: this category has subcategories. Delete them first.');
-      return;
-    }
-    if (!confirm('Delete this category? Related blog posts may be affected.')) return;
-
-    try {
-      const { error } = await supabase.from('categories').delete().eq('id', id);
-      if (error) throw error;
-      loadCategories();
-    } catch (error) {
-      console.error('Error deleting category:', error);
-      alert('Error deleting category');
-    }
+    if (categories.some((c) => c.parent_id === id)) { alert('Delete subcategories first.'); return; }
+    if (!confirm('Delete this category?')) return;
+    await supabase.from('categories').delete().eq('id', id);
+    load();
   };
 
-  const resetForm = () => {
-    setFormData({ name: '', slug: '', description: '', parent_id: '', position: '0' });
-    setEditingCategory(null);
-    setShowForm(false);
+  const reset = () => {
+    setForm({ name: '', slug: '', description: '', parent_id: '', position: '0' });
+    setEditing(null); setShowForm(false);
   };
 
-  // Build tree: parents first, then children indented beneath
   const parents = categories.filter((c) => !c.parent_id);
-  const children = categories.filter((c) => c.parent_id);
-
-  const parentName = (id: string | null) =>
-    id ? categories.find((c) => c.id === id)?.name ?? '—' : null;
-
-  // Flat ordered list: parent → its children → next parent ...
-  const ordered: Category[] = [];
+  const ordered: BlogCategory[] = [];
   for (const p of parents) {
     ordered.push(p);
-    for (const ch of children.filter((c) => c.parent_id === p.id)) {
-      ordered.push(ch);
-    }
+    for (const ch of categories.filter((c) => c.parent_id === p.id)) ordered.push(ch);
   }
-  // orphan children (parent deleted)
-  for (const ch of children.filter((c) => !parents.find((p) => p.id === c.parent_id))) {
-    ordered.push(ch);
-  }
+  for (const ch of categories.filter((c) => c.parent_id && !parents.find((p) => p.id === c.parent_id))) ordered.push(ch);
 
-  if (loading) {
-    return (
-      <div className="p-8">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-slate-200 rounded w-1/4"></div>
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-16 bg-slate-200 rounded"></div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSkeleton />;
 
   return (
-    <div className="p-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Categories Management</h1>
-          <p className="text-slate-600 mt-2">Manage blog categories and subcategories</p>
-        </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          Add Category
+    <>
+      <div className="flex justify-end mb-4">
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium">
+          <Plus className="w-4 h-4" /> Add Blog Category
         </button>
       </div>
 
-      {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">
-              {editingCategory ? 'Edit Category' : 'Add New Category'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Category Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => {
-                    const name = e.target.value;
-                    setFormData((f) => ({
-                      ...f,
-                      name,
-                      slug: editingCategory ? f.slug : generateSlug(name),
-                    }));
-                  }}
-                  required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Slug *</label>
-                <input
-                  type="text"
-                  value={formData.slug}
-                  onChange={(e) => setFormData((f) => ({ ...f, slug: e.target.value }))}
-                  required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                />
-                <p className="text-xs text-slate-400 mt-1">URL-friendly identifier</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Parent Category</label>
-                <select
-                  value={formData.parent_id}
-                  onChange={(e) => setFormData((f) => ({ ...f, parent_id: e.target.value }))}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                >
-                  <option value="">— None (top-level) —</option>
-                  {parents
-                    .filter((p) => p.id !== editingCategory?.id)
-                    .map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                </select>
-                <p className="text-xs text-slate-400 mt-1">Leave blank to make this a top-level category</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Position</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.position}
-                  onChange={(e) => setFormData((f) => ({ ...f, position: e.target.value }))}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                />
-                <p className="text-xs text-slate-400 mt-1">Lower number = displayed first</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData((f) => ({ ...f, description: e.target.value }))}
-                  rows={3}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  className="flex-1 bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800 transition-colors font-medium"
-                >
-                  {editingCategory ? 'Update' : 'Create'}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="flex-1 bg-slate-200 text-slate-900 py-2 rounded-lg hover:bg-slate-300 transition-colors font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <Modal title={editing ? 'Edit Blog Category' : 'Add Blog Category'} onClose={reset}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Field label="Name *">
+              <input type="text" value={form.name} required
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value, slug: editing ? f.slug : generateSlug(e.target.value) }))}
+                className={inputCls} />
+            </Field>
+            <Field label="Slug *" hint="URL-friendly identifier">
+              <input type="text" value={form.slug} required onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} className={inputCls} />
+            </Field>
+            <Field label="Parent Category" hint="Leave blank for top-level">
+              <select value={form.parent_id} onChange={(e) => setForm((f) => ({ ...f, parent_id: e.target.value }))} className={inputCls}>
+                <option value="">— None (top-level) —</option>
+                {parents.filter((p) => p.id !== editing?.id).map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Position" hint="Lower = shown first">
+              <input type="number" min="0" value={form.position} onChange={(e) => setForm((f) => ({ ...f, position: e.target.value }))} className={inputCls} />
+            </Field>
+            <Field label="Description">
+              <textarea value={form.description} rows={3} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className={inputCls} />
+            </Field>
+            <FormButtons onCancel={reset} editing={!!editing} />
+          </form>
+        </Modal>
       )}
 
-      {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Slug</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Parent</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-20">Pos</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {ordered.map((category) => {
-                const isChild = !!category.parent_id;
-                const pName = parentName(category.parent_id);
-                return (
-                  <tr key={category.id} className={`hover:bg-slate-50 ${isChild ? 'bg-slate-50/50' : ''}`}>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {isChild ? (
-                          <>
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 ml-4 flex-shrink-0" />
-                            <Folder className="w-4 h-4 text-orange-400 flex-shrink-0" />
-                          </>
-                        ) : (
-                          <FolderOpen className="w-4 h-4 text-slate-600 flex-shrink-0" />
-                        )}
-                        <span className={`font-medium ${isChild ? 'text-slate-700 text-sm' : 'text-slate-900'}`}>
-                          {category.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-500">{category.slug}</td>
-                    <td className="px-6 py-4 text-sm">
-                      {pName ? (
-                        <span className="inline-flex items-center gap-1 text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full text-xs font-medium">
-                          {pName}
-                        </span>
-                      ) : (
-                        <span className="text-slate-400 text-xs">Top-level</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-500">{category.position}</td>
-                    <td className="px-6 py-4 text-sm text-slate-500 max-w-xs truncate">
-                      {category.description || '—'}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => handleEdit(category)}
-                          className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(category.id)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <table className="w-full">
+          <thead className="bg-slate-50 border-b border-slate-200">
+            <tr>
+              {['Name', 'Slug', 'Parent', 'Pos', 'Description', 'Actions'].map((h) => (
+                <th key={h} className={`px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider ${h === 'Actions' ? 'text-right' : ''}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {ordered.map((c) => {
+              const isChild = !!c.parent_id;
+              const pName = isChild ? categories.find((x) => x.id === c.parent_id)?.name : null;
+              return (
+                <tr key={c.id} className={`hover:bg-slate-50 ${isChild ? 'bg-slate-50/40' : ''}`}>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      {isChild ? (<><ChevronRight className="w-3.5 h-3.5 text-slate-400 ml-4 flex-shrink-0" /><Folder className="w-4 h-4 text-orange-400 flex-shrink-0" /></>) : (<FolderOpen className="w-4 h-4 text-slate-600 flex-shrink-0" />)}
+                      <span className={`font-medium ${isChild ? 'text-slate-700 text-sm' : 'text-slate-900'}`}>{c.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-500">{c.slug}</td>
+                  <td className="px-6 py-4 text-sm">
+                    {pName ? <span className="bg-orange-50 text-orange-600 text-xs font-medium px-2 py-0.5 rounded-full">{pName}</span> : <span className="text-slate-400 text-xs">Top-level</span>}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-500">{c.position}</td>
+                  <td className="px-6 py-4 text-sm text-slate-500 max-w-xs truncate">{c.description || '—'}</td>
+                  <td className="px-6 py-4 text-right">
+                    <RowActions onEdit={() => handleEdit(c)} onDelete={() => handleDelete(c.id)} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {ordered.length === 0 && <EmptyState label="No blog categories yet" />}
+      </div>
+    </>
+  );
+}
+
+// ─── Product Categories Tab ───────────────────────────────────────────────────
+
+function ProductCategoriesTab() {
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<ProductCategory | null>(null);
+  const [form, setForm] = useState<ProductFormData>({ name: '', slug: '', description: '', position: '0' });
+
+  useEffect(() => { load(); }, []);
+
+  const load = async () => {
+    setLoading(true);
+    const { data } = await supabase.from('product_categories').select('*').order('position').order('name');
+    setCategories(data || []);
+    setLoading(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = {
+      name: form.name,
+      slug: form.slug || generateSlug(form.name),
+      description: form.description || null,
+      position: parseInt(form.position) || 0,
+    };
+    if (editing) {
+      await supabase.from('product_categories').update(payload).eq('id', editing.id);
+    } else {
+      await supabase.from('product_categories').insert([payload]);
+    }
+    reset(); load();
+  };
+
+  const handleEdit = (c: ProductCategory) => {
+    setEditing(c);
+    setForm({ name: c.name, slug: c.slug, description: c.description || '', position: String(c.position) });
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this product category?')) return;
+    await supabase.from('product_categories').delete().eq('id', id);
+    load();
+  };
+
+  const reset = () => {
+    setForm({ name: '', slug: '', description: '', position: '0' });
+    setEditing(null); setShowForm(false);
+  };
+
+  if (loading) return <LoadingSkeleton />;
+
+  return (
+    <>
+      <div className="flex justify-end mb-4">
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-lg hover:bg-slate-800 transition-colors text-sm font-medium">
+          <Plus className="w-4 h-4" /> Add Product Category
+        </button>
       </div>
 
-      {categories.length === 0 && (
-        <div className="text-center py-12 text-slate-500">No categories found</div>
+      {showForm && (
+        <Modal title={editing ? 'Edit Product Category' : 'Add Product Category'} onClose={reset}>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Field label="Name *">
+              <input type="text" value={form.name} required
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value, slug: editing ? f.slug : generateSlug(e.target.value) }))}
+                className={inputCls} />
+            </Field>
+            <Field label="Slug *" hint="URL-friendly identifier">
+              <input type="text" value={form.slug} required onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))} className={inputCls} />
+            </Field>
+            <Field label="Position" hint="Lower = shown first">
+              <input type="number" min="0" value={form.position} onChange={(e) => setForm((f) => ({ ...f, position: e.target.value }))} className={inputCls} />
+            </Field>
+            <Field label="Description">
+              <textarea value={form.description} rows={3} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className={inputCls} />
+            </Field>
+            <FormButtons onCancel={reset} editing={!!editing} />
+          </form>
+        </Modal>
       )}
+
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-slate-50 border-b border-slate-200">
+            <tr>
+              {['Name', 'Slug', 'Pos', 'Description', 'Actions'].map((h) => (
+                <th key={h} className={`px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider ${h === 'Actions' ? 'text-right' : ''}`}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {categories.map((c) => (
+              <tr key={c.id} className="hover:bg-slate-50">
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <ShoppingBag className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                    <span className="font-medium text-slate-900">{c.name}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-sm text-slate-500">{c.slug}</td>
+                <td className="px-6 py-4 text-sm text-slate-500">{c.position}</td>
+                <td className="px-6 py-4 text-sm text-slate-500 max-w-xs truncate">{c.description || '—'}</td>
+                <td className="px-6 py-4 text-right">
+                  <RowActions onEdit={() => handleEdit(c)} onDelete={() => handleDelete(c.id)} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {categories.length === 0 && <EmptyState label="No product categories yet" />}
+      </div>
+    </>
+  );
+}
+
+// ─── Shared UI ────────────────────────────────────────────────────────────────
+
+const inputCls = 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent text-sm';
+
+function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-bold text-slate-900 mb-5">{title}</h2>
+        {children}
+      </div>
     </div>
   );
+}
+
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
+      {children}
+      {hint && <p className="text-xs text-slate-400 mt-1">{hint}</p>}
+    </div>
+  );
+}
+
+function FormButtons({ onCancel, editing }: { onCancel: () => void; editing: boolean }) {
+  return (
+    <div className="flex gap-3 pt-2">
+      <button type="submit" className="flex-1 bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800 transition-colors font-medium text-sm">
+        {editing ? 'Update' : 'Create'}
+      </button>
+      <button type="button" onClick={onCancel} className="flex-1 bg-slate-200 text-slate-900 py-2 rounded-lg hover:bg-slate-300 transition-colors font-medium text-sm">
+        Cancel
+      </button>
+    </div>
+  );
+}
+
+function RowActions({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <button onClick={onEdit} className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+        <Edit className="w-4 h-4" />
+      </button>
+      <button onClick={onDelete} className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="animate-pulse space-y-3">
+      {[...Array(4)].map((_, i) => <div key={i} className="h-14 bg-slate-200 rounded-lg" />)}
+    </div>
+  );
+}
+
+function EmptyState({ label }: { label: string }) {
+  return <div className="text-center py-12 text-slate-500 text-sm">{label}</div>;
 }
