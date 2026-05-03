@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -10,7 +10,7 @@ import {
   List, ListOrdered, Heading1, Heading2, Heading3,
   Image as ImageIcon, Link as LinkIcon, AlignLeft, AlignCenter,
   AlignRight, AlignJustify, Undo, Redo, Quote, Code, Minus,
-  Upload, Type, Maximize2, Minimize2
+  Upload, Type, Maximize2, Minimize2, X
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -51,6 +51,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
   const [linkUrl, setLinkUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
   const linkInputRef = useRef<HTMLInputElement>(null);
+
+  // Image dialog state
+  const [showImageDialog, setShowImageDialog] = useState(false);
+  const [imageDialogUrl, setImageDialogUrl] = useState('');
+  const [imageDialogAlt, setImageDialogAlt] = useState('');
+  const [editingImageNode, setEditingImageNode] = useState<{ src: string; alt: string } | null>(null);
+  const imageUrlRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -94,11 +101,35 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
     },
   });
 
-  const insertImage = () => {
-    const url = window.prompt('Enter image URL:');
-    if (url && editor) {
-      editor.chain().focus().setImage({ src: url, alt: '' }).run();
+  const openImageDialog = () => {
+    // Check if cursor is on an existing image
+    if (editor?.isActive('image')) {
+      const attrs = editor.getAttributes('image');
+      setEditingImageNode({ src: attrs.src || '', alt: attrs.alt || '' });
+      setImageDialogUrl(attrs.src || '');
+      setImageDialogAlt(attrs.alt || '');
+    } else {
+      setEditingImageNode(null);
+      setImageDialogUrl('');
+      setImageDialogAlt('');
     }
+    setShowImageDialog(true);
+    setTimeout(() => imageUrlRef.current?.focus(), 50);
+  };
+
+  const handleImageDialogSubmit = () => {
+    if (!editor || !imageDialogUrl.trim()) return;
+    const src = imageDialogUrl.trim();
+    const alt = imageDialogAlt.trim();
+    if (editingImageNode) {
+      editor.chain().focus().updateAttributes('image', { src, alt }).run();
+    } else {
+      editor.chain().focus().setImage({ src, alt }).run();
+    }
+    setShowImageDialog(false);
+    setImageDialogUrl('');
+    setImageDialogAlt('');
+    setEditingImageNode(null);
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +138,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
       const reader = new FileReader();
       reader.onload = (e) => {
         const url = e.target?.result as string;
-        editor.chain().focus().setImage({ src: url, alt: file.name }).run();
+        // Open dialog pre-filled with filename as alt suggestion
+        setEditingImageNode(null);
+        setImageDialogUrl(url);
+        setImageDialogAlt(file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '));
+        setShowImageDialog(true);
+        setTimeout(() => imageUrlRef.current?.focus(), 50);
       };
       reader.readAsDataURL(file);
     }
@@ -246,7 +282,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
         <Divider />
 
         {/* Media */}
-        <ToolbarButton onClick={insertImage} title="Insert image from URL">
+        <ToolbarButton onClick={openImageDialog} active={editor.isActive('image')} title="Insert / edit image">
           <ImageIcon size={15} />
         </ToolbarButton>
         <ToolbarButton onClick={() => fileInputRef.current?.click()} title="Upload image from device">
@@ -316,6 +352,57 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
           >
             Cancel
           </button>
+        </div>
+      )}
+
+      {/* Image insert/edit dialog */}
+      {showImageDialog && (
+        <div className="sticky top-[44px] z-10 bg-white border-b border-slate-200 shadow-sm px-4 py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <ImageIcon size={14} className="text-slate-600 flex-shrink-0" />
+            <span className="text-sm font-semibold text-slate-700">
+              {editingImageNode ? 'Edit Image' : 'Insert Image'}
+            </span>
+            <button
+              type="button"
+              onClick={() => { setShowImageDialog(false); setImageDialogUrl(''); setImageDialogAlt(''); setEditingImageNode(null); }}
+              className="ml-auto text-slate-400 hover:text-slate-600"
+            >
+              <X size={14} />
+            </button>
+          </div>
+          <div className="flex flex-col gap-2">
+            {!editingImageNode && (
+              <input
+                ref={imageUrlRef}
+                type="text"
+                value={imageDialogUrl}
+                onChange={(e) => setImageDialogUrl(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleImageDialogSubmit(); if (e.key === 'Escape') { setShowImageDialog(false); } }}
+                placeholder="https://example.com/image.jpg"
+                className="w-full text-sm border border-slate-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              />
+            )}
+            <div className="flex gap-2 items-center">
+              <input
+                ref={editingImageNode ? imageUrlRef : undefined}
+                type="text"
+                value={imageDialogAlt}
+                onChange={(e) => setImageDialogAlt(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleImageDialogSubmit(); if (e.key === 'Escape') { setShowImageDialog(false); } }}
+                placeholder="Alt text (describe the image for accessibility)"
+                className="flex-1 text-sm border border-slate-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              />
+              <button
+                type="button"
+                onClick={handleImageDialogSubmit}
+                disabled={!imageDialogUrl.trim()}
+                className="text-xs bg-slate-800 text-white px-3 py-1.5 rounded hover:bg-slate-700 transition-colors disabled:opacity-40"
+              >
+                {editingImageNode ? 'Update' : 'Insert'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
