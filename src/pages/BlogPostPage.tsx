@@ -15,15 +15,26 @@ export function BlogPostPage() {
   const [nextPost, setNextPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [commentForm, setCommentForm] = useState({ name: '', email: '', message: '' });
+  const [showFeaturedImage, setShowFeaturedImage] = useState(true);
 
   useEffect(() => {
     if (id) {
       fetchPost();
       fetchSidebarPosts();
       fetchProducts();
+      fetchSettings();
       window.scrollTo(0, 0);
     }
   }, [id]);
+
+  async function fetchSettings() {
+    const { data } = await supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'post_featured_image_enabled')
+      .maybeSingle();
+    if (data) setShowFeaturedImage(data.value === 'true');
+  }
 
   async function fetchPost() {
     try {
@@ -297,6 +308,16 @@ export function BlogPostPage() {
                   </a>
                 </div>
               </div>
+              {showFeaturedImage && post.featured_image && (
+                <div className="rounded-2xl overflow-hidden shadow-lg mb-8">
+                  <img
+                    src={post.featured_image}
+                    alt={post.image_alt || post.title}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              )}
+
               <article className="mb-12">
                 <div className="prose prose-lg max-w-none">
                   <div

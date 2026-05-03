@@ -16,6 +16,7 @@ export interface BlogPost {
   author: string;
   image_url: string | null;
   featured_image: string | null;
+  image_alt: string | null;
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;

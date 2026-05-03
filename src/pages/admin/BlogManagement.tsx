@@ -17,6 +17,7 @@ interface BlogPost {
   author: string;
   image_url: string | null;
   featured_image: string | null;
+  image_alt: string | null;
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;
@@ -62,15 +63,15 @@ export default function BlogManagement() {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [excerptManuallyEdited, setExcerptManuallyEdited] = useState(false);
   const [showSEO, setShowSEO] = useState(false);
-  // 'featured' | 'thumbnail' | 'content' — which field is picking
-  const [galleryTarget, setGalleryTarget] = useState<'featured' | 'thumbnail' | null>(null);
+  const [showGallery, setShowGallery] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     excerpt: '',
     author: '',
-    image_url: '',
-    featured_image: '',
+    // featured_image and image_url are the same — one image serves both
+    image: '',
+    image_alt: '',
     seo_title: '',
     seo_description: '',
     seo_keywords: '',
@@ -124,8 +125,10 @@ export default function BlogManagement() {
         content: formData.content,
         excerpt: formData.excerpt || generateExcerpt(formData.title, formData.content),
         author: formData.author || 'Admin',
-        image_url: formData.image_url || null,
-        featured_image: formData.featured_image || null,
+        // both image_url and featured_image point to the same image
+        image_url: formData.image || null,
+        featured_image: formData.image || null,
+        image_alt: formData.image_alt || null,
         seo_title: formData.seo_title || null,
         seo_description: formData.seo_description || null,
         seo_keywords: formData.seo_keywords || null,
@@ -159,8 +162,8 @@ export default function BlogManagement() {
       content: post.content,
       excerpt: post.excerpt,
       author: post.author,
-      image_url: post.image_url || '',
-      featured_image: post.featured_image || '',
+      image: post.featured_image || post.image_url || '',
+      image_alt: post.image_alt || '',
       seo_title: post.seo_title || '',
       seo_description: post.seo_description || '',
       seo_keywords: post.seo_keywords || '',
@@ -178,7 +181,7 @@ export default function BlogManagement() {
   };
 
   const resetForm = () => {
-    setFormData({ title: '', content: '', excerpt: '', author: '', image_url: '', featured_image: '', seo_title: '', seo_description: '', seo_keywords: '', slug: '', category_id: '' });
+    setFormData({ title: '', content: '', excerpt: '', author: '', image: '', image_alt: '', seo_title: '', seo_description: '', seo_keywords: '', slug: '', category_id: '' });
     setEditingPost(null);
     setExcerptManuallyEdited(false);
     setShowSEO(false);
@@ -233,7 +236,6 @@ export default function BlogManagement() {
       {/* ─────────────── EDIT / CREATE MODAL ─────────────── */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center">
-          {/* The modal fills most of the viewport and is itself scrollable */}
           <div className="bg-white rounded-2xl w-full max-w-6xl shadow-2xl flex flex-col my-4 mx-4"
                style={{ height: 'calc(100vh - 2rem)', maxHeight: 900 }}>
 
@@ -286,13 +288,15 @@ export default function BlogManagement() {
                   />
                 </div>
 
-                {/* Featured Image */}
+                {/* Featured Image (= Thumbnail) */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-sm font-semibold text-slate-700">Featured Image</label>
+                    <label className="block text-sm font-semibold text-slate-700">
+                      Featured Image <span className="text-xs font-normal text-slate-400 ml-1">· also used as thumbnail</span>
+                    </label>
                     <button
                       type="button"
-                      onClick={() => setGalleryTarget('featured')}
+                      onClick={() => setShowGallery(true)}
                       className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors"
                     >
                       <Images className="w-3.5 h-3.5" />
@@ -301,13 +305,25 @@ export default function BlogManagement() {
                   </div>
                   <ImageUploader
                     label=""
-                    value={formData.featured_image}
-                    onChange={(url) => setFormData(prev => ({ ...prev, featured_image: url }))}
-                    placeholder="Upload or paste image URL"
+                    value={formData.image}
+                    onChange={(url) => setFormData(prev => ({ ...prev, image: url }))}
                   />
+                  {/* Alt text — shown below when image is set */}
+                  {formData.image && (
+                    <div className="mt-2">
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Alt Text</label>
+                      <input
+                        type="text"
+                        value={formData.image_alt}
+                        onChange={(e) => setFormData(p => ({ ...p, image_alt: e.target.value }))}
+                        placeholder="Describe the image for accessibility..."
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent text-sm"
+                      />
+                    </div>
+                  )}
                 </div>
 
-                {/* Content Editor — editor toolbar is sticky inside this scrollable area */}
+                {/* Content Editor */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Content</label>
                   <RichTextEditor
@@ -402,32 +418,6 @@ export default function BlogManagement() {
                   </select>
                 </div>
 
-                {/* Thumbnail Image */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-sm font-semibold text-slate-700">Thumbnail</label>
-                    <button
-                      type="button"
-                      onClick={() => setGalleryTarget('thumbnail')}
-                      className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors"
-                    >
-                      <Images className="w-3.5 h-3.5" />
-                      Gallery
-                    </button>
-                  </div>
-                  <p className="text-xs text-slate-400 mb-2">Used in blog listing cards</p>
-                  <input
-                    type="url"
-                    value={formData.image_url}
-                    onChange={(e) => setFormData(p => ({ ...p, image_url: e.target.value }))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent text-sm"
-                    placeholder="https://..."
-                  />
-                  {formData.image_url && (
-                    <img src={formData.image_url} alt="preview" className="mt-2 w-full h-24 object-cover rounded-lg" />
-                  )}
-                </div>
-
                 {/* URL Slug */}
                 {formData.slug && (
                   <div className="bg-white border border-slate-200 rounded-xl p-4">
@@ -463,16 +453,15 @@ export default function BlogManagement() {
       )}
 
       {/* ─────────────── GALLERY PICKER MODAL ─────────────── */}
-      {galleryTarget && (
+      {showGallery && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col overflow-hidden" style={{ height: '80vh' }}>
             <ImageGallery
               onPick={(url) => {
-                if (galleryTarget === 'featured') setFormData(p => ({ ...p, featured_image: url }));
-                if (galleryTarget === 'thumbnail') setFormData(p => ({ ...p, image_url: url }));
-                setGalleryTarget(null);
+                setFormData(p => ({ ...p, image: url }));
+                setShowGallery(false);
               }}
-              onClose={() => setGalleryTarget(null)}
+              onClose={() => setShowGallery(false)}
             />
           </div>
         </div>
@@ -496,8 +485,8 @@ export default function BlogManagement() {
                 <tr key={post.id} className="hover:bg-slate-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      {post.image_url ? (
-                        <img src={post.image_url} alt={post.title} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
+                      {(post.featured_image || post.image_url) ? (
+                        <img src={post.featured_image || post.image_url!} alt={post.image_alt || post.title} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
                       ) : (
                         <div className="w-12 h-12 bg-slate-100 rounded-lg flex-shrink-0" />
                       )}

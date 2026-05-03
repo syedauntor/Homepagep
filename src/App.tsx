@@ -31,6 +31,7 @@ import CategoriesManagement from './pages/admin/CategoriesManagement';
 import OrdersManagement from './pages/admin/OrdersManagement';
 import MessagesView from './pages/admin/MessagesView';
 import ImageGallery from './pages/admin/ImageGallery';
+import SettingsPage from './pages/admin/SettingsPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="messages" element={<MessagesView />} />
               <Route path="media" element={<ImageGallery />} />
+              <Route path="settings" element={<SettingsPage />} />
             </Route>
 
             <Route path="*" element={

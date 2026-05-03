@@ -10,7 +10,8 @@ import {
   LogOut,
   Menu,
   X,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Settings
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -22,6 +23,7 @@ const navItems = [
   { path: '/admin/media', icon: ImageIcon, label: 'Media Library' },
   { path: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
   { path: '/admin/messages', icon: MessageSquare, label: 'Messages' },
+  { path: '/admin/settings', icon: Settings, label: 'Settings' },
 ];
 
 export default function AdminDashboard() {
