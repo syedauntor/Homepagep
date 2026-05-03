@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
 import { supabase, BlogPost, Product } from '../lib/supabase';
-import { PinterestShareButton } from '../components/PinterestShareButton';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -298,21 +297,8 @@ export function BlogPostPage() {
                   </a>
                 </div>
               </div>
-              {post.featured_image && (
-                <div className="rounded-2xl overflow-hidden shadow-lg mb-8">
-                  <PinterestShareButton
-                    imageUrl={post.featured_image}
-                    description={post.title}
-                  />
-                </div>
-              )}
-
               <article className="mb-12">
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-xl text-gray-700 leading-relaxed mb-8 font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-orange-500 first-letter:mr-1 first-letter:float-left">
-                    {post.excerpt}
-                  </p>
-
                   <div
                     className="text-gray-700 text-lg leading-relaxed blog-content"
                     dangerouslySetInnerHTML={{ __html: post.content }}

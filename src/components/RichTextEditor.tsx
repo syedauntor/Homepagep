@@ -158,8 +158,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
         isFullscreen ? 'fixed inset-0 z-[100] rounded-none border-0 shadow-none bg-white' : ''
       }`}
     >
-      {/* Toolbar */}
-      <div className="bg-slate-50 border-b border-slate-300 px-2 py-1.5 flex flex-wrap items-center gap-0.5">
+      {/* Toolbar — sticky so it stays visible when content scrolls */}
+      <div className="sticky top-0 z-10 bg-slate-50 border-b border-slate-300 px-2 py-1.5 flex flex-wrap items-center gap-0.5">
         {/* Block type selector */}
         <select
           value={getCurrentHeading()}
@@ -279,7 +279,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
 
       {/* Link input bar */}
       {showLinkInput && (
-        <div className="bg-blue-50 border-b border-blue-200 px-3 py-2 flex items-center gap-2">
+        <div className="sticky top-0 z-10 bg-blue-50 border-b border-blue-200 px-3 py-2 flex items-center gap-2">
           <LinkIcon size={14} className="text-blue-600 flex-shrink-0" />
           <input
             ref={linkInputRef}
