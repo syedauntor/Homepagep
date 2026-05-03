@@ -114,6 +114,30 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
         }
         return false;
       },
+      handlePaste(_view, event) {
+        const items = event.clipboardData?.items;
+        if (!items) return false;
+        for (const item of Array.from(items)) {
+          if (item.type.startsWith('image/')) {
+            event.preventDefault();
+            const file = item.getAsFile();
+            if (file) uploadFileToStorage(file);
+            return true;
+          }
+        }
+        return false;
+      },
+      handleDrop(_view, event) {
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) return false;
+        const imageFile = Array.from(files).find(f => f.type.startsWith('image/'));
+        if (imageFile) {
+          event.preventDefault();
+          uploadFileToStorage(imageFile);
+          return true;
+        }
+        return false;
+      },
     },
   });
 
@@ -148,11 +172,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
     setEditingImageNode(null);
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    if (!file || !editor) return;
-
+  const uploadFileToStorage = async (file: File) => {
+    if (!editor) return;
     setUploading(true);
     try {
       const ext = file.name.split('.').pop() || 'jpg';
@@ -160,20 +181,23 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
       const { error: uploadError } = await supabase.storage
         .from('blog-images')
         .upload(filename, file, { upsert: false });
-
       if (uploadError) throw uploadError;
-
       const { data } = supabase.storage.from('blog-images').getPublicUrl(filename);
-      const publicUrl = data.publicUrl;
       const alt = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-
-      editor.chain().focus().setImage({ src: publicUrl, alt }).run();
+      editor.chain().focus().setImage({ src: data.publicUrl, alt }).run();
     } catch (err) {
       console.error('Image upload failed:', err);
       alert('Image upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (!file) return;
+    await uploadFileToStorage(file);
   };
 
   const handleLinkSubmit = useCallback(() => {
