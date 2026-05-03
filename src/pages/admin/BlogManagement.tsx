@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
 import {
   Plus, CreditCard as Edit, Trash2, Search, Eye, X,
-  RefreshCw, ChevronDown, ChevronUp, Images
+  ChevronDown, ChevronUp, Images
 } from 'lucide-react';
 import { RichTextEditor } from '../../components/RichTextEditor';
 import { ImageUploader } from '../../components/ImageUploader';
@@ -330,35 +330,6 @@ export default function BlogManagement() {
                     content={formData.content}
                     onChange={(content) => updateFormField('content', content)}
                   />
-                </div>
-
-                {/* Excerpt */}
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-sm font-semibold text-slate-700">Excerpt</label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setExcerptManuallyEdited(false);
-                        setFormData(prev => ({ ...prev, excerpt: generateExcerpt(prev.title, prev.content) }));
-                      }}
-                      className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 transition-colors"
-                    >
-                      <RefreshCw className="w-3 h-3" />
-                      Auto-generate
-                    </button>
-                  </div>
-                  <textarea
-                    value={formData.excerpt}
-                    onChange={(e) => { setExcerptManuallyEdited(true); setFormData(prev => ({ ...prev, excerpt: e.target.value })); }}
-                    rows={3}
-                    placeholder="Short summary for blog listings (auto-generated from content)"
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent resize-none text-sm"
-                  />
-                  <p className="text-xs text-slate-400 mt-1">
-                    {formData.excerpt.length} chars
-                    {!excerptManuallyEdited && formData.content && ' · Auto-generated'}
-                  </p>
                 </div>
 
                 {/* SEO (collapsible) */}

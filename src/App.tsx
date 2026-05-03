@@ -32,6 +32,7 @@ import OrdersManagement from './pages/admin/OrdersManagement';
 import MessagesView from './pages/admin/MessagesView';
 import ImageGallery from './pages/admin/ImageGallery';
 import SettingsPage from './pages/admin/SettingsPage';
+import AuthorsPage from './pages/admin/AuthorsPage';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="messages" element={<MessagesView />} />
               <Route path="media" element={<ImageGallery />} />
+              <Route path="authors" element={<AuthorsPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
 

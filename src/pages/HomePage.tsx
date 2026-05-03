@@ -1,16 +1,45 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Grid3x3, Gift, TrendingUp, Mail, Plus, Minus, Type, Pen } from 'lucide-react';
+import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Twitter, Grid3x3, Gift, TrendingUp, Mail, Plus, Minus, Type, Pen, User } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
+
+interface Author {
+  id: string;
+  name: string;
+  designation: string;
+  bio: string;
+  avatar_url: string | null;
+  fb_url: string | null;
+  ig_url: string | null;
+  x_url: string | null;
+  linkedin_url: string | null;
+  pinterest_url: string | null;
+  show_on_home: boolean;
+  display_order: number;
+  is_active: boolean;
+}
 
 export function HomePage() {
   const [popularPosts, setPopularPosts] = useState<BlogPost[]>([]);
   const [latestPosts, setLatestPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [teamMembers, setTeamMembers] = useState<Author[]>([]);
 
   useEffect(() => {
     fetchPosts();
+    fetchTeam();
   }, []);
+
+  async function fetchTeam() {
+    const { data } = await supabase
+      .from('authors')
+      .select('*')
+      .eq('show_on_home', true)
+      .eq('is_active', true)
+      .order('display_order')
+      .order('created_at');
+    if (data) setTeamMembers(data);
+  }
 
   async function fetchPosts() {
     try {
@@ -45,11 +74,7 @@ export function HomePage() {
     { name: 'Worksheets', icon: Download, color: 'from-lime-400 to-yellow-300', link: '/generators' },
   ];
 
-  const team = [
-    { name: 'Sarah Johnson', role: 'Graphic Designer', color: 'from-orange-400 to-orange-300' },
-    { name: 'Michael Chen', role: 'Content Creator', color: 'from-blue-400 to-blue-300' },
-    { name: 'Emily Davis', role: 'Education Specialist', color: 'from-green-400 to-green-300' },
-  ];
+  // team is now fetched from DB (teamMembers state)
 
   const features = [
     {
@@ -323,26 +348,60 @@ export function HomePage() {
                 Passionate educators and designers creating amazing resources
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
-                {team.map((member) => (
-                  <div key={member.name} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
-                    <div className={`w-32 h-32 bg-gradient-to-br ${member.color} rounded-full mx-auto mb-6`}></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {teamMembers.map((member) => (
+                  <div key={member.id} className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition">
+                    {member.avatar_url ? (
+                      <img src={member.avatar_url} alt={member.name} className="w-32 h-32 rounded-full mx-auto mb-6 object-cover" />
+                    ) : (
+                      <div className="w-32 h-32 bg-gradient-to-br from-orange-400 to-amber-300 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <User className="w-16 h-16 text-white" />
+                      </div>
+                    )}
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                    <p className="text-gray-600 mb-6">{member.role}</p>
-                    <div className="flex justify-center space-x-4">
-                      <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
-                        <Facebook className="w-5 h-5" />
-                      </button>
-                      <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
-                        <Instagram className="w-5 h-5" />
-                      </button>
-                      <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition">
-                        <Linkedin className="w-5 h-5" />
-                      </button>
+                    <p className="text-gray-600 mb-3">{member.designation}</p>
+                    {member.bio && <p className="text-sm text-gray-500 mb-5 line-clamp-3 leading-relaxed">{member.bio}</p>}
+                    <div className="flex justify-center space-x-3">
+                      {member.fb_url && (
+                        <a href={member.fb_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition text-gray-600">
+                          <Facebook className="w-5 h-5" />
+                        </a>
+                      )}
+                      {member.ig_url && (
+                        <a href={member.ig_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-pink-600 hover:text-white transition text-gray-600">
+                          <Instagram className="w-5 h-5" />
+                        </a>
+                      )}
+                      {member.x_url && (
+                        <a href={member.x_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-sky-500 hover:text-white transition text-gray-600">
+                          <Twitter className="w-5 h-5" />
+                        </a>
+                      )}
+                      {member.linkedin_url && (
+                        <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-700 hover:text-white transition text-gray-600">
+                          <Linkedin className="w-5 h-5" />
+                        </a>
+                      )}
+                      {!member.fb_url && !member.ig_url && !member.x_url && !member.linkedin_url && (
+                        <>
+                          <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition text-gray-600">
+                            <Facebook className="w-5 h-5" />
+                          </button>
+                          <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition text-gray-600">
+                            <Instagram className="w-5 h-5" />
+                          </button>
+                          <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition text-gray-600">
+                            <Linkedin className="w-5 h-5" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
+              {teamMembers.length === 0 && (
+                <p className="text-gray-500 text-center py-8">Add team members in the admin panel under Authors &amp; Team.</p>
+              )}
             </div>
           </section>
 

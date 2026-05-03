@@ -3,6 +3,18 @@ import { useParams, Link } from 'react-router-dom';
 import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
 import { supabase, BlogPost, Product } from '../lib/supabase';
 
+interface AuthorProfile {
+  name: string;
+  designation: string;
+  bio: string;
+  avatar_url: string | null;
+  fb_url: string | null;
+  ig_url: string | null;
+  x_url: string | null;
+  linkedin_url: string | null;
+  pinterest_url: string | null;
+}
+
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
   const [post, setPost] = useState<BlogPost | null>(null);
@@ -16,6 +28,7 @@ export function BlogPostPage() {
   const [loading, setLoading] = useState(true);
   const [commentForm, setCommentForm] = useState({ name: '', email: '', message: '' });
   const [showFeaturedImage, setShowFeaturedImage] = useState(true);
+  const [authorProfile, setAuthorProfile] = useState<AuthorProfile | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -51,6 +64,7 @@ export function BlogPostPage() {
         await incrementViews(data.id);
         await fetchRelatedPosts(data.id);
         await fetchPreviousNextPosts(data.created_at);
+        fetchAuthorProfile(data.author);
       }
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -61,6 +75,16 @@ export function BlogPostPage() {
 
   async function incrementViews(postId: string) {
     await supabase.rpc('increment_post_views', { post_id: postId }).catch(() => {});
+  }
+
+  async function fetchAuthorProfile(authorName: string) {
+    const { data } = await supabase
+      .from('authors')
+      .select('name, designation, bio, avatar_url, fb_url, ig_url, x_url, linkedin_url, pinterest_url')
+      .ilike('name', authorName)
+      .eq('is_active', true)
+      .maybeSingle();
+    if (data) setAuthorProfile(data);
   }
 
   async function fetchRelatedPosts(currentPostId: string) {
@@ -330,28 +354,50 @@ export function BlogPostPage() {
               <div className="border-t-2 border-gray-100 pt-8">
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">Writer</h3>
                 <div className="flex items-start space-x-6">
-                  <div className="w-24 h-24 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <User className="w-12 h-12 text-white" />
-                  </div>
+                  {authorProfile?.avatar_url ? (
+                    <img src={authorProfile.avatar_url} alt={authorProfile.name} className="w-24 h-24 rounded-full object-cover flex-shrink-0 shadow-lg" />
+                  ) : (
+                    <div className="w-24 h-24 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <User className="w-12 h-12 text-white" />
+                    </div>
+                  )}
                   <div className="flex-1">
                     <h4 className="text-2xl font-bold text-gray-900 mb-2">{post.author}</h4>
-                    <p className="text-orange-500 font-semibold mb-4">Content Writer</p>
+                    <p className="text-orange-500 font-semibold mb-4">
+                      {authorProfile?.designation || 'Content Writer'}
+                    </p>
                     <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-                      A passionate writer creating engaging content and sharing valuable insights with readers around the world.
+                      {authorProfile?.bio || 'A passionate writer creating engaging content and sharing valuable insights with readers around the world.'}
                     </p>
                     <div className="flex items-center space-x-4">
-                      <a href="#" className="text-blue-600 hover:text-blue-700 transition transform hover:scale-110">
-                        <Facebook className="w-6 h-6" />
-                      </a>
-                      <a href="#" className="text-sky-500 hover:text-sky-600 transition transform hover:scale-110">
-                        <Twitter className="w-6 h-6" />
-                      </a>
-                      <a href="#" className="text-pink-600 hover:text-pink-700 transition transform hover:scale-110">
-                        <Instagram className="w-6 h-6" />
-                      </a>
-                      <a href="#" className="text-blue-700 hover:text-blue-800 transition transform hover:scale-110">
-                        <Linkedin className="w-6 h-6" />
-                      </a>
+                      {authorProfile?.fb_url && (
+                        <a href={authorProfile.fb_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 transition transform hover:scale-110">
+                          <Facebook className="w-6 h-6" />
+                        </a>
+                      )}
+                      {authorProfile?.x_url && (
+                        <a href={authorProfile.x_url} target="_blank" rel="noopener noreferrer" className="text-sky-500 hover:text-sky-600 transition transform hover:scale-110">
+                          <Twitter className="w-6 h-6" />
+                        </a>
+                      )}
+                      {authorProfile?.ig_url && (
+                        <a href={authorProfile.ig_url} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-700 transition transform hover:scale-110">
+                          <Instagram className="w-6 h-6" />
+                        </a>
+                      )}
+                      {authorProfile?.linkedin_url && (
+                        <a href={authorProfile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-800 transition transform hover:scale-110">
+                          <Linkedin className="w-6 h-6" />
+                        </a>
+                      )}
+                      {!authorProfile && (
+                        <>
+                          <a href="#" className="text-blue-600 hover:text-blue-700 transition transform hover:scale-110"><Facebook className="w-6 h-6" /></a>
+                          <a href="#" className="text-sky-500 hover:text-sky-600 transition transform hover:scale-110"><Twitter className="w-6 h-6" /></a>
+                          <a href="#" className="text-pink-600 hover:text-pink-700 transition transform hover:scale-110"><Instagram className="w-6 h-6" /></a>
+                          <a href="#" className="text-blue-700 hover:text-blue-800 transition transform hover:scale-110"><Linkedin className="w-6 h-6" /></a>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

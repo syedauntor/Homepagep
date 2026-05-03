@@ -34,15 +34,15 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = ({ onClick, active, disabled
     title={title}
     className={`p-1.5 rounded text-sm transition-all ${
       active
-        ? 'bg-slate-800 text-white shadow-inner'
-        : 'text-slate-700 hover:bg-slate-200 hover:text-slate-900'
+        ? 'bg-white text-slate-900 shadow-inner'
+        : 'text-slate-200 hover:bg-slate-600 hover:text-white'
     } ${disabled ? 'opacity-30 cursor-not-allowed' : ''}`}
   >
     {children}
   </button>
 );
 
-const Divider = () => <div className="w-px bg-slate-300 mx-0.5 self-stretch" />;
+const Divider = () => <div className="w-px bg-slate-600 mx-0.5 self-stretch" />;
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -154,12 +154,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
 
   return (
     <div
-      className={`border border-slate-300 rounded-lg shadow-sm flex flex-col ${
+      className={`border-2 border-slate-800 rounded-xl shadow-md flex flex-col ${
         isFullscreen ? 'fixed inset-0 z-[100] rounded-none border-0 shadow-none bg-white' : ''
       }`}
     >
       {/* Toolbar — sticky so it stays visible when content scrolls */}
-      <div className="sticky top-0 z-10 bg-slate-50 border-b border-slate-300 px-2 py-1.5 flex flex-wrap items-center gap-0.5 rounded-t-lg">
+      <div className="sticky top-0 z-10 bg-slate-800 border-b border-slate-700 px-2 py-1.5 flex flex-wrap items-center gap-0.5 rounded-t-xl">
         {/* Block type selector */}
         <select
           value={getCurrentHeading()}
@@ -171,7 +171,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
               editor.chain().focus().toggleHeading({ level: val as 1|2|3|4 }).run();
             }
           }}
-          className="text-xs border border-slate-300 rounded px-1.5 py-1 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-400 mr-1"
+          className="text-xs border border-slate-600 rounded px-1.5 py-1 bg-slate-700 text-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-300 mr-1"
           title="Text style"
         >
           {headingOptions.map(opt => (
@@ -329,7 +329,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
       </div>
 
       {/* Status bar */}
-      <div className="bg-slate-50 border-t border-slate-200 px-3 py-1 flex items-center justify-between text-xs text-slate-400">
+      <div className="bg-slate-800 border-t border-slate-700 px-3 py-1 flex items-center justify-between text-xs text-slate-400 rounded-b-xl">
         <span>{wordCount} words</span>
         <span className="text-slate-300">
           Tip: Select text for quick formatting options
