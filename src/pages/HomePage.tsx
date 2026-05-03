@@ -46,15 +46,16 @@ export function HomePage() {
       const { data: allPosts, error } = await supabase
         .from('blog_posts')
         .select('*')
+        .eq('status', 'published')
+        .lte('published_at', new Date().toISOString())
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      if (allPosts) {
-        const sorted = [...allPosts].sort((a, b) => b.views - a.views);
-        setPopularPosts(sorted.slice(0, 8));
-        setLatestPosts(allPosts.slice(0, 8));
-      }
+      const posts = allPosts ?? [];
+      const sorted = [...posts].sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+      setPopularPosts(sorted.slice(0, 8));
+      setLatestPosts(posts.slice(0, 8));
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -280,16 +281,18 @@ export function HomePage() {
               {latestPosts.length > 0 && (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 mb-12">
-                    {latestPosts.map((post) => (
+                    {latestPosts.map((post) => {
+                      const thumb = (post as any).featured_image || post.image_url;
+                      return (
                       <Link
                         key={post.id}
-                        to={`/blog/${post.id}`}
+                        to={`/blog/${(post as any).slug || post.id}`}
                         className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
                       >
                         <div className="h-48 overflow-hidden relative">
-                          {post.image_url ? (
+                          {thumb ? (
                             <img
-                              src={post.image_url}
+                              src={thumb}
                               alt={post.title}
                               className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                             />
@@ -323,7 +326,8 @@ export function HomePage() {
                           </div>
                         </div>
                       </Link>
-                    ))}
+                    );
+                    })}
                   </div>
 
                   <div className="text-center">
@@ -417,16 +421,18 @@ export function HomePage() {
 
               {popularPosts.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 mb-12">
-                  {popularPosts.map((post) => (
+                  {popularPosts.map((post) => {
+                    const thumb = (post as any).featured_image || post.image_url;
+                    return (
                     <Link
                       key={post.id}
-                      to={`/blog/${post.id}`}
+                      to={`/blog/${(post as any).slug || post.id}`}
                       className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
                     >
                       <div className="h-48 overflow-hidden relative">
-                        {post.image_url ? (
+                        {thumb ? (
                           <img
-                            src={post.image_url}
+                            src={thumb}
                             alt={post.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                           />
@@ -460,7 +466,8 @@ export function HomePage() {
                         </div>
                       </div>
                     </Link>
-                  ))}
+                  );
+                  })}
                 </div>
               )}
             </div>
