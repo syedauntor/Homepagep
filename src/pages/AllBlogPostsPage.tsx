@@ -3,26 +3,40 @@ import { Link } from 'react-router-dom';
 import { Search, Calendar, Eye, ArrowRight, BookOpen, TrendingUp, Clock } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export function AllBlogPostsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'latest' | 'popular'>('latest');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
+    fetchCategories();
     fetchPosts();
   }, []);
 
   useEffect(() => {
     filterAndSortPosts();
-  }, [posts, searchTerm, sortBy]);
+  }, [posts, searchTerm, sortBy, selectedCategory]);
+
+  async function fetchCategories() {
+    const { data } = await supabase.from('categories').select('id, name, slug').order('name');
+    if (data) setCategories(data);
+  }
 
   async function fetchPosts() {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('*')
+        .select('*, categories(id, name, slug)')
         .eq('status', 'published')
         .lte('published_at', new Date().toISOString())
         .order('created_at', { ascending: false });
@@ -38,6 +52,10 @@ export function AllBlogPostsPage() {
 
   function filterAndSortPosts() {
     let result = [...posts];
+
+    if (selectedCategory) {
+      result = result.filter((post) => post.category_id === selectedCategory);
+    }
 
     if (searchTerm) {
       result = result.filter(
@@ -64,73 +82,111 @@ export function AllBlogPostsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-16">
+      <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 text-center">Our Blog</h1>
-          <p className="text-lg md:text-xl text-gray-600 text-center max-w-3xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 text-center">Our Blog</h1>
+          <p className="text-base md:text-lg text-gray-600 text-center max-w-3xl mx-auto">
             Explore our collection of articles, tutorials, and resources for education and creativity
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+        <div className="bg-white rounded-2xl shadow-lg px-5 py-4">
+          <div className="flex flex-wrap gap-3 items-center justify-between">
+            {/* Search — smaller */}
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search posts by title, content, or author..."
+                placeholder="Search posts..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
+                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               />
             </div>
 
-            <div className="flex gap-2">
+            {/* Sort + Category filters */}
+            <div className="flex flex-wrap gap-2 items-center">
               <button
                 onClick={() => setSortBy('latest')}
-                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2 ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 ${
                   sortBy === 'latest'
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                <Clock className="w-4 h-4" />
-                <span>Latest</span>
+                <Clock className="w-3.5 h-3.5" />
+                Latest
               </button>
               <button
                 onClick={() => setSortBy('popular')}
-                className={`px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2 ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 ${
                   sortBy === 'popular'
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                <TrendingUp className="w-4 h-4" />
-                <span>Popular</span>
+                <TrendingUp className="w-3.5 h-3.5" />
+                Popular
               </button>
+
+              {/* Divider */}
+              {categories.length > 0 && (
+                <div className="w-px h-6 bg-gray-200 mx-1" />
+              )}
+
+              {/* All button */}
+              {categories.length > 0 && (
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                    selectedCategory === null
+                      ? 'bg-gray-800 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  All
+                </button>
+              )}
+
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                    selectedCategory === cat.id
+                      ? 'bg-gray-800 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
           </div>
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-12">
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-gray-900 mb-2">No posts found</h3>
-            <p className="text-gray-600">Try adjusting your search terms</p>
+            <p className="text-gray-600">Try adjusting your search or filter</p>
           </div>
         ) : (
           <>
-            <div className="mb-8">
-              <p className="text-gray-600">
+            <div className="mb-6">
+              <p className="text-gray-600 text-sm">
                 Showing <span className="font-semibold text-gray-900">{filteredPosts.length}</span> {filteredPosts.length === 1 ? 'post' : 'posts'}
+                {selectedCategory && categories.find(c => c.id === selectedCategory) && (
+                  <> in <span className="font-semibold text-orange-500">{categories.find(c => c.id === selectedCategory)?.name}</span></>
+                )}
               </p>
             </div>
 
@@ -139,48 +195,53 @@ export function AllBlogPostsPage() {
                 const thumb = (post as any).featured_image || post.image_url;
                 const href = (post as any).slug ? `/blog/${(post as any).slug}` : `/blog/${post.id}`;
                 return (
-                <Link
-                  key={post.id}
-                  to={href}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
-                >
-                  <div className="h-56 overflow-hidden relative">
-                    {thumb ? (
-                      <img
-                        src={thumb}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                      />
-                    ) : (
-                      <div className="h-full bg-gradient-to-br from-emerald-200 to-teal-300 flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-white opacity-50" />
+                  <Link
+                    key={post.id}
+                    to={href}
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
+                  >
+                    <div className="h-52 overflow-hidden relative">
+                      {thumb ? (
+                        <img
+                          src={thumb}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                        />
+                      ) : (
+                        <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 flex items-center justify-center">
+                          <BookOpen className="w-12 h-12 text-white opacity-50" />
+                        </div>
+                      )}
+                      {(post as any).categories?.name && (
+                        <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                          {(post as any).categories.name}
+                        </span>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>{formatDate(post.created_at)}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-orange-500 font-semibold">
+                          <Eye className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>{post.views.toLocaleString()}</span>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 flex-shrink-0" />
-                        <span>{formatDate(post.created_at)}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-emerald-600 font-semibold">
-                        <Eye className="w-4 h-4 flex-shrink-0" />
-                        <span>{post.views.toLocaleString()}</span>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition line-clamp-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{post.excerpt}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-500">By {post.author}</span>
+                        <span className="text-orange-500 font-semibold flex items-center gap-1 text-sm">
+                          Read
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                        </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">By {post.author}</span>
-                      <span className="text-emerald-600 font-semibold flex items-center space-x-2 group-hover:space-x-3 transition-all">
-                        <span>Read</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
                 );
               })}
             </div>
