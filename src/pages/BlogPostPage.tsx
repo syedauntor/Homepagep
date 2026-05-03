@@ -15,7 +15,7 @@ function BlogContent({ html, pageUrl, pageTitle }: { html: string; pageUrl: stri
     const imgs = container.querySelectorAll<HTMLImageElement>('img');
     imgs.forEach(img => {
       if (img.parentElement?.classList.contains('pinterest-img-wrap')) return;
-      const wrap = document.createElement('span');
+      const wrap = document.createElement('div');
       wrap.className = 'pinterest-img-wrap';
       img.parentNode?.insertBefore(wrap, img);
       wrap.appendChild(img);

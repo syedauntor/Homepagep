@@ -98,6 +98,20 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
         class: 'prose prose-slate max-w-none focus:outline-none',
         spellcheck: 'true',
       },
+      handleClick(view, _pos, event) {
+        const target = event.target as HTMLElement;
+        if (target.tagName === 'IMG') {
+          const attrs = view.state.selection.$anchor.nodeAfter?.attrs
+            ?? { src: (target as HTMLImageElement).src, alt: (target as HTMLImageElement).alt };
+          setEditingImageNode({ src: attrs.src || (target as HTMLImageElement).src, alt: attrs.alt || (target as HTMLImageElement).alt });
+          setImageDialogUrl(attrs.src || (target as HTMLImageElement).src);
+          setImageDialogAlt(attrs.alt || (target as HTMLImageElement).alt || '');
+          setShowImageDialog(true);
+          setTimeout(() => imageUrlRef.current?.focus(), 50);
+          return true;
+        }
+        return false;
+      },
     },
   });
 
@@ -372,34 +386,34 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
             </button>
           </div>
           <div className="flex flex-col gap-2">
-            {!editingImageNode && (
-              <input
-                ref={imageUrlRef}
-                type="text"
-                value={imageDialogUrl}
-                onChange={(e) => setImageDialogUrl(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleImageDialogSubmit(); if (e.key === 'Escape') { setShowImageDialog(false); } }}
-                placeholder="https://example.com/image.jpg"
-                className="w-full text-sm border border-slate-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-400"
-              />
-            )}
+            <input
+              ref={editingImageNode ? imageUrlRef : undefined}
+              type="text"
+              value={imageDialogUrl}
+              onChange={(e) => !editingImageNode && setImageDialogUrl(e.target.value)}
+              readOnly={!!editingImageNode}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleImageDialogSubmit(); if (e.key === 'Escape') { setShowImageDialog(false); } }}
+              placeholder="https://example.com/image.jpg"
+              className={`w-full text-sm border rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-400 ${editingImageNode ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-default' : 'border-slate-300'}`}
+            />
             <div className="flex gap-2 items-center">
               <input
-                ref={editingImageNode ? imageUrlRef : undefined}
+                ref={editingImageNode ? undefined : imageUrlRef}
                 type="text"
                 value={imageDialogAlt}
                 onChange={(e) => setImageDialogAlt(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleImageDialogSubmit(); if (e.key === 'Escape') { setShowImageDialog(false); } }}
-                placeholder="Alt text (describe the image for accessibility)"
+                placeholder="Alt text — describe the image for accessibility & SEO"
+                autoFocus={!!editingImageNode}
                 className="flex-1 text-sm border border-slate-300 rounded px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-slate-400"
               />
               <button
                 type="button"
                 onClick={handleImageDialogSubmit}
                 disabled={!imageDialogUrl.trim()}
-                className="text-xs bg-slate-800 text-white px-3 py-1.5 rounded hover:bg-slate-700 transition-colors disabled:opacity-40"
+                className="text-xs bg-slate-800 text-white px-3 py-1.5 rounded hover:bg-slate-700 transition-colors disabled:opacity-40 whitespace-nowrap"
               >
-                {editingImageNode ? 'Update' : 'Insert'}
+                {editingImageNode ? 'Save Alt' : 'Insert'}
               </button>
             </div>
           </div>
@@ -481,7 +495,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
         }
         .ProseMirror a { color: #2563eb; text-decoration: underline; cursor: pointer; }
         .ProseMirror a:hover { color: #1d4ed8; }
-        .ProseMirror img { max-width: 100%; height: auto; border-radius: 8px; margin: 1em 0; display: block; }
+        .ProseMirror img { max-width: 100%; height: auto; border-radius: 8px; margin: 1em 0; display: block; cursor: pointer; outline: 2px solid transparent; transition: outline-color 0.15s; }
+        .ProseMirror img:hover { outline: 2px solid #64748b; outline-offset: 2px; }
         .ProseMirror hr { border: none; border-top: 2px solid #e2e8f0; margin: 2em 0; }
         .ProseMirror strong { font-weight: 700; }
         .ProseMirror em { font-style: italic; }

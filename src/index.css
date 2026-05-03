@@ -24,11 +24,24 @@
   display: block;
 }
 
-/* The Pinterest button is injected via JS in PinterestImageOverlay */
+/* Pinterest overlay wrapper injected by JS around each <img> in blog content */
 .pinterest-img-wrap {
   position: relative;
   display: block;
   width: 100%;
+  line-height: 0; /* collapse whitespace so no gap below image */
+}
+
+/* Ensure parent <p> doesn't clip the absolutely-positioned button */
+.blog-content p:has(.pinterest-img-wrap) {
+  overflow: visible;
+}
+
+.pinterest-img-wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  line-height: normal;
 }
 
 .pinterest-img-wrap .pinterest-btn {
@@ -47,6 +60,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   z-index: 10;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .pinterest-img-wrap:hover .pinterest-btn {
