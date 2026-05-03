@@ -185,11 +185,20 @@ export function BlogPostPage() {
 
   async function fetchPost() {
     try {
-      const { data, error } = await supabase
+      // Try by slug first, then fall back to id
+      let { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .eq('id', id)
+        .eq('slug', id!)
         .maybeSingle();
+
+      if (!data && !error) {
+        ({ data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('id', id!)
+          .maybeSingle());
+      }
 
       if (error) throw error;
 
