@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Calendar, Eye, ArrowRight, BookOpen, TrendingUp, Clock } from 'lucide-react';
+import { Search, Calendar, Eye, ArrowRight, BookOpen, TrendingUp, Clock, ChevronDown } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
 
 interface Category {
@@ -17,6 +17,18 @@ export function AllBlogPostsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'latest' | 'popular'>('latest');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     fetchCategories();
@@ -131,38 +143,54 @@ export function AllBlogPostsPage() {
                 Popular
               </button>
 
-              {/* Divider */}
+              {/* Category dropdown */}
               {categories.length > 0 && (
-                <div className="w-px h-6 bg-gray-200 mx-1" />
+                <>
+                  <div className="w-px h-6 bg-gray-200 mx-1" />
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={() => setDropdownOpen((o) => !o)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition border ${
+                        selectedCategory
+                          ? 'bg-gray-800 text-white border-gray-800'
+                          : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+                      }`}
+                    >
+                      {selectedCategory
+                        ? categories.find((c) => c.id === selectedCategory)?.name
+                        : 'Category'}
+                      <ChevronDown className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {dropdownOpen && (
+                      <div className="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                        <button
+                          onClick={() => { setSelectedCategory(null); setDropdownOpen(false); }}
+                          className={`w-full text-left px-4 py-2 text-sm transition ${
+                            selectedCategory === null
+                              ? 'bg-orange-50 text-orange-600 font-semibold'
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          All Categories
+                        </button>
+                        {categories.map((cat) => (
+                          <button
+                            key={cat.id}
+                            onClick={() => { setSelectedCategory(cat.id); setDropdownOpen(false); }}
+                            className={`w-full text-left px-4 py-2 text-sm transition ${
+                              selectedCategory === cat.id
+                                ? 'bg-orange-50 text-orange-600 font-semibold'
+                                : 'text-gray-700 hover:bg-gray-50'
+                            }`}
+                          >
+                            {cat.name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
-
-              {/* All button */}
-              {categories.length > 0 && (
-                <button
-                  onClick={() => setSelectedCategory(null)}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
-                    selectedCategory === null
-                      ? 'bg-gray-800 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  All
-                </button>
-              )}
-
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
-                    selectedCategory === cat.id
-                      ? 'bg-gray-800 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
             </div>
           </div>
         </div>
