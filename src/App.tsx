@@ -34,7 +34,6 @@ import ImageGallery from './pages/admin/ImageGallery';
 import SettingsPage from './pages/admin/SettingsPage';
 import AuthorsPage from './pages/admin/AuthorsPage';
 import PagesManagement from './pages/admin/PagesManagement';
-import MenuSettings from './pages/admin/MenuSettings';
 import { DynamicPage } from './pages/DynamicPage';
 
 function App() {
@@ -54,7 +53,6 @@ function App() {
               <Route path="media" element={<ImageGallery />} />
               <Route path="authors" element={<AuthorsPage />} />
               <Route path="pages" element={<PagesManagement />} />
-              <Route path="menu" element={<MenuSettings />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
 

@@ -2,7 +2,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
 import {
   Plus, CreditCard as Edit, Trash2, Search, Eye, X,
-  ChevronDown, ChevronUp, Images
+  ChevronDown, ChevronUp, Images, Lock, Unlock,
+  Calendar, Clock, Globe, FileText, AlarmClock
 } from 'lucide-react';
 import { RichTextEditor } from '../../components/RichTextEditor';
 import { ImageUploader } from '../../components/ImageUploader';
@@ -24,6 +25,10 @@ interface BlogPost {
   slug: string | null;
   views: number;
   category_id: string | null;
+  status: string;
+  published_at: string | null;
+  modified_at: string | null;
+  lock_modified_date: boolean;
   created_at: string;
 }
 
@@ -53,6 +58,24 @@ function generateSlug(title: string): string {
     .replace(/^-|-$/g, '');
 }
 
+// Format a datetime-local input value from an ISO string
+function toDatetimeLocal(iso: string | null): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function fromDatetimeLocal(val: string): string {
+  return val ? new Date(val).toISOString() : new Date().toISOString();
+}
+
+const STATUS_META: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
+  draft: { label: 'Draft', color: 'bg-slate-100 text-slate-600', icon: <FileText className="w-3.5 h-3.5" /> },
+  scheduled: { label: 'Scheduled', color: 'bg-amber-100 text-amber-700', icon: <AlarmClock className="w-3.5 h-3.5" /> },
+  published: { label: 'Published', color: 'bg-green-100 text-green-700', icon: <Globe className="w-3.5 h-3.5" /> },
+};
+
 export default function BlogManagement() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -69,7 +92,6 @@ export default function BlogManagement() {
     content: '',
     excerpt: '',
     author: '',
-    // featured_image and image_url are the same — one image serves both
     image: '',
     image_alt: '',
     seo_title: '',
@@ -77,6 +99,10 @@ export default function BlogManagement() {
     seo_keywords: '',
     slug: '',
     category_id: '',
+    status: 'published',
+    published_at: toDatetimeLocal(new Date().toISOString()),
+    modified_at: toDatetimeLocal(new Date().toISOString()),
+    lock_modified_date: false,
   });
 
   useEffect(() => { loadData(); }, []);
@@ -93,6 +119,10 @@ export default function BlogManagement() {
         }
         if (field === 'title' && !editingPost) {
           updated.slug = generateSlug(value);
+        }
+        // Auto-update modified_at on content change unless locked
+        if (!prev.lock_modified_date) {
+          updated.modified_at = toDatetimeLocal(new Date().toISOString());
         }
       }
       return updated;
@@ -120,12 +150,12 @@ export default function BlogManagement() {
     e.preventDefault();
     setSaving(true);
     try {
+      const now = new Date().toISOString();
       const postData = {
         title: formData.title,
         content: formData.content,
         excerpt: formData.excerpt || generateExcerpt(formData.title, formData.content),
         author: formData.author || 'Admin',
-        // both image_url and featured_image point to the same image
         image_url: formData.image || null,
         featured_image: formData.image || null,
         image_alt: formData.image_alt || null,
@@ -134,6 +164,12 @@ export default function BlogManagement() {
         seo_keywords: formData.seo_keywords || null,
         slug: formData.slug || null,
         category_id: formData.category_id || null,
+        status: formData.status,
+        published_at: formData.published_at ? fromDatetimeLocal(formData.published_at) : now,
+        modified_at: formData.lock_modified_date
+          ? (formData.modified_at ? fromDatetimeLocal(formData.modified_at) : now)
+          : now,
+        lock_modified_date: formData.lock_modified_date,
       };
 
       if (editingPost) {
@@ -169,6 +205,10 @@ export default function BlogManagement() {
       seo_keywords: post.seo_keywords || '',
       slug: post.slug || '',
       category_id: post.category_id || '',
+      status: post.status || 'published',
+      published_at: toDatetimeLocal(post.published_at || post.created_at),
+      modified_at: toDatetimeLocal(post.modified_at || post.created_at),
+      lock_modified_date: post.lock_modified_date || false,
     });
     setShowForm(true);
   };
@@ -181,7 +221,14 @@ export default function BlogManagement() {
   };
 
   const resetForm = () => {
-    setFormData({ title: '', content: '', excerpt: '', author: '', image: '', image_alt: '', seo_title: '', seo_description: '', seo_keywords: '', slug: '', category_id: '' });
+    setFormData({
+      title: '', content: '', excerpt: '', author: '', image: '', image_alt: '',
+      seo_title: '', seo_description: '', seo_keywords: '', slug: '', category_id: '',
+      status: 'published',
+      published_at: toDatetimeLocal(new Date().toISOString()),
+      modified_at: toDatetimeLocal(new Date().toISOString()),
+      lock_modified_date: false,
+    });
     setEditingPost(null);
     setExcerptManuallyEdited(false);
     setShowSEO(false);
@@ -203,6 +250,12 @@ export default function BlogManagement() {
       </div>
     );
   }
+
+  const headerPublishLabel = () => {
+    if (formData.status === 'draft') return 'Save Draft';
+    if (formData.status === 'scheduled') return 'Schedule';
+    return editingPost ? 'Update' : 'Publish';
+  };
 
   return (
     <div className="p-8">
@@ -257,7 +310,7 @@ export default function BlogManagement() {
                   className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2 rounded-lg hover:bg-slate-800 transition-colors font-semibold text-sm disabled:opacity-50"
                 >
                   {saving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                  {editingPost ? 'Update' : 'Publish'}
+                  {headerPublishLabel()}
                 </button>
                 <button type="button" onClick={resetForm} className="p-2 rounded-lg hover:bg-slate-200 text-slate-500">
                   <X className="w-5 h-5" />
@@ -288,7 +341,7 @@ export default function BlogManagement() {
                   />
                 </div>
 
-                {/* Featured Image (= Thumbnail) */}
+                {/* Featured Image */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-sm font-semibold text-slate-700">
@@ -308,7 +361,6 @@ export default function BlogManagement() {
                     value={formData.image}
                     onChange={(url) => setFormData(prev => ({ ...prev, image: url }))}
                   />
-                  {/* Alt text — shown below when image is set */}
                   {formData.image && (
                     <div className="mt-2">
                       <label className="block text-xs font-medium text-slate-600 mb-1">Alt Text</label>
@@ -359,7 +411,7 @@ export default function BlogManagement() {
                 </div>
               </div>
 
-              {/* Sidebar — scrollable */}
+              {/* ── Sidebar ── */}
               <div className="lg:w-72 border-t lg:border-t-0 lg:border-l border-slate-200 overflow-y-auto px-5 py-5 space-y-4 bg-slate-50/60 flex-shrink-0">
 
                 {/* Author */}
@@ -389,6 +441,82 @@ export default function BlogManagement() {
                   </select>
                 </div>
 
+                {/* Status */}
+                <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Status</label>
+                  <div className="space-y-2">
+                    {(['published', 'draft', 'scheduled'] as const).map(s => (
+                      <label key={s} className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-colors ${formData.status === s ? 'border-slate-900 bg-slate-50' : 'border-slate-200 hover:border-slate-300'}`}>
+                        <input
+                          type="radio"
+                          name="status"
+                          value={s}
+                          checked={formData.status === s}
+                          onChange={() => setFormData(p => ({ ...p, status: s }))}
+                          className="text-slate-900 focus:ring-slate-900"
+                        />
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_META[s].color}`}>
+                          {STATUS_META[s].icon}
+                          {STATUS_META[s].label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Publish Date */}
+                <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Calendar className="w-4 h-4 text-slate-500" />
+                    <label className="text-sm font-semibold text-slate-700">
+                      {formData.status === 'scheduled' ? 'Schedule Date' : 'Publish Date'}
+                    </label>
+                  </div>
+                  <input
+                    type="datetime-local"
+                    value={formData.published_at}
+                    onChange={(e) => setFormData(p => ({ ...p, published_at: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent text-sm"
+                  />
+                  {formData.status === 'scheduled' && (
+                    <p className="text-xs text-amber-600 mt-1.5 flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      Will publish automatically at this time
+                    </p>
+                  )}
+                </div>
+
+                {/* Modified Date */}
+                <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-slate-500" />
+                      <label className="text-sm font-semibold text-slate-700">Modified Date</label>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setFormData(p => ({ ...p, lock_modified_date: !p.lock_modified_date }))}
+                      className={`flex items-center gap-1 text-xs px-2 py-1 rounded-md transition-colors ${formData.lock_modified_date ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                      title={formData.lock_modified_date ? 'Unlock: auto-update on save' : 'Lock: prevent auto-update'}
+                    >
+                      {formData.lock_modified_date ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
+                      {formData.lock_modified_date ? 'Locked' : 'Lock'}
+                    </button>
+                  </div>
+                  <input
+                    type="datetime-local"
+                    value={formData.modified_at}
+                    onChange={(e) => setFormData(p => ({ ...p, modified_at: e.target.value }))}
+                    disabled={!formData.lock_modified_date}
+                    className={`w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent text-sm ${!formData.lock_modified_date ? 'opacity-50 cursor-not-allowed bg-slate-50' : ''}`}
+                  />
+                  <p className="text-xs text-slate-400 mt-1.5">
+                    {formData.lock_modified_date
+                      ? 'Date is locked — will not auto-update on save'
+                      : 'Auto-updates to now on each save'}
+                  </p>
+                </div>
+
                 {/* URL Slug */}
                 {formData.slug && (
                   <div className="bg-white border border-slate-200 rounded-xl p-4">
@@ -407,7 +535,7 @@ export default function BlogManagement() {
                     className="w-full bg-slate-900 text-white py-2.5 rounded-lg hover:bg-slate-800 transition-colors font-semibold text-sm disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {saving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                    {editingPost ? 'Update Post' : 'Publish Post'}
+                    {headerPublishLabel()}
                   </button>
                   <button
                     type="button"
@@ -446,49 +574,64 @@ export default function BlogManagement() {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Post</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Author</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Views</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Modified</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {filteredPosts.map((post) => (
-                <tr key={post.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {(post.featured_image || post.image_url) ? (
-                        <img src={post.featured_image || post.image_url!} alt={post.image_alt || post.title} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
-                      ) : (
-                        <div className="w-12 h-12 bg-slate-100 rounded-lg flex-shrink-0" />
-                      )}
-                      <div>
-                        <div className="font-medium text-slate-900 line-clamp-1">{post.title}</div>
-                        <div className="text-sm text-slate-500 truncate max-w-xs mt-0.5">{post.excerpt}</div>
+              {filteredPosts.map((post) => {
+                const statusMeta = STATUS_META[post.status] || STATUS_META.published;
+                return (
+                  <tr key={post.id} className="hover:bg-slate-50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {(post.featured_image || post.image_url) ? (
+                          <img src={post.featured_image || post.image_url!} alt={post.image_alt || post.title} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
+                        ) : (
+                          <div className="w-12 h-12 bg-slate-100 rounded-lg flex-shrink-0" />
+                        )}
+                        <div>
+                          <div className="font-medium text-slate-900 line-clamp-1">{post.title}</div>
+                          <div className="text-xs text-slate-400 mt-0.5">
+                            {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-900">{post.author}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1 text-sm text-slate-900">
-                      <Eye className="w-4 h-4 text-slate-400" />
-                      {post.views.toLocaleString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
-                    {new Date(post.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => handleEdit(post)} className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Edit">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDelete(post.id)} className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-900">{post.author}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${statusMeta.color}`}>
+                        {statusMeta.icon}
+                        {statusMeta.label}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-1 text-sm text-slate-900">
+                        <Eye className="w-4 h-4 text-slate-400" />
+                        {post.views.toLocaleString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-xs text-slate-500">
+                      <div className="flex items-center gap-1">
+                        {post.lock_modified_date && <Lock className="w-3 h-3 text-slate-400" />}
+                        {post.modified_at ? new Date(post.modified_at).toLocaleDateString() : '—'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => handleEdit(post)} className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="Edit">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(post.id)} className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

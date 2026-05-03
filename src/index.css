@@ -12,6 +12,52 @@
   cursor: pointer;
 }
 
+/* Pinterest hover button for inline content images */
+.blog-content figure,
+.blog-content .image-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.blog-content img {
+  display: block;
+}
+
+/* The Pinterest button is injected via JS in PinterestImageOverlay */
+.pinterest-img-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.pinterest-img-wrap .pinterest-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #E60023;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  z-index: 10;
+  text-decoration: none;
+}
+
+.pinterest-img-wrap:hover .pinterest-btn {
+  opacity: 1;
+}
+
+.pinterest-img-wrap .pinterest-btn:hover {
+  transform: scale(1.1);
+  background: #c0001c;
+}
+
 .blog-content h1 {
   font-size: 2rem;
   font-weight: bold;
