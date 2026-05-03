@@ -30,6 +30,7 @@ import BlogManagement from './pages/admin/BlogManagement';
 import CategoriesManagement from './pages/admin/CategoriesManagement';
 import OrdersManagement from './pages/admin/OrdersManagement';
 import MessagesView from './pages/admin/MessagesView';
+import ImageGallery from './pages/admin/ImageGallery';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Route path="categories" element={<CategoriesManagement />} />
               <Route path="orders" element={<OrdersManagement />} />
               <Route path="messages" element={<MessagesView />} />
+              <Route path="media" element={<ImageGallery />} />
             </Route>
 
             <Route path="*" element={

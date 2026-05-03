@@ -9,7 +9,8 @@ import {
   MessageSquare,
   LogOut,
   Menu,
-  X
+  X,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -18,6 +19,7 @@ const navItems = [
   { path: '/admin/products', icon: Package, label: 'Products' },
   { path: '/admin/blog', icon: FileText, label: 'Blog Posts' },
   { path: '/admin/categories', icon: FolderOpen, label: 'Categories' },
+  { path: '/admin/media', icon: ImageIcon, label: 'Media Library' },
   { path: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
   { path: '/admin/messages', icon: MessageSquare, label: 'Messages' },
 ];

@@ -138,6 +138,50 @@ export function BlogPostPage() {
     return `${minutes} min read`;
   }
 
+  useEffect(() => {
+    if (!post) return;
+
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description: post.excerpt || post.seo_description || '',
+      image: post.featured_image || post.image_url || undefined,
+      author: {
+        '@type': 'Person',
+        name: post.author,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'KidsMathWorksheets',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${window.location.origin}/image.png`,
+        },
+      },
+      datePublished: post.created_at,
+      dateModified: post.updated_at || post.created_at,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': window.location.href,
+      },
+    };
+
+    const existingScript = document.getElementById('article-schema');
+    if (existingScript) existingScript.remove();
+
+    const script = document.createElement('script');
+    script.id = 'article-schema';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    return () => {
+      const s = document.getElementById('article-schema');
+      if (s) s.remove();
+    };
+  }, [post]);
+
   function handleCommentSubmit(e: React.FormEvent) {
     e.preventDefault();
     console.log('Comment submitted:', commentForm);
