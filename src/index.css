@@ -4,68 +4,76 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pinterest wrapper — injected around every <img> in blog post content */
-.pinterest-img-wrap {
+/* ── Pinterest image overlay ─────────────────────────────────────── */
+figure.pinterest-img-wrap {
   position: relative;
   display: block;
   width: 100%;
   margin: 1.5rem 0;
-  line-height: 0;
+  padding: 0;
+  line-height: 0;   /* removes gap below inline-block img */
+  border-radius: 8px;
+  overflow: hidden; /* clips the image corners */
 }
 
-.pinterest-img-wrap img {
+figure.pinterest-img-wrap img {
   display: block;
   width: 100%;
-  max-width: 100%;
   height: auto;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   margin: 0;
 }
 
+/* Hidden by default, shown on hover */
+figure.pinterest-img-wrap .pinterest-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  background-color: #E60023;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.18s ease;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+  text-decoration: none !important;
+  cursor: pointer;
+  color: transparent;
+}
+
+figure.pinterest-img-wrap:hover .pinterest-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+figure.pinterest-img-wrap .pinterest-btn:hover {
+  transform: scale(1.12);
+  background-color: #c0001d;
+}
+
+figure.pinterest-img-wrap .pinterest-btn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+figure.pinterest-img-wrap .pinterest-btn svg path {
+  fill: #ffffff;
+}
+
+/* fallback for non-figure wrapped images */
 .blog-content img {
   max-width: 100%;
   height: auto;
   border-radius: 0.5rem;
   display: block;
-}
-
-/* Pinterest save button — hidden by default, shown on wrapper hover */
-.pinterest-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 40px;
-  height: 40px;
-  background-color: #E60023;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.15s ease;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  z-index: 10;
-  text-decoration: none !important;
-  cursor: pointer;
-}
-
-.pinterest-img-wrap:hover .pinterest-btn {
-  opacity: 1;
-}
-
-.pinterest-btn:hover {
-  transform: scale(1.1);
-  background-color: #c0001d;
-}
-
-.pinterest-btn svg {
-  display: block;
-  width: 18px;
-  height: 18px;
-}
-
-.pinterest-btn svg path {
-  fill: #ffffff;
+  margin: 1.5rem 0;
 }
 
 .blog-content h1 {
