@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
 import { supabase, BlogPost, Product } from '../lib/supabase';
@@ -10,72 +10,87 @@ interface BlogContentProps {
   pageDescription: string;
 }
 
+const PINTEREST_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" style="display:block"><path fill="#ffffff" d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12C24 5.373 18.627 0 12 0z"/></svg>`;
+
+function wrapImagesWithPinterest(container: HTMLElement, pageUrl: string, pageTitle: string, pageDescription: string) {
+  // Remove any previously injected wrappers to avoid duplication on re-runs
+  container.querySelectorAll('figure.pinterest-img-wrap').forEach(fig => {
+    const img = fig.querySelector('img');
+    if (img) fig.replaceWith(img);
+  });
+
+  container.querySelectorAll<HTMLImageElement>('img').forEach(img => {
+    // Use getAttribute to get the raw src, then fall back to img.src (absolute)
+    const rawSrc = img.getAttribute('src') || '';
+    const src = rawSrc.startsWith('http') ? rawSrc : img.src;
+    const alt = img.getAttribute('alt') || '';
+
+    const figure = document.createElement('figure');
+    figure.className = 'pinterest-img-wrap';
+    // Inline styles as fallback in case CSS hasn't loaded yet
+    figure.style.cssText = 'position:relative;display:block;width:100%;margin:1.5rem 0;line-height:0;border-radius:8px;overflow:hidden;';
+
+    // Move img into figure
+    img.after(figure);
+    figure.appendChild(img);
+    img.style.cssText = 'display:block;width:100%;height:auto;border-radius:8px;margin:0;';
+
+    // Add Pinterest button if image is a real hosted URL
+    if (src && src.startsWith('http')) {
+      const desc = [alt || pageTitle, pageDescription ? pageDescription.slice(0, 120) : '']
+        .filter(Boolean).join(' | ');
+
+      const pinterestUrl =
+        `https://pinterest.com/pin/create/button/` +
+        `?url=${encodeURIComponent(pageUrl)}` +
+        `&media=${encodeURIComponent(src)}` +
+        `&description=${encodeURIComponent(desc)}`;
+
+      const btn = document.createElement('a');
+      btn.href = pinterestUrl;
+      btn.target = '_blank';
+      btn.rel = 'noopener noreferrer';
+      btn.title = 'Save to Pinterest';
+      btn.setAttribute('aria-label', 'Save to Pinterest');
+      // Inline styles as absolute fallback
+      btn.style.cssText = [
+        'position:absolute',
+        'top:12px',
+        'right:12px',
+        'width:44px',
+        'height:44px',
+        'background:#E60023',
+        'border-radius:10px',
+        'display:flex',
+        'align-items:center',
+        'justify-content:center',
+        'opacity:0',
+        'transition:opacity 0.2s,transform 0.18s',
+        'box-shadow:0 3px 12px rgba(0,0,0,.35)',
+        'z-index:20',
+        'text-decoration:none',
+        'cursor:pointer',
+      ].join(';');
+      btn.innerHTML = PINTEREST_ICON;
+      btn.addEventListener('click', e => e.stopPropagation());
+
+      // Show/hide on figure hover using JS events (100% reliable)
+      figure.addEventListener('mouseenter', () => { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; });
+      figure.addEventListener('mouseleave', () => { btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; });
+
+      figure.appendChild(btn);
+    }
+  });
+}
+
 function BlogContent({ html, pageUrl, pageTitle, pageDescription }: BlogContentProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // useLayoutEffect runs synchronously after DOM mutations — before paint
+  useLayoutEffect(() => {
     const container = ref.current;
     if (!container) return;
-
-    // Find all images that haven't been wrapped yet
-    const imgs = Array.from(container.querySelectorAll<HTMLImageElement>('img:not(.pinterest-wrapped)'));
-
-    imgs.forEach(img => {
-      // Mark as processed
-      img.classList.add('pinterest-wrapped');
-
-      const src = img.src || img.getAttribute('src') || '';
-      const alt = img.alt || img.getAttribute('alt') || '';
-
-      // Build a standalone block wrapper (figure) to replace whatever parent the img is in
-      const figure = document.createElement('figure');
-      figure.className = 'pinterest-img-wrap';
-
-      // Clone the img and insert into figure
-      const clonedImg = img.cloneNode(true) as HTMLImageElement;
-      clonedImg.style.cssText = 'display:block;width:100%;height:auto;border-radius:8px;margin:0;';
-      figure.appendChild(clonedImg);
-
-      // Add Pinterest button for publicly hosted images only
-      if (src.startsWith('http')) {
-        const description = pageDescription
-          ? `${alt || pageTitle} | ${pageDescription.slice(0, 100)}`
-          : alt || pageTitle;
-        const pinterestUrl =
-          `https://pinterest.com/pin/create/button/` +
-          `?url=${encodeURIComponent(pageUrl)}` +
-          `&media=${encodeURIComponent(src)}` +
-          `&description=${encodeURIComponent(description)}`;
-
-        const btn = document.createElement('a');
-        btn.href = pinterestUrl;
-        btn.target = '_blank';
-        btn.rel = 'noopener noreferrer';
-        btn.className = 'pinterest-btn';
-        btn.title = 'Save to Pinterest';
-        btn.setAttribute('aria-label', 'Save to Pinterest');
-        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12C24 5.373 18.627 0 12 0z"/></svg>`;
-        btn.addEventListener('click', e => e.stopPropagation());
-        figure.appendChild(btn);
-      }
-
-      // Replace the original img's direct parent if it's a <p> that only contains this img
-      // (browsers auto-break <p> containing block elements, so we replace it entirely)
-      const parent = img.parentElement;
-      if (parent && parent.tagName === 'P') {
-        const otherContent = Array.from(parent.childNodes).filter(
-          n => n !== img && (n.nodeType !== Node.TEXT_NODE || (n.textContent || '').trim() !== '')
-        );
-        if (otherContent.length === 0) {
-          // The <p> only has this image — replace the whole <p> with the figure
-          parent.replaceWith(figure);
-          return;
-        }
-      }
-
-      // Otherwise just replace the img itself with the figure
-      img.replaceWith(figure);
-    });
+    wrapImagesWithPinterest(container, pageUrl, pageTitle, pageDescription);
   }, [html, pageUrl, pageTitle, pageDescription]);
 
   return (
