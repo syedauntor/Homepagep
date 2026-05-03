@@ -52,15 +52,27 @@
   height: 2.5rem;
   background: #E60023;
   border-radius: 0.5rem;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.2s, transform 0.2s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  z-index: 10;
+  z-index: 20;
   text-decoration: none;
   cursor: pointer;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+.pinterest-img-wrap .pinterest-btn svg {
+  display: block;
+  fill: #ffffff;
+  flex-shrink: 0;
+}
+
+.pinterest-img-wrap .pinterest-btn svg path {
+  fill: #ffffff;
 }
 
 .pinterest-img-wrap:hover .pinterest-btn {
@@ -95,6 +107,8 @@
 
 .blog-content p {
   margin-bottom: 1rem;
+  overflow: visible;
+  position: relative;
 }
 
 .blog-content ul,
