@@ -286,7 +286,7 @@ export function HomePage() {
                       return (
                       <Link
                         key={post.id}
-                        to={`/blog/${post.id}`}
+                        to={(post as any).slug ? `/blog/${(post as any).slug}` : `/blog/${post.id}`}
                         className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
                       >
                         <div className="h-48 overflow-hidden relative">
@@ -426,7 +426,7 @@ export function HomePage() {
                     return (
                     <Link
                       key={post.id}
-                      to={`/blog/${post.id}`}
+                      to={(post as any).slug ? `/blog/${(post as any).slug}` : `/blog/${post.id}`}
                       className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
                     >
                       <div className="h-48 overflow-hidden relative">

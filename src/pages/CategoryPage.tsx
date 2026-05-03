@@ -59,6 +59,8 @@ export default function CategoryPage() {
     let query = supabase
       .from('blog_posts')
       .select('*, categories(name, slug)')
+      .eq('status', 'published')
+      .lte('published_at', new Date().toISOString())
       .order('created_at', { ascending: false });
 
     if (slug) {
@@ -152,17 +154,20 @@ export default function CategoryPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
+            {posts.map((post) => {
+              const thumb = (post as any).featured_image || post.image_url;
+              const href = (post as any).slug ? `/blog/${(post as any).slug}` : `/blog/${post.id}`;
+              return (
               <Link
                 key={post.id}
-                to={`/blog/${post.id}`}
+                to={href}
                 className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300"
               >
                 <div className="relative">
                   <div className="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500"></div>
-                  {post.image_url ? (
+                  {thumb ? (
                     <img
-                      src={post.image_url}
+                      src={thumb}
                       alt={post.title}
                       className="w-full h-64 object-cover group-hover:scale-105 transition duration-500"
                     />
@@ -202,7 +207,8 @@ export default function CategoryPage() {
                   )}
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

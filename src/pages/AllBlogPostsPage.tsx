@@ -23,6 +23,8 @@ export function AllBlogPostsPage() {
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
+        .eq('status', 'published')
+        .lte('published_at', new Date().toISOString())
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -133,16 +135,19 @@ export function AllBlogPostsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {filteredPosts.map((post) => (
+              {filteredPosts.map((post) => {
+                const thumb = (post as any).featured_image || post.image_url;
+                const href = (post as any).slug ? `/blog/${(post as any).slug}` : `/blog/${post.id}`;
+                return (
                 <Link
                   key={post.id}
-                  to={`/blog/${post.id}`}
+                  to={href}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition"
                 >
                   <div className="h-56 overflow-hidden relative">
-                    {post.image_url ? (
+                    {thumb ? (
                       <img
-                        src={post.image_url}
+                        src={thumb}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                       />
@@ -176,7 +181,8 @@ export function AllBlogPostsPage() {
                     </div>
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           </>
         )}
