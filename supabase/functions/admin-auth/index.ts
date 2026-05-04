@@ -33,17 +33,17 @@ Deno.serve(async (req: Request) => {
 
       const { data, error } = await supabase
         .from('admin_users')
-        .insert({
+        .upsert({
           email,
           password_hash: passwordHash,
           full_name: 'Admin',
-        })
+        }, { onConflict: 'email' })
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         return new Response(
-          JSON.stringify({ success: false, error: error.message }),
+          JSON.stringify({ success: false, error: error.message || JSON.stringify(error), code: error.code, details: error.details, hint: error.hint }),
           {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -110,7 +110,7 @@ Deno.serve(async (req: Request) => {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: String(error), stack: error?.stack }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
