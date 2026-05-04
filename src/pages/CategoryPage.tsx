@@ -59,7 +59,7 @@ export default function CategoryPage() {
     let query = supabase
       .from('blog_posts')
       .select('*, categories(name, slug)')
-      .eq('status', 'published')
+      .or(`status.eq.published,status.is.null`)
       .lte('published_at', new Date().toISOString())
       .order('created_at', { ascending: false });
 

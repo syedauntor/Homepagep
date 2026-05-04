@@ -49,7 +49,7 @@ export function AllBlogPostsPage() {
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*, categories(id, name, slug)')
-        .eq('status', 'published')
+        .or(`status.eq.published,status.is.null`)
         .lte('published_at', new Date().toISOString())
         .order('created_at', { ascending: false });
 

@@ -294,7 +294,6 @@ export function BlogPostPage() {
         return;
       }
 
-      console.log('Fetched products:', data);
       if (data) setProducts(data);
     } catch (error) {
       console.error('Exception fetching products:', error);
@@ -361,7 +360,6 @@ export function BlogPostPage() {
 
   function handleCommentSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log('Comment submitted:', commentForm);
     setCommentForm({ name: '', email: '', message: '' });
   }
 
@@ -753,7 +751,7 @@ export function BlogPostPage() {
                     {products.map((product) => (
                       <Link
                         key={product.id}
-                        to={`/product/${product.id}`}
+                        to={`/shop/${product.id}`}
                         className="group block"
                       >
                         <div className="rounded-xl overflow-hidden shadow-md mb-3">
