@@ -14,15 +14,14 @@ export default function ProductDetailPage() {
   const [couponCode, setCouponCode] = useState('');
   const { addToCart } = useCart();
 
-  const productImages = product
-    ? [
-        product.image_url || '/2p.jpg',
-        '/3p.jpg',
-        '/4p.jpg',
-        '/5p.jpg',
-        '/6p.jpg',
-      ]
-    : [];
+  // Demo images - you can replace these with actual product images
+  const productImages = [
+    product?.image_url || '/2p.jpg',
+    '/3p.jpg',
+    '/4p.jpg',
+    '/5p.jpg',
+    '/6p.jpg'
+  ];
 
   useEffect(() => {
     if (id) {

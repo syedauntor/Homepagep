@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
 import { supabase, BlogPost, Product } from '../lib/supabase';
-import { DEMO_BLOG_POSTS } from '../lib/demoData';
 
 interface BlogContentProps {
   html: string;
@@ -209,20 +208,9 @@ export function BlogPostPage() {
         await fetchRelatedPosts(data.id);
         await fetchPreviousNextPosts(data.created_at);
         fetchAuthorProfile(data.author);
-      } else {
-        // Try demo posts as fallback
-        const demo = DEMO_BLOG_POSTS.find((p) => p.slug === id || p.id === id);
-        if (demo) {
-          setPost(demo);
-          setRelatedPosts(DEMO_BLOG_POSTS.filter((p) => p.id !== demo.id).slice(0, 3));
-        }
       }
-    } catch {
-      const demo = DEMO_BLOG_POSTS.find((p) => p.slug === id || p.id === id);
-      if (demo) {
-        setPost(demo);
-        setRelatedPosts(DEMO_BLOG_POSTS.filter((p) => p.id !== demo.id).slice(0, 3));
-      }
+    } catch (error) {
+      console.error('Error fetching post:', error);
     } finally {
       setLoading(false);
     }
@@ -306,6 +294,7 @@ export function BlogPostPage() {
         return;
       }
 
+      console.log('Fetched products:', data);
       if (data) setProducts(data);
     } catch (error) {
       console.error('Exception fetching products:', error);
@@ -372,6 +361,7 @@ export function BlogPostPage() {
 
   function handleCommentSubmit(e: React.FormEvent) {
     e.preventDefault();
+    console.log('Comment submitted:', commentForm);
     setCommentForm({ name: '', email: '', message: '' });
   }
 
@@ -763,7 +753,7 @@ export function BlogPostPage() {
                     {products.map((product) => (
                       <Link
                         key={product.id}
-                        to={`/shop/${product.id}`}
+                        to={`/product/${product.id}`}
                         className="group block"
                       >
                         <div className="rounded-xl overflow-hidden shadow-md mb-3">

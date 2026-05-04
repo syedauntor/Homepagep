@@ -9,54 +9,53 @@ const corsHeaders = {
 interface LoginRequest {
   email: string;
   password: string;
-  action: 'login' | 'create' | 'reset';
+  action: 'login' | 'create';
 }
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers: corsHeaders });
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
   }
 
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-      { auth: { autoRefreshToken: false, persistSession: false } }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     const { email, password, action }: LoginRequest = await req.json();
 
-    async function hashPassword(pw: string): Promise<string> {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(pw);
-      const hash = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-    }
-
-    if (action === 'create' || action === 'reset') {
+    if (action === 'create') {
       const passwordHash = await hashPassword(password);
-
-      // Delete existing first (upsert by email)
-      await supabase.from('admin_users').delete().eq('email', email);
 
       const { data, error } = await supabase
         .from('admin_users')
-        .insert({ email, password_hash: passwordHash, full_name: 'Admin' })
+        .insert({
+          email,
+          password_hash: passwordHash,
+          full_name: 'Admin',
+        })
         .select()
         .single();
 
       if (error) {
         return new Response(
-          JSON.stringify({ success: false, error: error.message, details: error }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ success: false, error: error.message }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
       return new Response(
-        JSON.stringify({ success: true, data: { id: data.id, email: data.email } }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: true, data }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -70,15 +69,22 @@ Deno.serve(async (req: Request) => {
       if (error || !admin) {
         return new Response(
           JSON.stringify({ success: false, error: 'Invalid credentials' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          {
+            status: 401,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
-      const passwordHash = await hashPassword(password);
-      if (passwordHash !== admin.password_hash) {
+      const isValid = await verifyPassword(password, admin.password_hash);
+
+      if (!isValid) {
         return new Response(
           JSON.stringify({ success: false, error: 'Invalid credentials' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          {
+            status: 401,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
         );
       }
 
@@ -89,18 +95,40 @@ Deno.serve(async (req: Request) => {
 
       return new Response(
         JSON.stringify({ success: true, email: admin.email }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
       );
     }
 
     return new Response(
       JSON.stringify({ success: false, error: 'Invalid action' }),
-      { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ success: false, error: error.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
     );
   }
 });
+
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  const passwordHash = await hashPassword(password);
+  return passwordHash === hash;
+}

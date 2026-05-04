@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Calendar, User, BookOpen, Home, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import type { BlogPost as BlogPostType } from '../lib/supabase';
-import { DEMO_BLOG_POSTS } from '../lib/demoData';
 
 interface Category {
   id: string;
@@ -61,7 +59,7 @@ export default function CategoryPage() {
     let query = supabase
       .from('blog_posts')
       .select('*, categories(name, slug)')
-      .or(`status.eq.published,status.is.null`)
+      .eq('status', 'published')
       .lte('published_at', new Date().toISOString())
       .order('created_at', { ascending: false });
 
@@ -79,14 +77,13 @@ export default function CategoryPage() {
 
     const { data, error } = await query;
 
-    if (error || !data || data.length === 0) {
-      if (error) console.error('Error fetching posts:', error);
-      setPosts(DEMO_BLOG_POSTS as unknown as BlogPost[]);
+    if (error) {
+      console.error('Error fetching posts:', error);
       setLoading(false);
       return;
     }
 
-    setPosts(data);
+    setPosts(data || []);
     setLoading(false);
   };
 
