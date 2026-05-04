@@ -30,21 +30,21 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       const path = `${Date.now()}_${safeName}`;
 
       const { error: storageError } = await supabase.storage
-        .from('media')
+        .from('blog-images')
         .upload(path, file, { upsert: false, contentType: file.type });
 
       if (storageError) throw storageError;
 
-      const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(path);
+      const { data: { publicUrl } } = supabase.storage.from('blog-images').getPublicUrl(path);
 
-      // Record in images table
-      await supabase.from('images').insert({
+      // Record in images table (optional - don't fail upload if this errors)
+      supabase.from('images').insert({
         filename: file.name,
         storage_path: path,
         public_url: publicUrl,
         size: file.size,
         mime_type: file.type,
-      });
+      }).then(() => {});
 
       onChange(publicUrl);
     } catch (err: any) {
