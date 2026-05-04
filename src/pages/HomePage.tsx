@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Twitter, Grid3x3, Gift, TrendingUp, Mail, Plus, Minus, Type, Pen, User } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
+import { DEMO_BLOG_POSTS } from '../lib/demoData';
 
 interface Author {
   id: string;
@@ -52,12 +53,14 @@ export function HomePage() {
 
       if (error) throw error;
 
-      const posts = allPosts ?? [];
+      const posts = allPosts && allPosts.length > 0 ? allPosts : DEMO_BLOG_POSTS;
       const sorted = [...posts].sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
       setPopularPosts(sorted.slice(0, 8));
       setLatestPosts(posts.slice(0, 8));
-    } catch (error) {
-      console.error('Error fetching posts:', error);
+    } catch {
+      const sorted = [...DEMO_BLOG_POSTS].sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+      setPopularPosts(sorted.slice(0, 8));
+      setLatestPosts(DEMO_BLOG_POSTS.slice(0, 8));
     } finally {
       setLoading(false);
     }

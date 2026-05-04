@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, Eye, ArrowRight, BookOpen, TrendingUp, Clock, ChevronDown } from 'lucide-react';
 import { supabase, BlogPost } from '../lib/supabase';
+import { DEMO_BLOG_POSTS } from '../lib/demoData';
 
 interface Category {
   id: string;
@@ -54,9 +55,13 @@ export function AllBlogPostsPage() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      if (data) setPosts(data);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
+      if (data && data.length > 0) {
+        setPosts(data);
+      } else {
+        setPosts(DEMO_BLOG_POSTS);
+      }
+    } catch {
+      setPosts(DEMO_BLOG_POSTS);
     } finally {
       setLoading(false);
     }

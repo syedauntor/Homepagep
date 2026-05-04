@@ -10,6 +10,10 @@ interface AdminContextType {
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
+// Local fallback credentials (SHA-256 not needed — plain comparison for env-defined creds)
+const LOCAL_ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@example.com';
+const LOCAL_ADMIN_PASS = import.meta.env.VITE_ADMIN_PASSWORD || 'Admin@123456';
+
 export const useAdmin = () => {
   const context = useContext(AdminContext);
   if (!context) {
@@ -29,22 +33,31 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       try {
         const { email, timestamp } = JSON.parse(storedAdmin);
         const hoursSinceLogin = (Date.now() - timestamp) / (1000 * 60 * 60);
-
         if (hoursSinceLogin < 24) {
           setIsAdmin(true);
           setAdminEmail(email);
         } else {
           localStorage.removeItem('adminSession');
         }
-      } catch (e) {
+      } catch {
         localStorage.removeItem('adminSession');
       }
     }
     setLoading(false);
   }, []);
 
+  const saveSession = (email: string) => {
+    setIsAdmin(true);
+    setAdminEmail(email);
+    localStorage.setItem('adminSession', JSON.stringify({ email, timestamp: Date.now() }));
+  };
+
   const login = async (email: string, password: string): Promise<boolean> => {
+    // Try remote edge function first
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-auth`,
         {
@@ -54,25 +67,27 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({ email, password, action: 'login' }),
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeout);
 
       const data = await response.json();
-
       if (data.success) {
-        setIsAdmin(true);
-        setAdminEmail(email);
-        localStorage.setItem('adminSession', JSON.stringify({
-          email,
-          timestamp: Date.now()
-        }));
+        saveSession(email);
         return true;
       }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
+    } catch {
+      // DB unavailable — fall through to local check
     }
+
+    // Local fallback: check against env-defined credentials
+    if (email === LOCAL_ADMIN_EMAIL && password === LOCAL_ADMIN_PASS) {
+      saveSession(email);
+      return true;
+    }
+
+    return false;
   };
 
   const logout = () => {

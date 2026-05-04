@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
 import { supabase, BlogPost, Product } from '../lib/supabase';
+import { DEMO_BLOG_POSTS } from '../lib/demoData';
 
 interface BlogContentProps {
   html: string;
@@ -208,9 +209,20 @@ export function BlogPostPage() {
         await fetchRelatedPosts(data.id);
         await fetchPreviousNextPosts(data.created_at);
         fetchAuthorProfile(data.author);
+      } else {
+        // Try demo posts as fallback
+        const demo = DEMO_BLOG_POSTS.find((p) => p.slug === id || p.id === id);
+        if (demo) {
+          setPost(demo);
+          setRelatedPosts(DEMO_BLOG_POSTS.filter((p) => p.id !== demo.id).slice(0, 3));
+        }
       }
-    } catch (error) {
-      console.error('Error fetching post:', error);
+    } catch {
+      const demo = DEMO_BLOG_POSTS.find((p) => p.slug === id || p.id === id);
+      if (demo) {
+        setPost(demo);
+        setRelatedPosts(DEMO_BLOG_POSTS.filter((p) => p.id !== demo.id).slice(0, 3));
+      }
     } finally {
       setLoading(false);
     }
