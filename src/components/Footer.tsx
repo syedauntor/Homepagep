@@ -95,10 +95,9 @@ export function Footer() {
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-center md:text-left">&copy; 2025 Print and Use. All rights reserved.</p>
-          <div className="flex space-x-6 items-center">
+          <div className="flex space-x-6">
             <Link to="/privacy-policy" className="hover:text-orange-500 transition">Privacy Policy</Link>
             <Link to="/terms-of-use" className="hover:text-orange-500 transition">Terms of Use</Link>
-            <Link to="/admin/login" className="text-gray-600 hover:text-gray-400 transition text-xs">Admin</Link>
           </div>
         </div>
       </div>
