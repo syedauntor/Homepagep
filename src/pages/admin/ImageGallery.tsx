@@ -45,29 +45,30 @@ export default function ImageGallery({ onPick, onClose }: ImageGalleryProps) {
     if (!files || files.length === 0) return;
     setUploading(true);
 
-    for (const file of Array.from(files)) {
-      const ext = file.name.split('.').pop();
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const path = `${Date.now()}_${safeName}`;
-
-      const { error: storageError } = await supabase.storage
-        .from('media')
-        .upload(path, file, { upsert: false, contentType: file.type });
-
-      if (storageError) {
-        console.error('Upload error:', storageError);
-        continue;
-      }
-
-      const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(path);
-
-      await supabase.from('images').insert({
-        filename: file.name,
-        storage_path: path,
-        public_url: publicUrl,
-        size: file.size,
-        mime_type: file.type,
+    const readAsDataUrl = (file: File): Promise<string> =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
       });
+
+    for (const file of Array.from(files)) {
+      try {
+        const dataUrl = await readAsDataUrl(file);
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = `local_${Date.now()}_${safeName}`;
+
+        await supabase.from('images').insert({
+          filename: file.name,
+          storage_path: path,
+          public_url: dataUrl,
+          size: file.size,
+          mime_type: file.type,
+        });
+      } catch (err) {
+        console.error('Upload error:', err);
+      }
     }
 
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -78,7 +79,6 @@ export default function ImageGallery({ onPick, onClose }: ImageGalleryProps) {
   const handleDelete = async (img: GalleryImage) => {
     if (!confirm(`Delete "${img.filename}"?`)) return;
 
-    await supabase.storage.from('media').remove([img.storage_path]);
     await supabase.from('images').delete().eq('id', img.id);
     setImages(prev => prev.filter(i => i.id !== img.id));
     if (selectedId === img.id) setSelectedId(null);

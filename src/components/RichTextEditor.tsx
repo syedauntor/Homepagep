@@ -12,7 +12,6 @@ import {
   AlignRight, AlignJustify, Undo, Redo, Quote, Code, Minus,
   Upload, Type, Maximize2, Minimize2, X, Loader2
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 
 interface RichTextEditorProps {
   content: string;
@@ -172,25 +171,21 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChang
     setEditingImageNode(null);
   };
 
-  const uploadFileToStorage = async (file: File) => {
+  const uploadFileToStorage = (file: File) => {
     if (!editor) return;
     setUploading(true);
-    try {
-      const ext = file.name.split('.').pop() || 'jpg';
-      const filename = `blog/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(filename, file, { upsert: false });
-      if (uploadError) throw uploadError;
-      const { data } = supabase.storage.from('blog-images').getPublicUrl(filename);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
       const alt = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-      editor.chain().focus().setImage({ src: data.publicUrl, alt }).run();
-    } catch (err) {
-      console.error('Image upload failed:', err);
-      alert('Image upload failed. Please try again.');
-    } finally {
+      editor.chain().focus().setImage({ src: dataUrl, alt }).run();
       setUploading(false);
-    }
+    };
+    reader.onerror = () => {
+      alert('Failed to read image file.');
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
