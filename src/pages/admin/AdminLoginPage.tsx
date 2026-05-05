@@ -4,8 +4,8 @@ import { useAdmin } from '../../contexts/AdminContext';
 import { Lock, Mail, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('admin@admin.com');
-  const [password, setPassword] = useState('Admin@123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAdmin();
