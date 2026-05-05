@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAdmin } from '../../contexts/AdminContext';
 import { Lock, Mail, AlertCircle, CheckCircle, UserPlus } from 'lucide-react';
 
+const DEFAULT_EMAIL = 'admin@admin.com';
+const DEFAULT_PASSWORD = 'Admin@123';
+
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(DEFAULT_EMAIL);
+  const [password, setPassword] = useState(DEFAULT_PASSWORD);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,9 +39,8 @@ export default function AdminLoginPage() {
         if (data.success) {
           setSuccess('Admin account created! You can now log in.');
           setMode('login');
-          setPassword('');
         } else {
-          setError(data.error || 'Failed to create admin account. It may already exist.');
+          setError(data.error || 'Failed to create admin account.');
         }
       } else {
         const success = await login(email, password);
@@ -47,6 +49,38 @@ export default function AdminLoginPage() {
         } else {
           setError('Invalid email or password. If no admin exists yet, use "Setup Admin" below.');
         }
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSetupDefault = async () => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-auth`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD, action: 'create' }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        setSuccess('Default admin created! Email: admin@admin.com | Password: Admin@123');
+        setMode('login');
+        setEmail(DEFAULT_EMAIL);
+        setPassword(DEFAULT_PASSWORD);
+      } else {
+        setError(data.error || 'Failed to create default admin.');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -99,7 +133,7 @@ export default function AdminLoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all"
-                  placeholder="admin@example.com"
+                  placeholder="admin@admin.com"
                 />
               </div>
             </div>
@@ -131,14 +165,23 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-200 text-center">
+          <div className="mt-6 pt-6 border-t border-slate-200 space-y-3 text-center">
             {mode === 'login' ? (
-              <button
-                onClick={() => { setMode('setup'); setError(''); setSuccess(''); }}
-                className="text-sm text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                First time? Setup admin account
-              </button>
+              <>
+                <button
+                  onClick={handleSetupDefault}
+                  disabled={loading}
+                  className="block w-full text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-colors py-2.5 rounded-lg font-medium disabled:opacity-50"
+                >
+                  {loading ? 'Creating...' : 'Create Default Admin (admin@admin.com)'}
+                </button>
+                <button
+                  onClick={() => { setMode('setup'); setError(''); setSuccess(''); }}
+                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors"
+                >
+                  Setup custom admin account
+                </button>
+              </>
             ) : (
               <button
                 onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
@@ -149,6 +192,10 @@ export default function AdminLoginPage() {
             )}
           </div>
         </div>
+
+        <p className="text-center text-xs text-slate-400 mt-4">
+          Default credentials: admin@admin.com / Admin@123
+        </p>
       </div>
     </div>
   );
