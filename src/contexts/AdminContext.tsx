@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { supabase } from '../lib/supabase';
+
+const ADMIN_EMAIL = 'admin@admin.com';
+const ADMIN_PASSWORD = 'Admin@123';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -23,66 +25,38 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        const role = session.user.app_metadata?.role || session.user.user_metadata?.role;
-        if (role === 'admin') {
+    const stored = localStorage.getItem('adminSession');
+    if (stored) {
+      try {
+        const { email, timestamp } = JSON.parse(stored);
+        const hoursSince = (Date.now() - timestamp) / (1000 * 60 * 60);
+        if (hoursSince < 24) {
           setIsAdmin(true);
-          setAdminEmail(session.user.email ?? null);
-        }
-      }
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        const role = session.user.app_metadata?.role || session.user.user_metadata?.role;
-        if (role === 'admin') {
-          setIsAdmin(true);
-          setAdminEmail(session.user.email ?? null);
+          setAdminEmail(email);
         } else {
-          setIsAdmin(false);
-          setAdminEmail(null);
+          localStorage.removeItem('adminSession');
         }
-      } else {
-        setIsAdmin(false);
-        setAdminEmail(null);
+      } catch {
+        localStorage.removeItem('adminSession');
       }
-    });
-
-    return () => subscription.unsubscribe();
+    }
+    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        return { success: false, error: error.message };
-      }
-
-      if (!data.user) {
-        return { success: false, error: 'Login failed. Please try again.' };
-      }
-
-      const role = data.user.app_metadata?.role || data.user.user_metadata?.role;
-      if (role !== 'admin') {
-        await supabase.auth.signOut();
-        return { success: false, error: 'Access denied. Admin privileges required.' };
-      }
-
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       setIsAdmin(true);
       setAdminEmail(email);
+      localStorage.setItem('adminSession', JSON.stringify({ email, timestamp: Date.now() }));
       return { success: true };
-    } catch (err) {
-      return { success: false, error: 'An unexpected error occurred.' };
     }
+    return { success: false, error: 'Invalid email or password.' };
   };
 
-  const logout = async () => {
-    await supabase.auth.signOut();
+  const logout = () => {
     setIsAdmin(false);
     setAdminEmail(null);
+    localStorage.removeItem('adminSession');
   };
 
   return (
