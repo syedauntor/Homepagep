@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 interface AdminContextType {
   isAdmin: boolean;
   adminEmail: string | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   loading: boolean;
 }
@@ -13,9 +13,7 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const useAdmin = () => {
   const context = useContext(AdminContext);
-  if (!context) {
-    throw new Error('useAdmin must be used within AdminProvider');
-  }
+  if (!context) throw new Error('useAdmin must be used within AdminProvider');
   return context;
 };
 
@@ -55,35 +53,29 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-auth`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ email, password, action: 'login' }),
-        }
-      );
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      const data = await response.json();
-
-      if (data.success && data.session) {
-        await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-        setIsAdmin(true);
-        setAdminEmail(email);
-        return true;
+      if (error) {
+        return { success: false, error: error.message };
       }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
+
+      if (!data.user) {
+        return { success: false, error: 'Login failed. Please try again.' };
+      }
+
+      const role = data.user.app_metadata?.role || data.user.user_metadata?.role;
+      if (role !== 'admin') {
+        await supabase.auth.signOut();
+        return { success: false, error: 'Access denied. Admin privileges required.' };
+      }
+
+      setIsAdmin(true);
+      setAdminEmail(email);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'An unexpected error occurred.' };
     }
   };
 
