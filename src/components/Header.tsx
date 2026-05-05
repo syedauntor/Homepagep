@@ -2,17 +2,7 @@ import { BookOpen, Menu, X, ShoppingCart, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../contexts/CartContext';
-import { supabase } from '../lib/supabase';
-
-interface MenuItem {
-  id: string;
-  label: string;
-  url: string;
-  target: string;
-  display_order: number;
-  parent_id: string | null;
-  is_active: boolean;
-}
+import { menuApi, MenuItem } from '../lib/api';
 
 function NavAnchor({ url, target, className, onClick, children }: {
   url: string; target: string; className: string; onClick?: () => void; children: React.ReactNode;
@@ -158,13 +148,9 @@ export function Header() {
   const [allItems, setAllItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    supabase
-      .from('menu_items')
-      .select('id, label, url, target, display_order, parent_id, is_active')
-      .eq('menu_location', 'header')
-      .eq('is_active', true)
-      .order('display_order')
-      .then(({ data }) => { if (data && data.length > 0) setAllItems(data); });
+    menuApi.list({ location: 'header', is_active: true })
+      .then(data => { if (data && data.length > 0) setAllItems(data); })
+      .catch(() => {});
   }, []);
 
   const source = allItems.length > 0 ? allItems : FALLBACK;

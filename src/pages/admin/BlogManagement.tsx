@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../../lib/supabase';
+import { blogApi, categoriesApi, BlogPost, Category } from '../../lib/api';
 import {
   Plus, CreditCard as Edit, Trash2, Search, Eye, X,
   ChevronDown, ChevronUp, Images, Lock, Unlock,
@@ -10,32 +10,7 @@ import { ImageUploader } from '../../components/ImageUploader';
 import { SEOFields } from '../../components/SEOFields';
 import ImageGallery from './ImageGallery';
 
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  author: string;
-  image_url: string | null;
-  featured_image: string | null;
-  image_alt: string | null;
-  seo_title: string | null;
-  seo_description: string | null;
-  seo_keywords: string | null;
-  slug: string | null;
-  views: number;
-  category_id: string | null;
-  status: string;
-  published_at: string | null;
-  modified_at: string | null;
-  lock_modified_date: boolean;
-  created_at: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
+type BlogPostExtended = BlogPost;
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -131,14 +106,9 @@ export default function BlogManagement() {
 
   const loadData = async () => {
     try {
-      const [postsResult, categoriesResult] = await Promise.all([
-        supabase.from('blog_posts').select('*').order('created_at', { ascending: false }),
-        supabase.from('categories').select('*').order('name'),
-      ]);
-      if (postsResult.error) throw postsResult.error;
-      if (categoriesResult.error) throw categoriesResult.error;
-      setPosts(postsResult.data || []);
-      setCategories(categoriesResult.data || []);
+      const [posts, cats] = await Promise.all([blogApi.list(), categoriesApi.list()]);
+      setPosts(posts);
+      setCategories(cats);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -173,11 +143,9 @@ export default function BlogManagement() {
       };
 
       if (editingPost) {
-        const { error } = await supabase.from('blog_posts').update(postData).eq('id', editingPost.id);
-        if (error) throw error;
+        await blogApi.update(editingPost.id, postData);
       } else {
-        const { error } = await supabase.from('blog_posts').insert([postData]);
-        if (error) throw error;
+        await blogApi.create(postData);
       }
 
       resetForm();
@@ -215,8 +183,7 @@ export default function BlogManagement() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this blog post?')) return;
-    const { error } = await supabase.from('blog_posts').delete().eq('id', id);
-    if (error) { alert('Error deleting post'); return; }
+    await blogApi.delete(id).catch(() => alert('Error deleting post'));
     loadData();
   };
 

@@ -1,7 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-const ADMIN_EMAIL = 'admin@admin.com';
-const ADMIN_PASSWORD = 'Admin@123';
+import { authApi } from '../lib/api';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -28,9 +26,9 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const stored = localStorage.getItem('adminSession');
     if (stored) {
       try {
-        const { email, timestamp } = JSON.parse(stored);
+        const { email, token, timestamp } = JSON.parse(stored);
         const hoursSince = (Date.now() - timestamp) / (1000 * 60 * 60);
-        if (hoursSince < 24) {
+        if (hoursSince < 24 && token) {
           setIsAdmin(true);
           setAdminEmail(email);
         } else {
@@ -44,13 +42,19 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    try {
+      const result = await authApi.login(email, password);
       setIsAdmin(true);
-      setAdminEmail(email);
-      localStorage.setItem('adminSession', JSON.stringify({ email, timestamp: Date.now() }));
+      setAdminEmail(result.email);
+      localStorage.setItem('adminSession', JSON.stringify({
+        email: result.email,
+        token: result.token,
+        timestamp: Date.now(),
+      }));
       return { success: true };
+    } catch (err) {
+      return { success: false, error: err instanceof Error ? err.message : 'Invalid email or password.' };
     }
-    return { success: false, error: 'Invalid email or password.' };
   };
 
   const logout = () => {

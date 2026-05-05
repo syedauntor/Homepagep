@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { CreditCard, Lock, ArrowLeft } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { ordersApi } from '../lib/api';
 import { useCart } from '../contexts/CartContext';
 
 export default function CheckoutPage() {
@@ -44,33 +44,16 @@ export default function CheckoutPage() {
 
     try {
       const totalAmount = getCartTotal();
-
-      const { data: orderData, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          customer_email: formData.email,
-          customer_name: formData.name,
-          total_amount: totalAmount,
-          status: 'pending',
-        })
-        .select()
-        .single();
-
-      if (orderError) throw orderError;
-
-      const orderItems = items.map((item) => ({
-        order_id: orderData.id,
-        product_id: item.id,
-        quantity: item.quantity,
-        price: item.price,
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
-
-      if (itemsError) throw itemsError;
-
+      const orderData = await ordersApi.create({
+        customer_email: formData.email,
+        customer_name: formData.name,
+        total_amount: totalAmount,
+        items: items.map((item) => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      });
       clearCart();
       navigate(`/order-success/${orderData.id}`);
     } catch (err) {

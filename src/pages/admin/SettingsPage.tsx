@@ -1,35 +1,11 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { settingsApi, menuApi, pagesApi, SiteSetting, MenuItem, Page } from '../../lib/api';
 import {
   Settings, Save, Loader2, Type, Menu as MenuIcon,
   Plus, Trash2, GripVertical, ExternalLink, ChevronDown
 } from 'lucide-react';
 
-/* ─── Types ─── */
-interface Setting {
-  id: string;
-  key: string;
-  value: string;
-  label: string;
-  group: string;
-}
-
-interface MenuItem {
-  id: string;
-  menu_location: string;
-  label: string;
-  url: string;
-  target: string;
-  display_order: number;
-  parent_id: string | null;
-  is_active: boolean;
-}
-
-interface Page {
-  id: string;
-  title: string;
-  slug: string;
-}
+type Setting = SiteSetting & { label?: string };
 
 /* ─── Setting metadata ─── */
 const GROUP_META: Record<string, { label: string; icon: React.ReactNode; description: string }> = {
@@ -94,9 +70,7 @@ export default function SettingsPage() {
   /* ── Settings helpers ── */
   const loadSettings = async () => {
     setLoadingSettings(true);
-    const { data } = await supabase.from('site_settings').select('*').order('group').order('key');
-    if (data) setSettings(data);
-    setLoadingSettings(false);
+    settingsApi.list().then(data => setSettings(data as Setting[])).catch(() => {}).finally(() => setLoadingSettings(false));
   };
 
   const updateSetting = (key: string, value: string) => {
@@ -107,7 +81,7 @@ export default function SettingsPage() {
     setSaving(true);
     try {
       for (const s of settings) {
-        await supabase.from('site_settings').update({ value: s.value, updated_at: new Date().toISOString() }).eq('key', s.key);
+        await settingsApi.update(s.key, s.value);
       }
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
@@ -125,12 +99,12 @@ export default function SettingsPage() {
   /* ── Menu helpers ── */
   const loadMenu = async () => {
     setLoadingMenu(true);
-    const [itemsRes, pagesRes] = await Promise.all([
-      supabase.from('menu_items').select('*').order('display_order'),
-      supabase.from('pages').select('id, title, slug').eq('is_published', true).order('title'),
-    ]);
-    if (itemsRes.data) setMenuItems(itemsRes.data);
-    if (pagesRes.data) setPages(pagesRes.data);
+    const [items, pages] = await Promise.all([
+      menuApi.list(),
+      pagesApi.list(true),
+    ]).catch(() => [[], []]) as [MenuItem[], Page[]];
+    setMenuItems(items);
+    setPages(pages);
     setLoadingMenu(false);
   };
 
@@ -141,9 +115,9 @@ export default function SettingsPage() {
   const addMenuItem = async () => {
     if (!newItem.label || !newItem.url) return;
     const maxOrder = Math.max(0, ...locationItems.map(i => i.display_order));
-    await supabase.from('menu_items').insert([{
+    await menuApi.create({
       menu_location: activeMenuLoc, label: newItem.label, url: newItem.url, target: newItem.target, display_order: maxOrder + 1, is_active: true,
-    }]);
+    });
     setNewItem({ label: '', url: '', target: '_self' });
     setShowAddForm(false);
     loadMenu();
@@ -157,7 +131,7 @@ export default function SettingsPage() {
     setMenuSaving(true);
     try {
       for (const item of menuItems) {
-        await supabase.from('menu_items').update({ label: item.label, url: item.url, target: item.target, display_order: item.display_order, is_active: item.is_active }).eq('id', item.id);
+        await menuApi.update(item.id, { label: item.label, url: item.url, target: item.target, display_order: item.display_order, is_active: item.is_active });
       }
       setMenuSaved(true);
       setTimeout(() => setMenuSaved(false), 2000);
@@ -166,7 +140,7 @@ export default function SettingsPage() {
 
   const deleteMenuItem = async (id: string) => {
     if (!confirm('Remove this menu item?')) return;
-    await supabase.from('menu_items').delete().eq('id', id);
+    await menuApi.delete(id);
     loadMenu();
   };
 

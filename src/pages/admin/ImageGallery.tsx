@@ -1,16 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { supabase } from '../../lib/supabase';
+import { imagesApi, GalleryImage } from '../../lib/api';
 import { Upload, Trash2, Copy, Check, Image as ImageIcon, X, Search } from 'lucide-react';
-
-interface GalleryImage {
-  id: string;
-  filename: string;
-  storage_path: string;
-  public_url: string;
-  size: number;
-  mime_type: string | null;
-  created_at: string;
-}
 
 interface ImageGalleryProps {
   /** If provided, renders as a picker modal */
@@ -33,12 +23,7 @@ export default function ImageGallery({ onPick, onClose }: ImageGalleryProps) {
 
   const loadImages = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('images')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (!error && data) setImages(data);
-    setLoading(false);
+    imagesApi.list().then(setImages).catch(() => {}).finally(() => setLoading(false));
   };
 
   const handleUpload = async (files: FileList | null) => {
@@ -59,7 +44,7 @@ export default function ImageGallery({ onPick, onClose }: ImageGalleryProps) {
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
         const path = `local_${Date.now()}_${safeName}`;
 
-        await supabase.from('images').insert({
+        await imagesApi.save({
           filename: file.name,
           storage_path: path,
           public_url: dataUrl,
@@ -79,7 +64,7 @@ export default function ImageGallery({ onPick, onClose }: ImageGalleryProps) {
   const handleDelete = async (img: GalleryImage) => {
     if (!confirm(`Delete "${img.filename}"?`)) return;
 
-    await supabase.from('images').delete().eq('id', img.id);
+    await imagesApi.delete(img.id);
     setImages(prev => prev.filter(i => i.id !== img.id));
     if (selectedId === img.id) setSelectedId(null);
   };

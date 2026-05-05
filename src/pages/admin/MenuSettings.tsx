@@ -1,26 +1,9 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { menuApi, pagesApi, MenuItem, Page } from '../../lib/api';
 import {
   Plus, Trash2, GripVertical, ExternalLink,
   ChevronDown, Menu as MenuIcon, Save, Loader2, ChevronRight
 } from 'lucide-react';
-
-interface MenuItem {
-  id: string;
-  menu_location: string;
-  label: string;
-  url: string;
-  target: string;
-  display_order: number;
-  parent_id: string | null;
-  is_active: boolean;
-}
-
-interface Page {
-  id: string;
-  title: string;
-  slug: string;
-}
 
 const MENU_LOCATIONS = [
   { key: 'header', label: 'Header Navigation' },
@@ -52,12 +35,12 @@ export default function MenuSettings() {
 
   const loadAll = async () => {
     setLoading(true);
-    const [itemsRes, pagesRes] = await Promise.all([
-      supabase.from('menu_items').select('*').order('display_order'),
-      supabase.from('pages').select('id, title, slug').eq('is_published', true).order('title'),
-    ]);
-    if (itemsRes.data) setItems(itemsRes.data);
-    if (pagesRes.data) setPages(pagesRes.data);
+    const [menuData, pagesData] = await Promise.all([
+      menuApi.list(),
+      pagesApi.list(true),
+    ]).catch(() => [[], []]) as [MenuItem[], Page[]];
+    setItems(menuData);
+    setPages(pagesData);
     setLoading(false);
   };
 
@@ -73,14 +56,14 @@ export default function MenuSettings() {
   const addTopLevel = async () => {
     if (!newItem.label || !newItem.url) return;
     const maxOrder = Math.max(0, ...parentItems.map(i => i.display_order));
-    await supabase.from('menu_items').insert([{
+    await menuApi.create({
       menu_location: activeMenu,
       label: newItem.label,
       url: newItem.url,
       target: newItem.target,
       display_order: maxOrder + 1,
       is_active: true,
-    }]);
+    });
     setNewItem(emptyNew);
     setShowAddForm(false);
     loadAll();
@@ -90,7 +73,7 @@ export default function MenuSettings() {
     if (!newSubItem.label || !newSubItem.url) return;
     const siblings = childrenOf(parentId);
     const maxOrder = Math.max(0, ...siblings.map(i => i.display_order));
-    await supabase.from('menu_items').insert([{
+    await menuApi.create({
       menu_location: activeMenu,
       label: newSubItem.label,
       url: newSubItem.url,
@@ -98,7 +81,7 @@ export default function MenuSettings() {
       display_order: maxOrder + 1,
       parent_id: parentId,
       is_active: true,
-    }]);
+    });
     setNewSubItem(emptyNew);
     setAddingSubFor(null);
     loadAll();
@@ -111,13 +94,13 @@ export default function MenuSettings() {
     setSaving(true);
     try {
       for (const item of items) {
-        await supabase.from('menu_items').update({
+        await menuApi.update(item.id, {
           label: item.label,
           url: item.url,
           target: item.target,
           display_order: item.display_order,
           is_active: item.is_active,
-        }).eq('id', item.id);
+        });
       }
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
@@ -132,9 +115,9 @@ export default function MenuSettings() {
     if (kids.length > 0 && !confirm(`This item has ${kids.length} sub-menu item(s). Delete all?`)) return;
     if (kids.length === 0 && !confirm('Remove this menu item?')) return;
     for (const kid of kids) {
-      await supabase.from('menu_items').delete().eq('id', kid.id);
+      await menuApi.delete(kid.id);
     }
-    await supabase.from('menu_items').delete().eq('id', id);
+    await menuApi.delete(id);
     loadAll();
   };
 
@@ -331,7 +314,7 @@ export default function MenuSettings() {
                                   <button onClick={() => setEditingId(child.id)} className="p-1.5 rounded hover:bg-slate-100 text-slate-500 hover:text-slate-900" title="Edit">
                                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                   </button>
-                                  <button onClick={() => { if (confirm('Remove this sub-item?')) { supabase.from('menu_items').delete().eq('id', child.id).then(() => loadAll()); } }} className="p-1.5 rounded hover:bg-red-50 text-red-400 hover:text-red-600" title="Remove">
+                                  <button onClick={() => { if (confirm('Remove this sub-item?')) { menuApi.delete(child.id).then(() => loadAll()); } }} className="p-1.5 rounded hover:bg-red-50 text-red-400 hover:text-red-600" title="Remove">
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
                                 </div>

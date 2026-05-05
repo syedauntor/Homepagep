@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { dashboardApi } from '../../lib/api';
 import { Package, FileText, ShoppingCart, MessageSquare, TrendingUp, DollarSign } from 'lucide-react';
 
 interface Stats {
@@ -28,27 +28,17 @@ export default function DashboardHome() {
 
   const loadStats = async () => {
     try {
-      const [products, blogPosts, orders, messages] = await Promise.all([
-        supabase.from('products').select('*', { count: 'exact', head: true }),
-        supabase.from('blog_posts').select('*', { count: 'exact', head: true }),
-        supabase.from('orders').select('*'),
-        supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
-      ]);
-
-      const ordersData = orders.data || [];
-      const totalRevenue = ordersData.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
-
+      const data = await dashboardApi.stats();
       const lastWeek = new Date();
       lastWeek.setDate(lastWeek.getDate() - 7);
-      const recentOrders = ordersData.filter(order => new Date(order.created_at) >= lastWeek).length;
-
+      const recentOrders = data.recent_orders.filter(o => new Date(o.created_at) >= lastWeek).length;
       setStats({
-        totalProducts: products.count || 0,
-        totalBlogPosts: blogPosts.count || 0,
-        totalOrders: ordersData.length,
-        totalMessages: messages.count || 0,
+        totalProducts: data.product_count,
+        totalBlogPosts: data.blog_count,
+        totalOrders: data.order_count,
+        totalMessages: data.message_count,
         recentOrders,
-        revenue: totalRevenue,
+        revenue: data.total_revenue,
       });
     } catch (error) {
       console.error('Error loading stats:', error);

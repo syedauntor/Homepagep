@@ -1,32 +1,11 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { authorsApi, Author } from '../../lib/api';
 import {
   Plus, Trash2, Search, X, User,
   Facebook, Instagram, Twitter, Linkedin, ExternalLink,
   Eye, EyeOff, Shield, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { ImageUploader } from '../../components/ImageUploader';
-
-interface Author {
-  id: string;
-  name: string;
-  designation: string;
-  bio: string;
-  avatar_url: string | null;
-  avatar_alt: string;
-  email: string | null;
-  role: string;
-  access_enabled: boolean;
-  fb_url: string | null;
-  ig_url: string | null;
-  x_url: string | null;
-  pinterest_url: string | null;
-  linkedin_url: string | null;
-  show_on_home: boolean;
-  display_order: number;
-  is_active: boolean;
-  created_at: string;
-}
 
 const ROLE_OPTIONS = [
   { value: 'admin', label: 'Admin', desc: 'Full access' },
@@ -70,13 +49,7 @@ export default function AuthorsPage() {
 
   const loadAuthors = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('authors')
-      .select('*')
-      .order('display_order')
-      .order('created_at');
-    if (!error && data) setAuthors(data);
-    setLoading(false);
+    authorsApi.list().then(setAuthors).catch(() => {}).finally(() => setLoading(false));
   };
 
   const handleEdit = (author: Author) => {
@@ -136,11 +109,9 @@ export default function AuthorsPage() {
       };
 
       if (editingAuthor) {
-        const { error } = await supabase.from('authors').update(payload).eq('id', editingAuthor.id);
-        if (error) throw error;
+        await authorsApi.update(editingAuthor.id, payload);
       } else {
-        const { error } = await supabase.from('authors').insert([payload]);
-        if (error) throw error;
+        await authorsApi.create(payload);
       }
 
       resetForm();
@@ -154,12 +125,12 @@ export default function AuthorsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this author? Posts linked to them will keep their name text but lose the author link.')) return;
-    await supabase.from('authors').delete().eq('id', id);
+    await authorsApi.delete(id);
     loadAuthors();
   };
 
   const toggleActive = async (author: Author) => {
-    await supabase.from('authors').update({ is_active: !author.is_active }).eq('id', author.id);
+    await authorsApi.toggleActive(author.id);
     loadAuthors();
   };
 

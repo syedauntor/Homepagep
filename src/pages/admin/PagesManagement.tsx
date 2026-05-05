@@ -1,24 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../../lib/supabase';
+import { pagesApi, Page } from '../../lib/api';
 import {
   Plus, Trash2, Search, Eye, X,
   ChevronDown, ChevronUp, Globe, Lock
 } from 'lucide-react';
 import { RichTextEditor } from '../../components/RichTextEditor';
-
-interface Page {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  seo_title: string | null;
-  seo_description: string | null;
-  seo_keywords: string | null;
-  is_system: boolean;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
-}
 
 function generateSlug(title: string): string {
   return title
@@ -53,12 +39,7 @@ export default function PagesManagement() {
 
   const loadPages = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('pages')
-      .select('*')
-      .order('created_at', { ascending: true });
-    if (!error && data) setPages(data);
-    setLoading(false);
+    pagesApi.list().then(setPages).catch(() => {}).finally(() => setLoading(false));
   };
 
   const updateTitle = useCallback((title: string) => {
@@ -99,11 +80,9 @@ export default function PagesManagement() {
       };
 
       if (editingPage) {
-        const { error } = await supabase.from('pages').update(payload).eq('id', editingPage.id);
-        if (error) throw error;
+        await pagesApi.update(editingPage.id, payload);
       } else {
-        const { error } = await supabase.from('pages').insert([{ ...payload, is_system: false }]);
-        if (error) throw error;
+        await pagesApi.create(payload);
       }
       resetForm();
       loadPages();
@@ -117,12 +96,12 @@ export default function PagesManagement() {
   const handleDelete = async (page: Page) => {
     if (page.is_system) return alert('System pages cannot be deleted. You can edit their content.');
     if (!confirm(`Delete "${page.title}"?`)) return;
-    await supabase.from('pages').delete().eq('id', page.id);
+    await pagesApi.delete(page.id);
     loadPages();
   };
 
   const togglePublished = async (page: Page) => {
-    await supabase.from('pages').update({ is_published: !page.is_published }).eq('id', page.id);
+    await pagesApi.togglePublished(page.id);
     loadPages();
   };
 

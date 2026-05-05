@@ -1,16 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-
-interface Page {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  seo_title: string | null;
-  seo_description: string | null;
-  is_published: boolean;
-}
+import { pagesApi, Page } from '../lib/api';
 
 export function DynamicPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -24,21 +14,16 @@ export function DynamicPage() {
 
   async function fetchPage(pageSlug: string) {
     setLoading(true);
-    const { data } = await supabase
-      .from('pages')
-      .select('*')
-      .eq('slug', pageSlug)
-      .eq('is_published', true)
-      .maybeSingle();
-
-    if (data) {
+    try {
+      const data = await pagesApi.get(pageSlug);
       setPage(data);
       if (data.seo_title) document.title = data.seo_title;
       else if (data.title) document.title = data.title + ' | Print&Use';
-    } else {
+    } catch {
       setNotFound(true);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   if (loading) {

@@ -1,15 +1,7 @@
 import { BookOpen, Phone, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
-
-interface MenuItem {
-  id: string;
-  label: string;
-  url: string;
-  target: string;
-  display_order: number;
-}
+import { menuApi, MenuItem } from '../lib/api';
 
 function FooterLink({ item }: { item: MenuItem }) {
   const isExternal = item.url.startsWith('http');
@@ -39,18 +31,12 @@ export function Footer() {
   const [catLinks, setCatLinks] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    supabase
-      .from('menu_items')
-      .select('id, label, url, target, display_order, menu_location')
-      .in('menu_location', ['footer_quick_links', 'footer_categories'])
-      .eq('is_active', true)
-      .order('display_order')
-      .then(({ data }) => {
-        if (data) {
-          setQuickLinks(data.filter((i: any) => i.menu_location === 'footer_quick_links'));
-          setCatLinks(data.filter((i: any) => i.menu_location === 'footer_categories'));
-        }
-      });
+    menuApi.list({ is_active: true }).then(data => {
+      if (data) {
+        setQuickLinks(data.filter(i => i.menu_location === 'footer_quick_links'));
+        setCatLinks(data.filter(i => i.menu_location === 'footer_categories'));
+      }
+    }).catch(() => {});
   }, []);
 
   const quick = quickLinks.length > 0 ? quickLinks : FALLBACK_QUICK;

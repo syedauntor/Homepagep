@@ -1,18 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { productsApi, Product } from '../../lib/api';
 import { Plus, CreditCard as Edit, Trash2, Search } from 'lucide-react';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image_url: string;
-  category: string;
-  is_active: boolean;
-  stock?: number;
-  created_at: string;
-}
 
 export default function ProductsManagement() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -36,13 +24,8 @@ export default function ProductsManagement() {
 
   const loadProducts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProducts(data || []);
+      const data = await productsApi.list();
+      setProducts(data);
     } catch (error) {
       console.error('Error loading products:', error);
     } finally {
@@ -65,18 +48,9 @@ export default function ProductsManagement() {
       };
 
       if (editingProduct) {
-        const { error } = await supabase
-          .from('products')
-          .update(productData)
-          .eq('id', editingProduct.id);
-
-        if (error) throw error;
+        await productsApi.update(editingProduct.id, productData);
       } else {
-        const { error } = await supabase
-          .from('products')
-          .insert([productData]);
-
-        if (error) throw error;
+        await productsApi.create(productData);
       }
 
       resetForm();
@@ -105,12 +79,7 @@ export default function ProductsManagement() {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await productsApi.delete(id);
       loadProducts();
     } catch (error) {
       console.error('Error deleting product:', error);

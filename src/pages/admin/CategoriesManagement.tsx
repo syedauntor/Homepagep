@@ -1,16 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { categoriesApi, Category } from '../../lib/api';
 import { Plus, CreditCard as Edit, Trash2, ChevronRight, FolderOpen, Folder } from 'lucide-react';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  parent_id: string | null;
-  position: number;
-  created_at: string;
-}
 
 interface FormData {
   name: string;
@@ -39,14 +29,8 @@ export default function CategoriesManagement() {
 
   const loadCategories = async () => {
     try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('position')
-        .order('name');
-
-      if (error) throw error;
-      setCategories(data || []);
+      const data = await categoriesApi.list();
+      setCategories(data);
     } catch (error) {
       console.error('Error loading categories:', error);
     } finally {
@@ -69,14 +53,9 @@ export default function CategoriesManagement() {
       };
 
       if (editingCategory) {
-        const { error } = await supabase
-          .from('categories')
-          .update(categoryData)
-          .eq('id', editingCategory.id);
-        if (error) throw error;
+        await categoriesApi.update(editingCategory.id, categoryData);
       } else {
-        const { error } = await supabase.from('categories').insert([categoryData]);
-        if (error) throw error;
+        await categoriesApi.create(categoryData);
       }
 
       resetForm();
@@ -108,8 +87,7 @@ export default function CategoriesManagement() {
     if (!confirm('Delete this category? Related blog posts may be affected.')) return;
 
     try {
-      const { error } = await supabase.from('categories').delete().eq('id', id);
-      if (error) throw error;
+      await categoriesApi.delete(id);
       loadCategories();
     } catch (error) {
       console.error('Error deleting category:', error);

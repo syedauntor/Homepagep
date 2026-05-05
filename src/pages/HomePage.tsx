@@ -1,23 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Eye, ArrowRight, Sparkles, Palette, GraduationCap, Download, Facebook, Instagram, Linkedin, Twitter, Grid3x3, Gift, TrendingUp, Mail, Plus, Minus, Type, Pen, User } from 'lucide-react';
-import { supabase, BlogPost } from '../lib/supabase';
-
-interface Author {
-  id: string;
-  name: string;
-  designation: string;
-  bio: string;
-  avatar_url: string | null;
-  fb_url: string | null;
-  ig_url: string | null;
-  x_url: string | null;
-  linkedin_url: string | null;
-  pinterest_url: string | null;
-  show_on_home: boolean;
-  display_order: number;
-  is_active: boolean;
-}
+import { blogApi, authorsApi, BlogPost, Author } from '../lib/api';
 
 export function HomePage() {
   const [popularPosts, setPopularPosts] = useState<BlogPost[]>([]);
@@ -31,28 +15,14 @@ export function HomePage() {
   }, []);
 
   async function fetchTeam() {
-    const { data } = await supabase
-      .from('authors')
-      .select('*')
-      .eq('show_on_home', true)
-      .eq('is_active', true)
-      .order('display_order')
-      .order('created_at');
-    if (data) setTeamMembers(data);
+    authorsApi.list({ show_on_home: true, is_active: true })
+      .then(data => setTeamMembers(data))
+      .catch(() => {});
   }
 
   async function fetchPosts() {
     try {
-      const { data: allPosts, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('status', 'published')
-        .lte('published_at', new Date().toISOString())
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      const posts = allPosts ?? [];
+      const posts = await blogApi.list({ status: 'published' });
       const sorted = [...posts].sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
       setPopularPosts(sorted.slice(0, 8));
       setLatestPosts(posts.slice(0, 8));

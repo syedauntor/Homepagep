@@ -1,26 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, Download, Mail } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-
-interface Order {
-  id: string;
-  customer_email: string;
-  customer_name: string;
-  total_amount: number;
-  status: string;
-  created_at: string;
-}
-
-interface OrderItem {
-  id: string;
-  quantity: number;
-  price: number;
-  products: {
-    title: string;
-    file_type: string;
-  };
-}
+import { ordersApi, Order, OrderItem } from '../lib/api';
 
 export default function OrderSuccessPage() {
   const { orderId } = useParams<{ orderId: string }>();
@@ -36,23 +17,9 @@ export default function OrderSuccessPage() {
 
   async function fetchOrder(id: string) {
     try {
-      const { data: orderData, error: orderError } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle();
-
-      if (orderError) throw orderError;
-
-      const { data: itemsData, error: itemsError } = await supabase
-        .from('order_items')
-        .select('*, products(title, file_type)')
-        .eq('order_id', id);
-
-      if (itemsError) throw itemsError;
-
+      const { order: orderData, items: itemsData } = await ordersApi.get(id);
       setOrder(orderData);
-      setOrderItems(itemsData || []);
+      setOrderItems(itemsData);
     } catch (error) {
       console.error('Error fetching order:', error);
     } finally {

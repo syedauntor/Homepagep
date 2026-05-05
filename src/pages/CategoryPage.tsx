@@ -1,28 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Calendar, User, BookOpen, Home, ChevronRight } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-}
-
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  image_url: string | null;
-  created_at: string;
-  category_id: string;
-  categories: {
-    name: string;
-    slug: string;
-  };
-}
+import { categoriesApi, blogApi, BlogPost, Category } from '../lib/api';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug?: string }>();
@@ -37,54 +16,34 @@ export default function CategoryPage() {
   }, [slug]);
 
   const fetchCategories = async () => {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .order('name');
-
-    if (error) {
-      console.error('Error fetching categories:', error);
-      return;
-    }
-
-    setCategories(data || []);
+    const data = await categoriesApi.list().catch(() => []);
+    setCategories(data);
     if (slug) {
-      const category = data?.find((cat) => cat.slug === slug);
+      const category = data.find((cat) => cat.slug === slug);
       setSelectedCategory(category?.id || null);
     }
   };
 
   const fetchPosts = async () => {
     setLoading(true);
-    let query = supabase
-      .from('blog_posts')
-      .select('*, categories(name, slug)')
-      .eq('status', 'published')
-      .lte('published_at', new Date().toISOString())
-      .order('created_at', { ascending: false });
-
-    if (slug) {
-      const { data: categoryData } = await supabase
-        .from('categories')
-        .select('id')
-        .eq('slug', slug)
-        .maybeSingle();
-
-      if (categoryData) {
-        query = query.eq('category_id', categoryData.id);
+    try {
+      if (slug) {
+        const category = await categoriesApi.get(slug).catch(() => null);
+        if (category) {
+          const data = await categoriesApi.postsByCategory(category.id);
+          setPosts(data);
+        } else {
+          setPosts([]);
+        }
+      } else {
+        const data = await blogApi.list({ status: 'published' });
+        setPosts(data);
       }
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('Error fetching posts:', error);
+    } catch {
+      setPosts([]);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setPosts(data || []);
-    setLoading(false);
   };
 
   const formatDate = (dateString: string) => {

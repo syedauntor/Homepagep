@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ArrowLeft, Check, Home, ChevronRight, FileText, Package, Star, Tag, BookOpen, Ticket } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { productsApi } from '../lib/api';
 import { useCart, Product } from '../contexts/CartContext';
 
 export default function ProductDetailPage() {
@@ -31,20 +31,7 @@ export default function ProductDetailPage() {
 
   async function fetchProduct(productId: string) {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', productId)
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (!data) {
-        navigate('/shop');
-        return;
-      }
-
+      const data = await productsApi.get(productId, true);
       setProduct(data);
     } catch (error) {
       console.error('Error fetching product:', error);

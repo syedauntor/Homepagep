@@ -1,28 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { ordersApi, Order, OrderItem } from '../../lib/api';
 import { Search, Eye, Package } from 'lucide-react';
-
-interface Order {
-  id: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string | null;
-  shipping_address: string | null;
-  total_amount: number;
-  status: string;
-  created_at: string;
-}
-
-interface OrderItem {
-  id: string;
-  product_id: string;
-  quantity: number;
-  price: number;
-  products: {
-    title: string;
-    image_url: string;
-  };
-}
 
 export default function OrdersManagement() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -38,13 +16,8 @@ export default function OrdersManagement() {
 
   const loadOrders = async () => {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setOrders(data || []);
+      const data = await ordersApi.list();
+      setOrders(data);
     } catch (error) {
       console.error('Error loading orders:', error);
     } finally {
@@ -54,19 +27,8 @@ export default function OrdersManagement() {
 
   const loadOrderItems = async (orderId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('order_items')
-        .select(`
-          *,
-          products (
-            title,
-            image_url
-          )
-        `)
-        .eq('order_id', orderId);
-
-      if (error) throw error;
-      setOrderItems(data || []);
+      const { items } = await ordersApi.get(orderId);
+      setOrderItems(items);
     } catch (error) {
       console.error('Error loading order items:', error);
     }
@@ -80,13 +42,7 @@ export default function OrdersManagement() {
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status: newStatus })
-        .eq('id', orderId);
-
-      if (error) throw error;
-
+      await ordersApi.updateStatus(orderId, newStatus);
       loadOrders();
 
       if (selectedOrder?.id === orderId) {

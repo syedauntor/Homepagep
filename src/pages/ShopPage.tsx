@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Filter, Search } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { productsApi } from '../lib/api';
 import { useCart, Product } from '../contexts/CartContext';
 
 export default function ShopPage() {
@@ -39,18 +39,10 @@ export default function ShopPage() {
 
   async function fetchProducts() {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      setProducts(data || []);
-      setFilteredProducts(data || []);
-
-      const uniqueCategories = [...new Set((data || []).map((p) => p.category))];
+      const data = await productsApi.list({ is_active: true });
+      setProducts(data);
+      setFilteredProducts(data);
+      const uniqueCategories = [...new Set(data.map((p) => p.category).filter(Boolean))] as string[];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error fetching products:', error);

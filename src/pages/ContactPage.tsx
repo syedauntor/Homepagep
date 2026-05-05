@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { contactApi } from '../lib/api';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -18,11 +18,7 @@ export function ContactPage() {
     setErrorMessage('');
 
     try {
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([formData]);
-
-      if (error) throw error;
+      await contactApi.submit(formData);
 
       setStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });

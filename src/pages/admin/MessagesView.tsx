@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { contactApi, ContactSubmission } from '../../lib/api';
 import { Search, Mail, Trash2 } from 'lucide-react';
-
-interface ContactSubmission {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  created_at: string;
-}
 
 export default function MessagesView() {
   const [messages, setMessages] = useState<ContactSubmission[]>([]);
@@ -24,13 +15,8 @@ export default function MessagesView() {
 
   const loadMessages = async () => {
     try {
-      const { data, error } = await supabase
-        .from('contact_submissions')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setMessages(data || []);
+      const data = await contactApi.list();
+      setMessages(data);
     } catch (error) {
       console.error('Error loading messages:', error);
     } finally {
@@ -47,12 +33,7 @@ export default function MessagesView() {
     if (!confirm('Are you sure you want to delete this message?')) return;
 
     try {
-      const { error } = await supabase
-        .from('contact_submissions')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await contactApi.delete(id);
       loadMessages();
       if (selectedMessage?.id === id) {
         setShowDetails(false);

@@ -1,13 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, Eye, ArrowRight, BookOpen, TrendingUp, Clock, ChevronDown } from 'lucide-react';
-import { supabase, BlogPost } from '../lib/supabase';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
+import { blogApi, categoriesApi, BlogPost, Category } from '../lib/api';
 
 export function AllBlogPostsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -40,21 +34,13 @@ export function AllBlogPostsPage() {
   }, [posts, searchTerm, sortBy, selectedCategory]);
 
   async function fetchCategories() {
-    const { data } = await supabase.from('categories').select('id, name, slug').order('name');
-    if (data) setCategories(data);
+    categoriesApi.list().then(setCategories).catch(() => {});
   }
 
   async function fetchPosts() {
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*, categories(id, name, slug)')
-        .eq('status', 'published')
-        .lte('published_at', new Date().toISOString())
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      if (data) setPosts(data);
+      const data = await blogApi.list({ status: 'published' });
+      setPosts(data);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {

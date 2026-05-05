@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Eye, User, BookOpen, Facebook, Instagram, Linkedin, Twitter, Home, ChevronRight, Search, ArrowLeft, ArrowRight, Send, ShoppingBag } from 'lucide-react';
-import { supabase, BlogPost, Product } from '../lib/supabase';
+import { blogApi, authorsApi, productsApi, settingsApi, BlogPost, Product, Author } from '../lib/api';
 
 interface BlogContentProps {
   html: string;
@@ -137,17 +137,7 @@ function BlogContent({ html, pageUrl, pageTitle, pageDescription }: BlogContentP
   );
 }
 
-interface AuthorProfile {
-  name: string;
-  designation: string;
-  bio: string;
-  avatar_url: string | null;
-  fb_url: string | null;
-  ig_url: string | null;
-  x_url: string | null;
-  linkedin_url: string | null;
-  pinterest_url: string | null;
-}
+type AuthorProfile = Pick<Author, 'name' | 'designation' | 'bio' | 'avatar_url' | 'fb_url' | 'ig_url' | 'x_url' | 'linkedin_url' | 'pinterest_url'>;
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -175,39 +165,20 @@ export function BlogPostPage() {
   }, [id]);
 
   async function fetchSettings() {
-    const { data } = await supabase
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'post_featured_image_enabled')
-      .maybeSingle();
-    if (data) setShowFeaturedImage(data.value === 'true');
+    settingsApi.get('post_featured_image_enabled')
+      .then(data => { if (data) setShowFeaturedImage(data.value === 'true'); })
+      .catch(() => {});
   }
 
   async function fetchPost() {
     try {
-      // Try by slug first, then fall back to id
-      let { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('slug', id!)
-        .maybeSingle();
-
-      if (!data && !error) {
-        ({ data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .eq('id', id!)
-          .maybeSingle());
-      }
-
-      if (error) throw error;
-
+      const data = await blogApi.get(id!);
       if (data) {
         setPost(data);
-        await incrementViews(data.id);
-        await fetchRelatedPosts(data.id);
-        await fetchPreviousNextPosts(data.created_at);
-        fetchAuthorProfile(data.author);
+        blogApi.incrementViews(data.id).catch(() => {});
+        fetchRelatedPosts(data.id);
+        fetchPreviousNextPosts(data.id);
+        if (data.author) fetchAuthorProfile(data.author);
       }
     } catch (error) {
       console.error('Error fetching post:', error);
@@ -216,91 +187,33 @@ export function BlogPostPage() {
     }
   }
 
-  async function incrementViews(postId: string) {
-    await supabase.rpc('increment_post_views', { post_id: postId }).catch(() => {});
-  }
-
   async function fetchAuthorProfile(authorName: string) {
-    const { data } = await supabase
-      .from('authors')
-      .select('name, designation, bio, avatar_url, fb_url, ig_url, x_url, linkedin_url, pinterest_url')
-      .ilike('name', authorName)
-      .eq('is_active', true)
-      .maybeSingle();
-    if (data) setAuthorProfile(data);
+    authorsApi.getByName(authorName)
+      .then(data => setAuthorProfile(data))
+      .catch(() => {});
   }
 
   async function fetchRelatedPosts(currentPostId: string) {
-    const { data } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .neq('id', currentPostId)
-      .order('created_at', { ascending: false })
-      .limit(3);
-
-    if (data) setRelatedPosts(data);
+    blogApi.list({ limit: 4 })
+      .then(data => setRelatedPosts(data.filter(p => p.id !== currentPostId).slice(0, 3)))
+      .catch(() => {});
   }
 
-  async function fetchPreviousNextPosts(currentPostDate: string) {
-    const { data: previous } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .lt('created_at', currentPostDate)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    const { data: next } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .gt('created_at', currentPostDate)
-      .order('created_at', { ascending: true })
-      .limit(1)
-      .maybeSingle();
-
-    if (previous) setPreviousPost(previous);
-    if (next) setNextPost(next);
+  async function fetchPreviousNextPosts(postId: string) {
+    blogApi.prev(postId).then(data => { if (data) setPreviousPost(data); }).catch(() => {});
+    blogApi.next(postId).then(data => { if (data) setNextPost(data); }).catch(() => {});
   }
 
   async function fetchSidebarPosts() {
-    const { data: recent } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(3);
-
-    const { data: popular } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .order('views', { ascending: false })
-      .limit(3);
-
-    if (recent) setRecentPosts(recent);
-    if (popular) setPopularPosts(popular);
+    blogApi.list({ limit: 3 }).then(setRecentPosts).catch(() => {});
+    blogApi.list({ limit: 3, sort: 'views_desc' }).then(setPopularPosts).catch(() => {});
   }
 
   async function fetchProducts() {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
-        .limit(4);
-
-      if (error) {
-        console.error('Error fetching products:', error);
-        setProductsLoading(false);
-        return;
-      }
-
-      console.log('Fetched products:', data);
-      if (data) setProducts(data);
-    } catch (error) {
-      console.error('Exception fetching products:', error);
-    } finally {
-      setProductsLoading(false);
-    }
+    productsApi.list({ is_active: true, limit: 4 })
+      .then(data => setProducts(data))
+      .catch(() => {})
+      .finally(() => setProductsLoading(false));
   }
 
   function formatDate(dateString: string) {
