@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '../lib/supabase';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -24,23 +25,34 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedAdmin = localStorage.getItem('adminSession');
-    if (storedAdmin) {
-      try {
-        const { email, timestamp } = JSON.parse(storedAdmin);
-        const hoursSinceLogin = (Date.now() - timestamp) / (1000 * 60 * 60);
-
-        if (hoursSinceLogin < 24) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const role = session.user.app_metadata?.role || session.user.user_metadata?.role;
+        if (role === 'admin') {
           setIsAdmin(true);
-          setAdminEmail(email);
-        } else {
-          localStorage.removeItem('adminSession');
+          setAdminEmail(session.user.email ?? null);
         }
-      } catch (e) {
-        localStorage.removeItem('adminSession');
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        const role = session.user.app_metadata?.role || session.user.user_metadata?.role;
+        if (role === 'admin') {
+          setIsAdmin(true);
+          setAdminEmail(session.user.email ?? null);
+        } else {
+          setIsAdmin(false);
+          setAdminEmail(null);
+        }
+      } else {
+        setIsAdmin(false);
+        setAdminEmail(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -59,13 +71,13 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.session) {
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
         setIsAdmin(true);
         setAdminEmail(email);
-        localStorage.setItem('adminSession', JSON.stringify({
-          email,
-          timestamp: Date.now()
-        }));
         return true;
       }
       return false;
@@ -75,10 +87,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setIsAdmin(false);
     setAdminEmail(null);
-    localStorage.removeItem('adminSession');
   };
 
   return (
