@@ -1,6 +1,31 @@
-import { Download, FileArchive, CheckCircle, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { Download, FileArchive, CheckCircle, Loader2 } from 'lucide-react';
 
 export function DownloadThemePage() {
+  const [downloading, setDownloading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleDownload() {
+    setDownloading(true);
+    setError('');
+    try {
+      const res = await fetch('/printanduse.zip');
+      if (!res.ok) throw new Error('File not found');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'printanduse.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      setError('Download failed. Please try opening the preview in a new browser tab and try again.');
+    } finally {
+      setDownloading(false);
+    }
+  }
   const files = [
     { label: 'Core Theme', items: ['style.css', 'functions.php', 'header.php', 'footer.php'] },
     { label: 'Page Templates', items: ['front-page.php', 'single.php', 'archive.php', 'page.php', '404.php'] },
@@ -36,16 +61,23 @@ export function DownloadThemePage() {
         {/* Download Button */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8 text-center">
           <p className="text-gray-600 mb-6 text-base">
-            নিচের বাটনে ক্লিক করুন। Browser আপনাকে save করতে বলবে।
+            নিচের বাটনে ক্লিক করুন — file আপনার computer-এ save হবে।
           </p>
-          <a
-            href="/printanduse.zip"
-            download="printanduse.zip"
-            className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg shadow-orange-200"
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 disabled:opacity-70 text-white font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg shadow-orange-200 cursor-pointer"
           >
-            <Download className="w-6 h-6" />
-            printanduse.zip ডাউনলোড করুন
-          </a>
+            {downloading
+              ? <><Loader2 className="w-6 h-6 animate-spin" /> Downloading...</>
+              : <><Download className="w-6 h-6" /> printanduse.zip ডাউনলোড করুন</>
+            }
+          </button>
+          {error && (
+            <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
           <p className="text-gray-400 text-sm mt-4">File size: ~84 KB</p>
         </div>
 
