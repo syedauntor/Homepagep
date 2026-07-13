@@ -35,7 +35,6 @@ import SettingsPage from './pages/admin/SettingsPage';
 import AuthorsPage from './pages/admin/AuthorsPage';
 import PagesManagement from './pages/admin/PagesManagement';
 import { DynamicPage } from './pages/DynamicPage';
-import { DownloadThemePage } from './pages/DownloadThemePage';
 
 function App() {
   return (
@@ -80,7 +79,6 @@ function App() {
                     <Route path="/blog/:id" element={<BlogPostPage />} />
                     <Route path="/category" element={<CategoryPage />} />
                     <Route path="/category/:slug" element={<CategoryPage />} />
-                    <Route path="/download-theme" element={<DownloadThemePage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/:slug" element={<DynamicPage />} />
