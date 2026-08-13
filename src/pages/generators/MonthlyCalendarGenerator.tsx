@@ -1,37 +1,38 @@
 import { useState } from 'react';
-import { Download, Printer, Eye, RefreshCw, ChevronRight, Play, Calendar } from 'lucide-react';
+import { Download, Printer, ChevronRight, CalendarDays, RotateCcw, Sparkles, Palette, Settings2, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RelatedGenerators } from '../../components/RelatedGenerators';
 
 interface Theme {
   id: string;
   name: string;
-  accentColor: string;
-  borderColor: string;
+  accent: string;
+  bg: string;
+  cellBg: string;
+  headerBg: string;
   decoration?: string;
-  bgColor: string;
 }
 
 const themes: Theme[] = [
-  { id: 'blank', name: 'Blank', accentColor: '#F97316', borderColor: 'transparent', bgColor: '#ffffff' },
-  { id: 'autumn', name: 'Autumn Leaves', accentColor: '#10B981', borderColor: '#10B981', decoration: '🍂', bgColor: '#FEF6E4' },
-  { id: 'beep', name: 'Beep Beep', accentColor: '#F59E0B', borderColor: '#F59E0B', decoration: '🚗', bgColor: '#FFF8E1' },
-  { id: 'blue', name: 'Ocean Blue', accentColor: '#06B6D4', borderColor: '#06B6D4', decoration: '🌊', bgColor: '#E0F7FA' },
-  { id: 'green', name: 'Fresh Green', accentColor: '#10B981', borderColor: '#10B981', decoration: '🌿', bgColor: '#ECFDF5' },
-  { id: 'hearts', name: 'Hearts', accentColor: '#EC4899', borderColor: '#EC4899', decoration: '❤️', bgColor: '#FDF2F8' },
-  { id: 'yellow', name: 'Sunny Yellow', accentColor: '#EAB308', borderColor: '#EAB308', decoration: '☀️', bgColor: '#FEFCE8' },
-  { id: 'lavender', name: 'Lavender', accentColor: '#A78BFA', borderColor: '#A78BFA', decoration: '🌸', bgColor: '#F5F3FF' },
-  { id: 'coral', name: 'Coral', accentColor: '#FB7185', borderColor: '#FB7185', decoration: '🐚', bgColor: '#FFF1F2' },
-  { id: 'slate', name: 'Minimal Slate', accentColor: '#475569', borderColor: '#475569', bgColor: '#F8FAFC' },
+  { id: 'clean', name: 'Clean White', accent: '#F97316', bg: '#ffffff', cellBg: '#ffffff', headerBg: '#FFF7ED' },
+  { id: 'autumn', name: 'Autumn', accent: '#D97706', bg: '#FEF6E4', cellBg: '#FFFBF0', headerBg: '#FDE68A', decoration: '🍂' },
+  { id: 'ocean', name: 'Ocean', accent: '#0891B2', bg: '#ECFEFF', cellBg: '#ffffff', headerBg: '#CFFAFE', decoration: '🌊' },
+  { id: 'forest', name: 'Forest', accent: '#059669', bg: '#ECFDF5', cellBg: '#ffffff', headerBg: '#A7F3D0', decoration: '🌿' },
+  { id: 'rose', name: 'Rose', accent: '#E11D48', bg: '#FFF1F2', cellBg: '#ffffff', headerBg: '#FECDD3', decoration: '🌹' },
+  { id: 'sunshine', name: 'Sunshine', accent: '#CA8A04', bg: '#FEFCE8', cellBg: '#ffffff', headerBg: '#FEF08A', decoration: '☀️' },
+  { id: 'lavender', name: 'Lavender', accent: '#7C3AED', bg: '#F5F3FF', cellBg: '#ffffff', headerBg: '#DDD6FE', decoration: '🌸' },
+  { id: 'slate', name: 'Slate', accent: '#475569', bg: '#F8FAFC', cellBg: '#ffffff', headerBg: '#E2E8F0' },
+  { id: 'coral', name: 'Coral', accent: '#F43F5E', bg: '#FFF1F2', cellBg: '#ffffff', headerBg: '#FDA4AF', decoration: '🐚' },
+  { id: 'mint', name: 'Mint', accent: '#10B981', bg: '#F0FDF4', cellBg: '#ffffff', headerBg: '#BBF7D0', decoration: '🍃' },
 ];
 
 const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
-
-const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const dayNamesWeekStart = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const dayNamesShort = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const dayNamesFull = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const dayNamesMonStart = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const calendarGenerators = [
   { name: 'Monthly Calendar Generator', slug: 'monthly-calendar' },
@@ -41,7 +42,6 @@ const calendarGenerators = [
 function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate();
 }
-
 function getFirstDayOfWeek(year: number, month: number, weekStartsOn: number): number {
   const jsDay = new Date(year, month, 1).getDay();
   return (jsDay - weekStartsOn + 7) % 7;
@@ -52,504 +52,456 @@ export function MonthlyCalendarGenerator() {
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const [weekStartsOn, setWeekStartsOn] = useState<0 | 1>(0);
-  const [selectedTheme, setSelectedTheme] = useState<Theme>(themes[0]);
+  const [theme, setTheme] = useState<Theme>(themes[0]);
   const [title, setTitle] = useState('');
-  const [showNote, setShowNote] = useState(true);
-  const [noteText, setNoteText] = useState('Notes:');
-  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium');
-  const [hasGenerated, setHasGenerated] = useState(true);
-  const [activeNavTab, setActiveNavTab] = useState<'generator' | 'theme' | 'howto'>('generator');
+  const [showNotes, setShowNotes] = useState(true);
+  const [notesLabel, setNotesLabel] = useState('Notes');
+  const [noteRows, setNoteRows] = useState(3);
+  const [cellSize, setCellSize] = useState<'compact' | 'regular' | 'spacious'>('regular');
+  const [showWeekend, setShowWeekend] = useState(true);
+  const [activePanel, setActivePanel] = useState<'settings' | 'theme' | 'help'>('settings');
 
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfWeek(year, month, weekStartsOn);
-  const dayLabels = weekStartsOn === 0 ? dayNames : dayNamesWeekStart;
+  const dayLabels = weekStartsOn === 0 ? dayNamesFull : dayNamesMonStart;
   const displayTitle = title || `${monthNames[month]} ${year}`;
 
-  const headerFontSize = fontSize === 'small' ? '26px' : fontSize === 'medium' ? '32px' : '38px';
-  const dayHeaderSize = fontSize === 'small' ? '12px' : fontSize === 'medium' ? '14px' : '16px';
-  const dateCellSize = fontSize === 'small' ? '30px' : fontSize === 'medium' ? '34px' : '40px';
+  const cellHeight = cellSize === 'compact' ? '38px' : cellSize === 'regular' ? '48px' : '58px';
+  const dateFontSize = cellSize === 'compact' ? '13px' : cellSize === 'regular' ? '15px' : '17px';
 
   const handleReset = () => {
     setYear(now.getFullYear());
     setMonth(now.getMonth());
     setWeekStartsOn(0);
-    setSelectedTheme(themes[0]);
+    setTheme(themes[0]);
     setTitle('');
-    setShowNote(true);
-    setNoteText('Notes:');
-    setFontSize('medium');
+    setShowNotes(true);
+    setNotesLabel('Notes');
+    setNoteRows(3);
+    setCellSize('regular');
+    setShowWeekend(true);
   };
 
-  const buildCalendarHTML = () => {
-    const hasBorder = selectedTheme.id !== 'blank';
-    const borderStyle = hasBorder
-      ? `border:${selectedTheme.borderWidth === 'transparent' ? '3px' : '3px'} solid ${selectedTheme.borderColor};`
-      : '';
-
+  const buildPrintHTML = () => {
     const cells: string[] = [];
     for (let i = 0; i < firstDay; i++) cells.push('<div class="cell empty"></div>');
     for (let d = 1; d <= daysInMonth; d++) {
-      cells.push(`<div class="cell"><span class="date">${d}</span></div>`);
+      const dow = (new Date(year, month, d).getDay() - weekStartsOn + 7) % 7;
+      const isWeekend = dow === 5 || dow === 6;
+      const weekendClass = showWeekend && isWeekend ? ' weekend' : '';
+      cells.push(`<div class="cell${weekendClass}"><span class="date">${d}</span></div>`);
     }
-    const totalCells = cells.length;
-    const cellsToFill = totalCells <= 35 ? 35 : totalCells <= 42 ? 42 : totalCells;
-    while (cells.length < cellsToFill) cells.push('<div class="cell empty"></div>');
+    const fillCount = cells.length <= 35 ? 35 : 42;
+    while (cells.length < fillCount) cells.push('<div class="cell empty"></div>');
 
-    const dayHeaderHTML = dayLabels
-      .map((d) => `<div class="day-header">${d}</div>`)
-      .join('');
+    const dayHeaderHTML = dayLabels.map((d) => `<div class="dh">${d}</div>`).join('');
+    const notesHTML = showNotes ? `<div class="notes">
+      <div class="notes-label">${notesLabel}</div>
+      ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
+    </div>` : '';
 
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>${displayTitle}</title>
-  <style>
-    @page { size: A4 portrait; margin: ${hasBorder ? '8mm' : '0'}; }
-    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    html, body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #000; }
-    .page {
-      width: ${hasBorder ? '194mm' : '210mm'};
-      height: ${hasBorder ? '279mm' : '297mm'};
-      padding: ${hasBorder ? '0' : '12mm'};
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      background: #fff;
-      ${borderStyle}
-    }
-    .inner { padding: 12mm 15mm; display: flex; flex-direction: column; height: 100%; }
-    .header { text-align: center; flex-shrink: 0; margin-bottom: 8px; }
-    .header h1 { font-size: ${headerFontSize}; font-weight: 900; color: ${selectedTheme.accentColor}; margin: 0; letter-spacing: 0.5px; }
-    .calendar { flex: 1; display: flex; flex-direction: column; }
-    .days-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px; }
-    .day-header { text-align: center; font-size: ${dayHeaderSize}; font-weight: 700; color: ${selectedTheme.accentColor}; padding: 6px 0; text-transform: uppercase; letter-spacing: 1px; }
-    .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; flex: 1; }
-    .cell { border: 1px solid #d1d5db; padding: 4px 6px; display: flex; flex-direction: column; align-items: flex-start; min-height: 0; }
-    .cell.empty { border: 1px solid #f3f4f6; }
-    .date { font-size: ${dateCellSize}; font-weight: 700; color: #1f2937; line-height: 1; }
-    .notes { flex-shrink: 0; margin-top: 10px; }
-    .notes-label { font-size: 13px; font-weight: 700; color: ${selectedTheme.accentColor}; }
-    .notes-line { border-bottom: 1px solid #d1d5db; height: 22px; margin-bottom: 4px; }
-    .footer { flex-shrink: 0; text-align: center; font-size: 11px; color: #6b7280; padding-top: 8px; }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <div class="inner">
-      <div class="header">
-        <h1>${displayTitle}</h1>
-      </div>
-      <div class="calendar">
-        <div class="days-row">${dayHeaderHTML}</div>
-        <div class="grid">${cells.join('')}</div>
-      </div>
-      ${showNote ? `<div class="notes">
-        <div class="notes-label">${noteText}</div>
-        <div class="notes-line"></div>
-        <div class="notes-line"></div>
-        <div class="notes-line"></div>
-      </div>` : ''}
-      <div class="footer">
-        <p style="margin:0">Find more printable resources at PrintAndUse.com</p>
-        <p style="margin:0">Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
-      </div>
-    </div>
-  </div>
-  <script>
-    window.onload = function() {
-      window.print();
-      window.onafterprint = function() { window.close(); };
-    }
-  </script>
-</body>
-</html>`;
+    const ch = cellSize === 'compact' ? '34px' : cellSize === 'regular' ? '42px' : '52px';
+    const dfs = cellSize === 'compact' ? '12px' : cellSize === 'regular' ? '14px' : '16px';
+
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${displayTitle}</title>
+<style>
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.page{width:190mm;min-height:277mm;display:flex;flex-direction:column;background:#fff}
+.cal-header{background:${theme.headerBg};border-radius:12px 12px 0 0;padding:14px 20px;text-align:center}
+.cal-header h1{font-size:28px;font-weight:900;color:${theme.accent};margin:0;letter-spacing:.5px}
+.cal-header .sub{font-size:12px;color:#6b7280;margin-top:2px}
+.cal-body{padding:0 4px}
+.days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
+.dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cell{border:1px solid #e5e7eb;min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;background:${theme.cellBg}}
+.cell.empty{border-color:#f3f4f6;background:transparent}
+.cell.weekend{background:${theme.headerBg}66}
+.date{font-size:${dfs};font-weight:700;color:#1f2937}
+.notes{margin-top:12px;padding:0 4px}
+.notes-label{font-size:13px;font-weight:800;color:${theme.accent};margin-bottom:6px}
+.notes-line{border-bottom:1px solid #d1d5db;height:22px;margin-bottom:5px}
+.footer{text-align:center;font-size:10px;color:#9ca3af;padding:10px 0}
+</style></head><body>
+<div class="page">
+<div class="cal-header"><h1>${displayTitle}</h1><div class="sub">PrintAndUse.com Printable Calendar</div></div>
+<div class="cal-body">
+<div class="days-row">${dayHeaderHTML}</div>
+<div class="grid">${cells.join('')}</div>
+</div>
+${notesHTML}
+<div class="footer"><p>Find more printable resources at PrintAndUse.com</p><p>Copyright &copy;2025 - www.printanduse.com | All rights reserved</p></div>
+</div>
+<script>window.onload=function(){window.print();window.onafterprint=function(){window.close()}}</script>
+</body></html>`;
   };
 
-  const openPrintWindow = () => {
-    const printWindow = window.open('', '_blank', 'width=900,height=1200');
-    if (!printWindow) return;
-    printWindow.document.write(buildCalendarHTML());
-    printWindow.document.close();
+  const openPrint = () => {
+    const w = window.open('', '_blank', 'width=900,height=1200');
+    if (!w) return;
+    w.document.write(buildPrintHTML());
+    w.document.close();
   };
 
-  const handlePrint = () => openPrintWindow();
-  const downloadWorksheet = () => openPrintWindow();
+  const allCells: (number | null)[] = [];
+  for (let i = 0; i < firstDay; i++) allCells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) allCells.push(d);
+  const fillTotal = allCells.length <= 35 ? 35 : 42;
+  while (allCells.length < fillTotal) allCells.push(null);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-          <Link to="/" className="hover:text-orange-500 transition">Home</Link>
-          <ChevronRight className="w-4 h-4" />
-          <Link to="/generators" className="hover:text-orange-500 transition">Worksheet Generator</Link>
-          <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900 font-medium">Monthly Calendar Generator</span>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-stone-50 to-orange-50/30">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-8">
+          <Link to="/" className="hover:text-orange-600 transition">Home</Link>
+          <ChevronRight className="w-3.5 h-3.5" />
+          <Link to="/generators" className="hover:text-orange-600 transition">Generators</Link>
+          <ChevronRight className="w-3.5 h-3.5" />
+          <span className="text-gray-900 font-medium">Monthly Calendar</span>
+        </nav>
 
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center space-x-2 mb-2">
-            <Calendar className="w-8 h-8 text-orange-500" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Monthly Calendar Generator</h1>
-          <p className="text-gray-600">Create beautiful printable monthly calendars with custom themes</p>
-        </div>
-
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex space-x-1 bg-white border-2 border-gray-200 rounded-full p-1 shadow-sm">
-            <button
-              onClick={() => setActiveNavTab('generator')}
-              className={`px-8 py-3 font-semibold transition rounded-full ${
-                activeNavTab === 'generator'
-                  ? 'bg-orange-500 text-white shadow-md'
-                  : 'bg-transparent text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              Generator
-            </button>
-            <button
-              onClick={() => setActiveNavTab('theme')}
-              className={`px-8 py-3 font-semibold transition rounded-full ${
-                activeNavTab === 'theme'
-                  ? 'bg-orange-500 text-white shadow-md'
-                  : 'bg-transparent text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              Theme
-            </button>
-          </div>
-
-          <button
-            onClick={() => setActiveNavTab('howto')}
-            className={`px-8 py-3 font-semibold transition rounded-full flex items-center space-x-2 ${
-              activeNavTab === 'howto'
-                ? 'bg-pink-600 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <span>How to make</span>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-              activeNavTab === 'howto' ? 'bg-white' : 'bg-orange-500'
-            }`}>
-              <Play className={`w-4 h-4 ${
-                activeNavTab === 'howto' ? 'text-orange-500' : 'text-white'
-              }`} fill="currentColor" />
+        {/* Hero */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center">
+              <CalendarDays className="w-6 h-6 text-orange-600" />
             </div>
-          </button>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Monthly Calendar Generator</h1>
+              <p className="text-gray-500 mt-0.5">Design a beautiful printable calendar for any month</p>
+            </div>
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-orange-50 rounded-2xl shadow-sm p-8">
-            {activeNavTab === 'generator' ? (
-              <>
-                <h2 className="text-lg font-bold text-gray-900 mb-6">Calendar Settings</h2>
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
-                      Title (optional — defaults to month and year)
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition"
-                      placeholder="e.g. My Family Schedule"
-                    />
-                  </div>
+        {/* Panel switcher */}
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+          {([
+            { id: 'settings' as const, label: 'Settings', icon: Settings2 },
+            { id: 'theme' as const, label: 'Themes', icon: Palette },
+            { id: 'help' as const, label: 'How it works', icon: HelpCircle },
+          ]).map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActivePanel(tab.id)}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition whitespace-nowrap ${
+                activePanel === tab.id
+                  ? 'bg-gray-900 text-white shadow-md'
+                  : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">Month</label>
+        <div className="grid lg:grid-cols-[380px_1fr] gap-6">
+          {/* Left: controls */}
+          <div className="space-y-4">
+            {activePanel === 'settings' && (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Custom Title</label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition text-gray-900"
+                    placeholder="Leave empty for month name"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Month</label>
+                    <div className="relative">
                       <select
                         value={month}
                         onChange={(e) => setMonth(Number(e.target.value))}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition appearance-none"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition appearance-none text-gray-900 font-medium"
                       >
-                        {monthNames.map((m, i) => (
-                          <option key={m} value={i}>{m}</option>
-                        ))}
+                        {monthNames.map((m, i) => <option key={m} value={i}>{m}</option>)}
                       </select>
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">Year</label>
-                      <input
-                        type="number"
-                        value={year}
-                        min={2000}
-                        max={2100}
-                        onChange={(e) => setYear(Number(e.target.value))}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition"
-                      />
-                    </div>
                   </div>
-
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">Week Starts On</label>
-                    <div className="flex space-x-4">
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="weekStart"
-                          checked={weekStartsOn === 0}
-                          onChange={() => setWeekStartsOn(0)}
-                          className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
-                        />
-                        <span className="text-gray-900 font-medium">Sunday</span>
-                      </label>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="weekStart"
-                          checked={weekStartsOn === 1}
-                          onChange={() => setWeekStartsOn(1)}
-                          className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
-                        />
-                        <span className="text-gray-900 font-medium">Monday</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">Font Size</label>
-                    <div className="flex space-x-4">
-                      {(['small', 'medium', 'large'] as const).map((sz) => (
-                        <label key={sz} className="flex items-center space-x-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="fontSize"
-                            checked={fontSize === sz}
-                            onChange={() => setFontSize(sz)}
-                            className="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500"
-                          />
-                          <span className="text-gray-900 font-medium capitalize">{sz}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="flex items-center space-x-2 cursor-pointer mb-2">
-                      <input
-                        type="checkbox"
-                        checked={showNote}
-                        onChange={(e) => setShowNote(e.target.checked)}
-                        className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-gray-900 font-medium">Include Notes Section</span>
-                    </label>
-                    {showNote && (
-                      <input
-                        type="text"
-                        value={noteText}
-                        onChange={(e) => setNoteText(e.target.value)}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none transition"
-                        placeholder="Notes label"
-                      />
-                    )}
-                  </div>
-
-                  <div className="flex space-x-4 pt-4">
-                    <button
-                      onClick={handleReset}
-                      className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 text-orange-500 rounded-lg hover:bg-orange-100 transition font-semibold"
-                    >
-                      <span>Reset</span>
-                    </button>
-                    <button
-                      onClick={() => setHasGenerated(true)}
-                      className="flex-1 flex items-center justify-center space-x-2 px-6 py-4 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold shadow-lg"
-                    >
-                      <RefreshCw className="w-5 h-5" />
-                      <span>Generate Calendar</span>
-                    </button>
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Year</label>
+                    <input
+                      type="number"
+                      value={year}
+                      min={2000}
+                      max={2100}
+                      onChange={(e) => setYear(Number(e.target.value))}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition text-gray-900 font-medium"
+                    />
                   </div>
                 </div>
-              </>
-            ) : activeNavTab === 'theme' ? (
-              <>
-                <h2 className="text-lg font-bold text-gray-900 mb-6">Select Calendar Theme</h2>
-                <div className="grid grid-cols-2 gap-4 max-h-[600px] overflow-y-auto pr-2">
-                  {themes.map((theme) => (
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Week Starts</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {([
+                      { val: 0 as const, label: 'Sunday' },
+                      { val: 1 as const, label: 'Monday' },
+                    ]).map((opt) => (
+                      <button
+                        key={opt.val}
+                        onClick={() => setWeekStartsOn(opt.val)}
+                        className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
+                          weekStartsOn === opt.val
+                            ? 'bg-orange-500 text-white shadow-sm'
+                            : 'bg-gray-50 text-gray-600 border border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Cell Size</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(['compact', 'regular', 'spacious'] as const).map((sz) => (
+                      <button
+                        key={sz}
+                        onClick={() => setCellSize(sz)}
+                        className={`px-3 py-2.5 rounded-xl text-sm font-semibold capitalize transition ${
+                          cellSize === sz
+                            ? 'bg-orange-500 text-white shadow-sm'
+                            : 'bg-gray-50 text-gray-600 border border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        {sz}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Notes Section</label>
+                  <button
+                    onClick={() => setShowNotes(!showNotes)}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition ${
+                      showNotes ? 'bg-orange-50 border border-orange-200' : 'bg-gray-50 border border-gray-200'
+                    }`}
+                  >
+                    <span className="font-semibold text-gray-900 text-sm">{showNotes ? 'Enabled' : 'Disabled'}</span>
+                    <div className={`w-10 h-6 rounded-full transition ${showNotes ? 'bg-orange-500' : 'bg-gray-300'}`}>
+                      <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform mt-0.5 ${showNotes ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                    </div>
+                  </button>
+                  {showNotes && (
+                    <div className="mt-3 space-y-3">
+                      <input
+                        type="text"
+                        value={notesLabel}
+                        onChange={(e) => setNotesLabel(e.target.value)}
+                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition text-sm text-gray-900"
+                        placeholder="Notes label"
+                      />
+                      <div>
+                        <label className="block text-xs text-gray-400 mb-1">Lines: {noteRows}</label>
+                        <input
+                          type="range"
+                          min={1}
+                          max={6}
+                          value={noteRows}
+                          onChange={(e) => setNoteRows(Number(e.target.value))}
+                          className="w-full accent-orange-500"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Weekend Shading</label>
+                  <button
+                    onClick={() => setShowWeekend(!showWeekend)}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition ${
+                      showWeekend ? 'bg-orange-50 border border-orange-200' : 'bg-gray-50 border border-gray-200'
+                    }`}
+                  >
+                    <span className="font-semibold text-gray-900 text-sm">{showWeekend ? 'On' : 'Off'}</span>
+                    <div className={`w-10 h-6 rounded-full transition ${showWeekend ? 'bg-orange-500' : 'bg-gray-300'}`}>
+                      <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform mt-0.5 ${showWeekend ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                    </div>
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleReset}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-500 rounded-xl hover:bg-gray-50 transition font-semibold text-sm border border-gray-200"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Reset all
+                </button>
+              </div>
+            )}
+
+            {activePanel === 'theme' && (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-4 h-4 text-orange-500" />
+                  <h2 className="text-sm font-bold text-gray-900">Pick a theme</h2>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {themes.map((t) => (
                     <button
-                      key={theme.id}
-                      onClick={() => setSelectedTheme(theme)}
-                      className={`relative border-2 rounded-lg p-4 transition-all ${
-                        selectedTheme.id === theme.id
-                          ? 'border-orange-500 bg-orange-50'
-                          : 'border-gray-200 hover:border-orange-300'
+                      key={t.id}
+                      onClick={() => setTheme(t)}
+                      className={`rounded-xl p-3 transition-all text-left ${
+                        theme.id === t.id
+                          ? 'ring-2 ring-orange-500 ring-offset-1'
+                          : 'ring-1 ring-gray-200 hover:ring-gray-300'
                       }`}
                     >
                       <div
-                        className="w-full h-32 rounded border-2 mb-2 flex items-center justify-center relative overflow-hidden"
-                        style={{
-                          borderColor: theme.borderColor === 'transparent' ? '#e5e7eb' : theme.borderColor,
-                          background: theme.bgColor,
-                        }}
+                        className="h-20 rounded-lg flex flex-col items-center justify-center gap-1 mb-2"
+                        style={{ background: t.bg }}
                       >
-                        {theme.decoration && (
-                          <span className="absolute top-2 left-2 text-2xl">{theme.decoration}</span>
-                        )}
-                        <span className="text-lg font-bold" style={{ color: theme.accentColor }}>
-                          {theme.name}
-                        </span>
-                        {theme.decoration && (
-                          <span className="absolute bottom-2 right-2 text-2xl">{theme.decoration}</span>
-                        )}
-                      </div>
-                      <p className="text-sm font-semibold text-gray-900">{theme.name}</p>
-                      {selectedTheme.id === theme.id && (
-                        <div className="absolute top-2 right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
+                        <div className="flex gap-1.5">
+                          <div className="w-6 h-6 rounded-md" style={{ background: t.accent }} />
+                          <div className="w-6 h-6 rounded-md border" style={{ background: t.headerBg }} />
                         </div>
-                      )}
+                        {t.decoration && <span className="text-lg">{t.decoration}</span>}
+                      </div>
+                      <p className="text-xs font-bold text-gray-900">{t.name}</p>
                     </button>
                   ))}
                 </div>
-              </>
-            ) : (
-              <>
-                <h2 className="text-lg font-bold text-gray-900 mb-6">How to Make a Monthly Calendar</h2>
-                <div className="prose prose-sm text-gray-700 space-y-4">
-                  <ol className="list-decimal list-inside space-y-3">
-                    <li>Pick the month and year for your calendar</li>
-                    <li>Choose whether the week starts on Sunday or Monday</li>
-                    <li>Set the font size and optionally add a notes section</li>
-                    <li>Give your calendar a custom title, or leave it blank for the default</li>
-                    <li>Switch to the Theme tab to pick a decorative border style</li>
-                    <li>Click "Generate Calendar" then download or print</li>
-                  </ol>
-                </div>
-              </>
+              </div>
+            )}
+
+            {activePanel === 'help' && (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <h2 className="text-sm font-bold text-gray-900 mb-4">How it works</h2>
+                <ol className="space-y-3">
+                  {[
+                    'Choose a month and year for your calendar',
+                    'Decide if the week starts on Sunday or Monday',
+                    'Pick a cell size — compact for small calendars, spacious for writing room',
+                    'Add a notes section with custom label and line count',
+                    'Switch to Themes to choose a color palette',
+                    'Download or print your finished calendar',
+                  ].map((step, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-orange-100 text-orange-600 text-xs font-bold flex items-center justify-center">
+                        {i + 1}
+                      </span>
+                      <span className="text-sm text-gray-700">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             )}
           </div>
 
-          <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 pb-0">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Calendar Preview</h2>
-            </div>
-
-            {!hasGenerated ? (
-              <div className="flex flex-col items-center justify-center h-96 bg-gray-50 mx-6 mb-6 rounded-lg">
-                <div className="w-16 h-16 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                  <Eye className="w-8 h-8 text-gray-400" />
-                </div>
-                <p className="text-gray-500 text-lg">No preview available yet.</p>
+          {/* Right: live preview */}
+          <div className="space-y-4">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 className="text-sm font-bold text-gray-900">Live Preview</h2>
+                <span className="text-xs text-gray-400">A4 Portrait</span>
               </div>
-            ) : (
-              <div>
+
+              <div className="p-8 bg-stone-100 flex justify-center">
                 <div
-                  className="preview-container flex items-center justify-center overflow-hidden mx-6 mb-6 rounded-lg"
-                  style={{
-                    height: '650px',
-                    background: selectedTheme.id !== 'blank' ? selectedTheme.bgColor : '#e5e7eb',
-                  }}
+                  className="rounded-2xl overflow-hidden shadow-lg"
+                  style={{ width: '460px', background: theme.bg, fontFamily: 'Inter, sans-serif' }}
                 >
-                  <div className="preview-scale">
-                    <div
-                      className="calendar-content bg-white"
-                      style={{
-                        width: '210mm',
-                        height: '297mm',
-                        boxSizing: 'border-box',
-                        border: selectedTheme.id !== 'blank' ? `3px solid ${selectedTheme.borderColor}` : 'none',
-                      }}
-                    >
-                      <div className="flex flex-col h-full" style={{ padding: '12mm 15mm' }}>
-                        <div className="text-center mb-2">
-                          <h1
-                            className="font-black tracking-tight"
-                            style={{ fontSize: headerFontSize, color: selectedTheme.accentColor }}
-                          >
-                            {displayTitle}
-                          </h1>
-                        </div>
-
-                        <div className="flex-1 flex flex-col">
-                          <div className="grid grid-cols-7 gap-0.5 mb-1">
-                            {dayLabels.map((d) => (
-                              <div
-                                key={d}
-                                className="text-center font-bold uppercase tracking-wide py-1.5"
-                                style={{ fontSize: dayHeaderSize, color: selectedTheme.accentColor }}
-                              >
-                                {d}
-                              </div>
-                            ))}
-                          </div>
-                          <div className="grid grid-cols-7 gap-0.5 flex-1">
-                            {Array.from({ length: firstDay }).map((_, i) => (
-                              <div
-                                key={`e-${i}`}
-                                className="border border-gray-100"
-                              />
-                            ))}
-                            {Array.from({ length: daysInMonth }).map((_, i) => (
-                              <div
-                                key={`d-${i}`}
-                                className="border border-gray-300 p-1 flex items-start"
-                              >
-                                <span
-                                  className="font-bold text-gray-800 leading-none"
-                                  style={{ fontSize: dateCellSize }}
-                                >
-                                  {i + 1}
-                                </span>
-                              </div>
-                            ))}
-                            {Array.from({
-                              length: (firstDay + daysInMonth <= 35 ? 35 : 42) - firstDay - daysInMonth,
-                            }).map((_, i) => (
-                              <div
-                                key={`pad-${i}`}
-                                className="border border-gray-100"
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {showNote && (
-                          <div className="mt-2">
-                            <div className="font-bold text-sm mb-1" style={{ color: selectedTheme.accentColor }}>
-                              {noteText}
-                            </div>
-                            <div className="border-b border-gray-300 h-5 mb-1" />
-                            <div className="border-b border-gray-300 h-5 mb-1" />
-                            <div className="border-b border-gray-300 h-5" />
-                          </div>
-                        )}
-
-                        <div className="text-center text-xs text-gray-500 pt-2">
-                          <p>Find more printable resources at PrintAndUse.com</p>
-                          <p>Copyright &copy;2025 - www.printanduse.com | All rights reserved</p>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Calendar header bar */}
+                  <div
+                    className="text-center py-4 px-5"
+                    style={{ background: theme.headerBg }}
+                  >
+                    <h3 className="text-2xl font-black tracking-tight" style={{ color: theme.accent }}>
+                      {displayTitle}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">PrintAndUse.com</p>
                   </div>
-                </div>
 
-                <div className="p-6 pt-0">
-                  <div className="space-y-3">
-                    <button
-                      onClick={downloadWorksheet}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold shadow-md"
-                    >
-                      <Download className="w-5 h-5" />
-                      <span>Download Calendar</span>
-                    </button>
-                    <button
-                      onClick={handlePrint}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-3 border-2 border-orange-500 text-orange-500 rounded-full hover:bg-orange-50 transition font-semibold"
-                    >
-                      <Printer className="w-5 h-5" />
-                      <span>Print</span>
-                    </button>
+                  {/* Day headers */}
+                  <div className="grid grid-cols-7 gap-1 px-3 pt-3">
+                    {dayLabels.map((d, i) => (
+                      <div
+                        key={i}
+                        className="text-center py-2 text-xs font-bold uppercase tracking-wider"
+                        style={{ color: theme.accent }}
+                      >
+                        {d}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Calendar grid */}
+                  <div className="grid grid-cols-7 gap-1 px-3 pb-3">
+                    {allCells.map((cell, i) => {
+                      if (cell === null) {
+                        return <div key={i} className="rounded-md" style={{ height: cellHeight }} />;
+                      }
+                      const dow = (new Date(year, month, cell).getDay() - weekStartsOn + 7) % 7;
+                      const isWeekend = dow === 5 || dow === 6;
+                      return (
+                        <div
+                          key={i}
+                          className="rounded-md border flex items-start justify-end p-1.5"
+                          style={{
+                            height: cellHeight,
+                            borderColor: '#e5e7eb',
+                            background: showWeekend && isWeekend ? `${theme.headerBg}66` : theme.cellBg,
+                          }}
+                        >
+                          <span
+                            className="font-bold text-gray-800 leading-none"
+                            style={{ fontSize: dateFontSize }}
+                          >
+                            {cell}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Notes */}
+                  {showNotes && (
+                    <div className="px-5 pb-3">
+                      <p className="text-sm font-bold mb-2" style={{ color: theme.accent }}>{notesLabel}</p>
+                      {Array.from({ length: noteRows }).map((_, i) => (
+                        <div key={i} className="border-b border-gray-300 h-5 mb-2" />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Footer */}
+                  <div className="text-center py-3 border-t border-gray-100">
+                    <p className="text-[10px] text-gray-400">PrintAndUse.com · Copyright ©2025</p>
                   </div>
                 </div>
               </div>
-            )}
+
+              {/* Action bar */}
+              <div className="flex gap-3 p-6 border-t border-gray-100 bg-gray-50">
+                <button
+                  onClick={openPrint}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition font-bold shadow-sm"
+                >
+                  <Download className="w-5 h-5" />
+                  Download
+                </button>
+                <button
+                  onClick={openPrint}
+                  className="flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-gray-700 rounded-xl hover:bg-gray-50 transition font-bold border border-gray-200"
+                >
+                  <Printer className="w-5 h-5" />
+                  Print
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -559,20 +511,9 @@ export function MonthlyCalendarGenerator() {
           currentSlug="monthly-calendar"
         />
       </div>
-
-      <style>{`
-        .calendar-content {
-          box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        .preview-scale {
-          transform: scale(0.48);
-          transform-origin: center center;
-        }
-        .preview-container {
-          padding: 10px 5px;
-          position: relative;
-        }
-      `}</style>
     </div>
   );
 }
+
+
+export { MonthlyCalendarGenerator }
