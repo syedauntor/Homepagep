@@ -114,6 +114,7 @@ export function MonthlyCalendarGenerator() {
 
     const ch = cellHeight;
     const dfs = dateFontSize;
+    const numRows = cells.length / 7;
 
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${displayTitle}</title>
 <style>
@@ -132,8 +133,8 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .cal-body{padding:0 4px;flex:0 1 auto}
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
 .dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:${ch};gap:3px;align-content:start}
-.cell{border:1px solid #e5e7eb;height:${ch};min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(${numRows},${ch});gap:3px}
+.cell{border:1px solid #e5e7eb;padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
 .cell.empty{border-color:#f3f4f6;background:transparent}
 .cell.weekend{background:${theme.headerBg}66}
 .date{font-size:${dfs};font-weight:700;color:#1f2937}
