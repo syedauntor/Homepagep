@@ -139,10 +139,46 @@ ${notesHTML}
   };
 
   const openPrint = () => {
-    const w = window.open('', '_blank', 'width=900,height=1200');
-    if (!w) return;
-    w.document.write(buildPrintHTML());
-    w.document.close();
+    const html = buildPrintHTML();
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.left = '-9999px';
+    iframe.style.top = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    document.body.appendChild(iframe);
+    const doc = iframe.contentWindow?.document;
+    if (!doc) { document.body.removeChild(iframe); return; }
+    doc.open();
+    doc.write(html);
+    doc.close();
+    iframe.onload = () => {
+      try {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+      } catch {
+        const w = window.open('', '_blank');
+        if (w) { w.document.write(html); w.document.close(); }
+      }
+      setTimeout(() => document.body.removeChild(iframe), 1000);
+    };
+    if (iframe.contentWindow?.document?.readyState === 'complete') {
+      iframe.onload(null);
+    }
+  };
+
+  const downloadHTML = () => {
+    const html = buildPrintHTML();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${displayTitle.replace(/[^a-zA-Z0-9]/g, '_')}_calendar.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const allCells: (number | null)[] = [];
@@ -487,7 +523,7 @@ ${notesHTML}
               {/* Action bar */}
               <div className="flex gap-3 p-6 border-t border-gray-100 bg-gray-50">
                 <button
-                  onClick={openPrint}
+                  onClick={downloadHTML}
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition font-bold shadow-sm"
                 >
                   <Download className="w-5 h-5" />
@@ -514,3 +550,5 @@ ${notesHTML}
     </div>
   );
 }
+
+export { MonthlyCalendarGenerator }
