@@ -122,7 +122,7 @@ export function MonthlyCalendarGenerator() {
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .page{width:190mm;height:277mm;min-height:277mm;display:flex;flex-direction:column;background:#fff;overflow:hidden}
-.photo-banner{height:66mm;flex:0 0 66mm;overflow:hidden;position:relative;background:${theme.headerBg}}
+.photo-banner{height:105mm;flex:0 0 105mm;overflow:hidden;position:relative;background:${theme.headerBg}}
 .photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
 .photo-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 20px;background:linear-gradient(180deg,transparent 45%,rgba(17,24,39,.48))}
 .photo-overlay span{font-size:10px;font-weight:800;letter-spacing:2px;color:#fff}
@@ -498,7 +498,7 @@ ${notesHTML}
                   className="w-full max-w-[500px] overflow-hidden rounded-[22px] border border-stone-200 bg-white shadow-[0_22px_60px_rgba(28,25,23,0.18)] transition-transform duration-300 hover:-translate-y-1"
                   style={{ background: theme.bg, fontFamily: 'Inter, sans-serif' }}
                 >
-                  <div className={`relative h-36 overflow-hidden sm:h-44 ${bannerImage ? 'bg-stone-200' : 'bg-[radial-gradient(circle_at_20%_20%,#fed7aa_0,#fff7ed_35%,#f5f5f4_100%)]'}`}>
+                  <div className={`relative h-44 overflow-hidden sm:h-56 ${bannerImage ? 'bg-stone-200' : 'bg-[radial-gradient(circle_at_20%_20%,#fed7aa_0,#fff7ed_35%,#f5f5f4_100%)]'}`}>
                     {bannerImage ? <img src={bannerImage} alt="Calendar banner preview" className="h-full w-full object-cover" /> : <div className="flex h-full flex-col items-center justify-center gap-3 text-stone-600"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 text-orange-500 shadow-sm ring-1 ring-orange-100"><ImagePlus className="h-7 w-7" /></div><div className="text-center"><p className="text-xs font-black uppercase tracking-[0.18em]">Make it yours</p><p className="mt-1 text-[11px] text-stone-500">Add a photo banner to begin</p></div></div>}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-5 pb-4 pt-12">
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Printable monthly planner</p>
