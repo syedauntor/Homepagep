@@ -514,6 +514,3 @@ ${notesHTML}
     </div>
   );
 }
-
-
-export { MonthlyCalendarGenerator }
