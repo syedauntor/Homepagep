@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Download, Printer, ChevronRight, CalendarDays, RotateCcw, Sparkles, Palette, Settings2, HelpCircle } from 'lucide-react';
+import { ChangeEvent, useState } from 'react';
+import { Download, Printer, ChevronRight, CalendarDays, RotateCcw, Sparkles, Palette, Settings2, HelpCircle, ImagePlus, X, LayoutTemplate } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RelatedGenerators } from '../../components/RelatedGenerators';
 
@@ -60,6 +60,7 @@ export function MonthlyCalendarGenerator() {
   const [cellSize, setCellSize] = useState<'compact' | 'regular' | 'spacious'>('regular');
   const [showWeekend, setShowWeekend] = useState(true);
   const [activePanel, setActivePanel] = useState<'settings' | 'theme' | 'help'>('settings');
+  const [bannerImage, setBannerImage] = useState('');
 
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfWeek(year, month, weekStartsOn);
@@ -80,6 +81,16 @@ export function MonthlyCalendarGenerator() {
     setNoteRows(3);
     setCellSize('regular');
     setShowWeekend(true);
+    setBannerImage('');
+  };
+
+  const handleBannerUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024) return;
+    const reader = new FileReader();
+    reader.onload = () => setBannerImage(typeof reader.result === 'string' ? reader.result : '');
+    reader.readAsDataURL(file);
   };
 
   const buildPrintHTML = () => {
@@ -95,6 +106,7 @@ export function MonthlyCalendarGenerator() {
     while (cells.length < fillCount) cells.push('<div class="cell empty"></div>');
 
     const dayHeaderHTML = dayLabels.map((d) => `<div class="dh">${d}</div>`).join('');
+    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /></div>` : '';
     const notesHTML = showNotes ? `<div class="notes">
       <div class="notes-label">${notesLabel}</div>
       ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
@@ -109,8 +121,10 @@ export function MonthlyCalendarGenerator() {
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .page{width:190mm;min-height:277mm;display:flex;flex-direction:column;background:#fff}
-.cal-header{background:${theme.headerBg};border-radius:12px 12px 0 0;padding:14px 20px;text-align:center}
-.cal-header h1{font-size:28px;font-weight:900;color:${theme.accent};margin:0;letter-spacing:.5px}
+.photo-banner{height:78mm;overflow:hidden;background:${theme.headerBg}}
+.photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
+.cal-header{background:${theme.headerBg};padding:11px 20px 13px;text-align:left;border-bottom:4px solid ${theme.accent}}
+.cal-header h1{font-size:28px;font-weight:900;color:#111827;margin:0;letter-spacing:-.5px}
 .cal-header .sub{font-size:12px;color:#6b7280;margin-top:2px}
 .cal-body{padding:0 4px}
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
@@ -126,6 +140,7 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .footer{text-align:center;font-size:10px;color:#9ca3af;padding:10px 0}
 </style></head><body>
 <div class="page">
+${bannerHTML}
 <div class="cal-header"><h1>${displayTitle}</h1><div class="sub">PrintAndUse.com Printable Calendar</div></div>
 <div class="cal-body">
 <div class="days-row">${dayHeaderHTML}</div>
@@ -238,7 +253,14 @@ ${notesHTML}
           {/* Left: controls */}
           <div className="space-y-4">
             {activePanel === 'settings' && (
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+              <div className="bg-white rounded-3xl border border-stone-200 shadow-[0_18px_50px_rgba(28,25,23,0.08)] p-6 space-y-5">
+                <div className="flex items-center justify-between gap-3 pb-1">
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-orange-600">Build your page</p>
+                    <h2 className="text-lg font-black text-stone-900">Personalise the calendar</h2>
+                  </div>
+                  <LayoutTemplate className="w-5 h-5 text-stone-300" />
+                </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Custom Title</label>
                   <input
@@ -248,6 +270,27 @@ ${notesHTML}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition text-gray-900"
                     placeholder="Leave empty for month name"
                   />
+                </div>
+
+                <div className="rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-black text-stone-900">Add a photo banner</p>
+                      <p className="text-xs leading-5 text-stone-500 mt-1">Use a family photo, classroom scene, artwork, or seasonal image.</p>
+                    </div>
+                    <ImagePlus className="w-5 h-5 text-orange-500 shrink-0" />
+                  </div>
+                  {bannerImage ? (
+                    <div className="relative mt-3 overflow-hidden rounded-xl border border-stone-200 bg-white">
+                      <img src={bannerImage} alt="Selected calendar banner" className="h-24 w-full object-cover" />
+                      <button type="button" onClick={() => setBannerImage('')} className="absolute right-2 top-2 rounded-full bg-stone-900/80 p-1.5 text-white hover:bg-stone-900" aria-label="Remove banner image"><X className="h-3.5 w-3.5" /></button>
+                    </div>
+                  ) : (
+                    <label className="mt-3 flex cursor-pointer items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-stone-700 shadow-sm ring-1 ring-stone-200 transition hover:-translate-y-0.5 hover:ring-orange-300">
+                      <ImagePlus className="mr-2 h-4 w-4 text-orange-500" /> Choose image
+                      <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleBannerUpload} className="sr-only" />
+                    </label>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -445,20 +488,20 @@ ${notesHTML}
                 <span className="text-xs text-gray-400">A4 Portrait</span>
               </div>
 
-              <div className="p-8 bg-stone-100 flex justify-center">
+              <div className="p-5 sm:p-8 bg-stone-100 flex justify-center">
                 <div
-                  className="rounded-2xl overflow-hidden shadow-lg"
-                  style={{ width: '460px', background: theme.bg, fontFamily: 'Inter, sans-serif' }}
+                  className="w-full max-w-[500px] overflow-hidden rounded-[22px] border border-stone-200 bg-white shadow-[0_22px_60px_rgba(28,25,23,0.18)] transition-transform duration-300 hover:-translate-y-1"
+                  style={{ background: theme.bg, fontFamily: 'Inter, sans-serif' }}
                 >
-                  {/* Calendar header bar */}
-                  <div
-                    className="text-center py-4 px-5"
-                    style={{ background: theme.headerBg }}
-                  >
-                    <h3 className="text-2xl font-black tracking-tight" style={{ color: theme.accent }}>
-                      {displayTitle}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-0.5">PrintAndUse.com</p>
+                  <div className="relative h-44 overflow-hidden bg-stone-200 sm:h-52">
+                    {bannerImage ? <img src={bannerImage} alt="Calendar banner preview" className="h-full w-full object-cover" /> : <div className="flex h-full flex-col items-center justify-center gap-2 text-stone-500"><ImagePlus className="h-8 w-8 text-orange-500" /><span className="text-xs font-bold uppercase tracking-[0.16em]">Your photo banner</span></div>}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-5 pb-4 pt-12">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Printable monthly planner</p>
+                    </div>
+                  </div>
+                  <div className="flex items-end justify-between gap-4 border-b-4 px-5 py-4" style={{ borderColor: theme.accent, background: theme.headerBg }}>
+                    <h3 className="text-2xl font-black tracking-tight text-stone-900">{displayTitle}</h3>
+                    <CalendarDays className="mb-1 h-5 w-5 shrink-0" style={{ color: theme.accent }} />
                   </div>
 
                   {/* Day headers */}
@@ -515,7 +558,7 @@ ${notesHTML}
 
                   {/* Footer */}
                   <div className="text-center py-3 border-t border-gray-100">
-                    <p className="text-[10px] text-gray-400">PrintAndUse.com · Copyright ©2025</p>
+                    <p className="text-[10px] text-gray-400">Made for your month · PrintAndUse.com</p>
                   </div>
                 </div>
               </div>
