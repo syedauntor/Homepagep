@@ -67,7 +67,7 @@ export function MonthlyCalendarGenerator() {
   const dayLabels = weekStartsOn === 0 ? dayNamesFull : dayNamesMonStart;
   const displayTitle = title || `${monthNames[month]} ${year}`;
 
-  const cellHeight = cellSize === 'compact' ? '38px' : cellSize === 'regular' ? '48px' : '58px';
+  const cellHeight = cellSize === 'compact' ? '32px' : cellSize === 'regular' ? '48px' : '68px';
   const dateFontSize = cellSize === 'compact' ? '13px' : cellSize === 'regular' ? '15px' : '17px';
 
   const handleReset = () => {
@@ -106,7 +106,7 @@ export function MonthlyCalendarGenerator() {
     while (cells.length < fillCount) cells.push('<div class="cell empty"></div>');
 
     const dayHeaderHTML = dayLabels.map((d) => `<div class="dh">${d}</div>`).join('');
-    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /><div class="photo-overlay"><span>PrintAndUse.com Printable Calendar</span></div></div>` : '';
+    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /><div class="photo-overlay"><span>PRINTABLE MONTHLY PLANNER</span></div></div>` : '';
     const notesHTML = showNotes ? `<div class="notes">
       <div class="notes-label">${notesLabel}</div>
       ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
@@ -132,8 +132,8 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .cal-body{padding:0 4px;flex:1 1 auto}
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
 .dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cell{border:1px solid #e5e7eb;height:${ch};min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:${ch};gap:3px}
+.cell{border:1px solid #e5e7eb;height:auto;min-height:0;padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
 .cell.empty{border-color:#f3f4f6;background:transparent}
 .cell.weekend{background:${theme.headerBg}66}
 .date{font-size:${dfs};font-weight:700;color:#1f2937}
