@@ -106,7 +106,7 @@ export function MonthlyCalendarGenerator() {
     while (cells.length < fillCount) cells.push('<div class="cell empty"></div>');
 
     const dayHeaderHTML = dayLabels.map((d) => `<div class="dh">${d}</div>`).join('');
-    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /></div>` : '';
+    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /><div class="photo-overlay"><span>YOUR MONTH</span></div></div>` : '';
     const notesHTML = showNotes ? `<div class="notes">
       <div class="notes-label">${notesLabel}</div>
       ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
@@ -120,9 +120,11 @@ export function MonthlyCalendarGenerator() {
 @page{size:A4 portrait;margin:10mm}
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-.page{width:190mm;min-height:277mm;display:flex;flex-direction:column;background:#fff}
-.photo-banner{height:78mm;overflow:hidden;background:${theme.headerBg}}
+.page{width:190mm;display:flex;flex-direction:column;background:#fff}
+.photo-banner{height:58mm;overflow:hidden;position:relative;background:${theme.headerBg}}
 .photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 20px;background:linear-gradient(180deg,transparent 45%,rgba(17,24,39,.48))}
+.photo-overlay span{font-size:10px;font-weight:800;letter-spacing:2px;color:#fff}
 .cal-header{background:${theme.headerBg};padding:11px 20px 13px;text-align:left;border-bottom:4px solid ${theme.accent}}
 .cal-header h1{font-size:28px;font-weight:900;color:#111827;margin:0;letter-spacing:-.5px}
 .cal-header .sub{font-size:12px;color:#6b7280;margin-top:2px}
@@ -137,7 +139,7 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .notes{margin-top:12px;padding:0 4px}
 .notes-label{font-size:13px;font-weight:800;color:${theme.accent};margin-bottom:6px}
 .notes-line{border-bottom:1px solid #d1d5db;height:22px;margin-bottom:5px}
-.footer{text-align:center;font-size:10px;color:#9ca3af;padding:10px 0}
+.footer{text-align:center;font-size:9px;color:#9ca3af;padding:16px 0 4px}.footer p{margin:2px 0}
 </style></head><body>
 <div class="page">
 ${bannerHTML}
@@ -484,8 +486,8 @@ ${notesHTML}
           <div className="space-y-4">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h2 className="text-sm font-bold text-gray-900">Live Preview</h2>
-                <span className="text-xs text-gray-400">A4 Portrait</span>
+                <div><h2 className="text-sm font-bold text-gray-900">Live Preview</h2><p className="mt-0.5 text-xs text-stone-400">Your printable page updates as you edit</p></div>
+                <span className="rounded-full bg-stone-100 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-stone-500">A4 Portrait</span>
               </div>
 
               <div className="p-5 sm:p-8 bg-stone-100 flex justify-center">
@@ -493,8 +495,8 @@ ${notesHTML}
                   className="w-full max-w-[500px] overflow-hidden rounded-[22px] border border-stone-200 bg-white shadow-[0_22px_60px_rgba(28,25,23,0.18)] transition-transform duration-300 hover:-translate-y-1"
                   style={{ background: theme.bg, fontFamily: 'Inter, sans-serif' }}
                 >
-                  <div className="relative h-44 overflow-hidden bg-stone-200 sm:h-52">
-                    {bannerImage ? <img src={bannerImage} alt="Calendar banner preview" className="h-full w-full object-cover" /> : <div className="flex h-full flex-col items-center justify-center gap-2 text-stone-500"><ImagePlus className="h-8 w-8 text-orange-500" /><span className="text-xs font-bold uppercase tracking-[0.16em]">Your photo banner</span></div>}
+                  <div className={`relative h-36 overflow-hidden sm:h-44 ${bannerImage ? 'bg-stone-200' : 'bg-[radial-gradient(circle_at_20%_20%,#fed7aa_0,#fff7ed_35%,#f5f5f4_100%)]'}`}>
+                    {bannerImage ? <img src={bannerImage} alt="Calendar banner preview" className="h-full w-full object-cover" /> : <div className="flex h-full flex-col items-center justify-center gap-3 text-stone-600"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 text-orange-500 shadow-sm ring-1 ring-orange-100"><ImagePlus className="h-7 w-7" /></div><div className="text-center"><p className="text-xs font-black uppercase tracking-[0.18em]">Make it yours</p><p className="mt-1 text-[11px] text-stone-500">Add a photo banner to begin</p></div></div>}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-5 pb-4 pt-12">
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Printable monthly planner</p>
                     </div>
@@ -564,10 +566,10 @@ ${notesHTML}
               </div>
 
               {/* Action bar */}
-              <div className="flex gap-3 p-6 border-t border-gray-100 bg-gray-50">
+              <div className="flex flex-col gap-3 border-t border-gray-100 bg-gray-50 p-5 sm:flex-row sm:p-6">
                 <button
                   onClick={downloadHTML}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition font-bold shadow-sm"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-stone-900 text-white rounded-xl hover:bg-orange-600 transition font-bold shadow-sm"
                 >
                   <Download className="w-5 h-5" />
                   Download
