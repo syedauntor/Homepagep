@@ -106,7 +106,7 @@ export function MonthlyCalendarGenerator() {
     while (cells.length < fillCount) cells.push('<div class="cell empty"></div>');
 
     const dayHeaderHTML = dayLabels.map((d) => `<div class="dh">${d}</div>`).join('');
-    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /><div class="photo-overlay"><span>YOUR MONTH</span></div></div>` : '';
+    const bannerHTML = bannerImage ? `<div class="photo-banner"><img src="${bannerImage}" alt="Calendar banner" /><div class="photo-overlay"><span>PrintAndUse.com Printable Calendar</span></div></div>` : '';
     const notesHTML = showNotes ? `<div class="notes">
       <div class="notes-label">${notesLabel}</div>
       ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
@@ -133,7 +133,7 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
 .dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cell{border:1px solid #e5e7eb;height:${ch};min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;background:${theme.cellBg}}
+.cell{border:1px solid #e5e7eb;height:${ch};min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
 .cell.empty{border-color:#f3f4f6;background:transparent}
 .cell.weekend{background:${theme.headerBg}66}
 .date{font-size:${dfs};font-weight:700;color:#1f2937}
@@ -145,7 +145,7 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 </style></head><body>
 <div class="page">
 ${bannerHTML}
-<div class="cal-header"><h1>${displayTitle}</h1><div class="sub">PrintAndUse.com Printable Calendar</div></div>
+<div class="cal-header"><h1>${displayTitle}</h1></div>
 <div class="cal-body">
 <div class="days-row">${dayHeaderHTML}</div>
 <div class="grid">${cells.join('')}</div>
