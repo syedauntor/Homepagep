@@ -129,11 +129,11 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .cal-header{background:${theme.headerBg};padding:11px 20px 13px;text-align:left;border-bottom:4px solid ${theme.accent}}
 .cal-header h1{font-size:28px;font-weight:900;color:#111827;margin:0;letter-spacing:-.5px}
 .cal-header .sub{font-size:12px;color:#6b7280;margin-top:2px}
-.cal-body{padding:0 4px;flex:1 1 auto}
+.cal-body{padding:0 4px;flex:0 1 auto}
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
 .dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:${ch};gap:3px}
-.cell{border:1px solid #e5e7eb;height:auto;min-height:0;padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:${ch};gap:3px;align-content:start}
+.cell{border:1px solid #e5e7eb;height:${ch};min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;justify-content:flex-end;background:${theme.cellBg}}
 .cell.empty{border-color:#f3f4f6;background:transparent}
 .cell.weekend{background:${theme.headerBg}66}
 .date{font-size:${dfs};font-weight:700;color:#1f2937}
