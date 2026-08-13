@@ -122,7 +122,7 @@ export function MonthlyCalendarGenerator() {
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .page{width:190mm;height:277mm;min-height:277mm;display:flex;flex-direction:column;background:#fff;overflow:hidden}
-.photo-banner{height:105mm;flex:0 0 105mm;overflow:hidden;position:relative;background:${theme.headerBg}}
+.photo-banner{height:90mm;flex:0 0 90mm;overflow:hidden;position:relative;background:${theme.headerBg}}
 .photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
 .photo-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 20px;background:linear-gradient(180deg,transparent 45%,rgba(17,24,39,.48))}
 .photo-overlay span{font-size:10px;font-weight:800;letter-spacing:2px;color:#fff}
