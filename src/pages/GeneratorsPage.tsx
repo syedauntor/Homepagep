@@ -1,4 +1,4 @@
-import { FileText, Sparkles, Puzzle as PuzzleIcon } from 'lucide-react';
+import { FileText, Sparkles, Puzzle as PuzzleIcon, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function GeneratorsPage() {
@@ -29,6 +29,10 @@ export function GeneratorsPage() {
       { name: 'Tartan Maker', slug: 'tartan-maker' },
       { name: 'Maze Generator', slug: 'maze' },
       { name: 'Word Search Generator', slug: 'word-search' },
+    ],
+    calendarGenerator: [
+      { name: 'Monthly Calendar Generator', slug: 'monthly-calendar', featured: true },
+      { name: 'Countdown Calendar Generator', slug: 'countdown-calendar', featured: true },
     ],
   };
 
@@ -122,6 +126,36 @@ export function GeneratorsPage() {
             </div>
           </section>
         </div>
+
+          <section>
+            <div className="flex items-center space-x-3 mb-6 md:mb-8">
+              <Calendar className="w-7 h-7 md:w-8 md:h-8 text-orange-500" />
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Calendar Generators</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {generators.calendarGenerator.map((generator) => (
+                <Link
+                  key={generator.slug}
+                  to={`/generator/${generator.slug}`}
+                  className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border-2 border-transparent hover:border-orange-500 group relative ${
+                    generator.featured ? 'ring-2 ring-green-500' : ''
+                  }`}
+                >
+                  {generator.featured && (
+                    <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      Featured
+                    </span>
+                  )}
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition">
+                    {generator.name}
+                  </h3>
+                  <p className="text-gray-600">
+                    Create custom printable calendars for planning and counting down
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
 
         <div className="mt-16 bg-orange-100 rounded-2xl p-8 text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">

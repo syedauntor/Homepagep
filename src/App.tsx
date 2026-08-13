@@ -14,6 +14,8 @@ import { DivisionGenerator } from './pages/generators/DivisionGenerator';
 import { NameTracingGenerator } from './pages/generators/NameTracingGenerator';
 import { NameTracingColoringGenerator } from './pages/generators/NameTracingColoringGenerator';
 import AlphabetTracingGenerator from './pages/generators/AlphabetTracingGenerator';
+import { MonthlyCalendarGenerator } from './pages/generators/MonthlyCalendarGenerator';
+import { CountdownCalendarGenerator } from './pages/generators/CountdownCalendarGenerator';
 import CategoryPage from './pages/CategoryPage';
 import ShopPage from './pages/ShopPage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -71,6 +73,8 @@ function App() {
                     <Route path="/generator/alphabet-tracing" element={<AlphabetTracingGenerator />} />
                     <Route path="/generator/name-tracing" element={<NameTracingGenerator />} />
                     <Route path="/generator/name-tracing-coloring" element={<NameTracingColoringGenerator />} />
+                    <Route path="/generator/monthly-calendar" element={<MonthlyCalendarGenerator />} />
+                    <Route path="/generator/countdown-calendar" element={<CountdownCalendarGenerator />} />
                     <Route path="/shop" element={<ShopPage />} />
                     <Route path="/shop/:id" element={<ProductDetailPage />} />
                     <Route path="/cart" element={<CartPage />} />
