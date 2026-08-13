@@ -118,17 +118,18 @@ export function MonthlyCalendarGenerator() {
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${displayTitle}</title>
 <style>
 @page{size:A4 portrait;margin:10mm}
+@media print{html,body{width:190mm;height:277mm;overflow:hidden}.page{page-break-inside:avoid}}
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-.page{width:190mm;display:flex;flex-direction:column;background:#fff}
-.photo-banner{height:58mm;overflow:hidden;position:relative;background:${theme.headerBg}}
+.page{width:190mm;height:277mm;min-height:277mm;display:flex;flex-direction:column;background:#fff;overflow:hidden}
+.photo-banner{height:66mm;flex:0 0 66mm;overflow:hidden;position:relative;background:${theme.headerBg}}
 .photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
 .photo-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 20px;background:linear-gradient(180deg,transparent 45%,rgba(17,24,39,.48))}
 .photo-overlay span{font-size:10px;font-weight:800;letter-spacing:2px;color:#fff}
 .cal-header{background:${theme.headerBg};padding:11px 20px 13px;text-align:left;border-bottom:4px solid ${theme.accent}}
 .cal-header h1{font-size:28px;font-weight:900;color:#111827;margin:0;letter-spacing:-.5px}
 .cal-header .sub{font-size:12px;color:#6b7280;margin-top:2px}
-.cal-body{padding:0 4px}
+.cal-body{padding:0 4px;flex:1 1 auto}
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
 .dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
@@ -136,10 +137,11 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .cell.empty{border-color:#f3f4f6;background:transparent}
 .cell.weekend{background:${theme.headerBg}66}
 .date{font-size:${dfs};font-weight:700;color:#1f2937}
-.notes{margin-top:12px;padding:0 4px}
+.notes{margin-top:12px;padding:0 4px;flex:0 0 auto}
+.spacer{flex:1 1 auto;min-height:8px}
 .notes-label{font-size:13px;font-weight:800;color:${theme.accent};margin-bottom:6px}
 .notes-line{border-bottom:1px solid #d1d5db;height:22px;margin-bottom:5px}
-.footer{text-align:center;font-size:9px;color:#9ca3af;padding:16px 0 4px}.footer p{margin:2px 0}
+.footer{margin-top:auto;flex:0 0 auto;text-align:center;font-size:9px;color:#9ca3af;padding:16px 0 0}.footer p{margin:2px 0}.footer p:last-child{margin-bottom:0}
 </style></head><body>
 <div class="page">
 ${bannerHTML}
@@ -149,6 +151,7 @@ ${bannerHTML}
 <div class="grid">${cells.join('')}</div>
 </div>
 ${notesHTML}
+<div class="spacer"></div>
 <div class="footer"><p>Find more printable resources at PrintAndUse.com</p><p>Copyright &copy;2025 - www.printanduse.com | All rights reserved</p></div>
 </div>
 <script>window.onload=function(){window.print();window.onafterprint=function(){window.close()}}</script>
