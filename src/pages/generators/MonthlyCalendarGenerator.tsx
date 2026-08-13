@@ -112,8 +112,8 @@ export function MonthlyCalendarGenerator() {
       ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
     </div>` : '';
 
-    const ch = cellSize === 'compact' ? '34px' : cellSize === 'regular' ? '42px' : '52px';
-    const dfs = cellSize === 'compact' ? '12px' : cellSize === 'regular' ? '14px' : '16px';
+    const ch = cellHeight;
+    const dfs = dateFontSize;
 
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${displayTitle}</title>
 <style>
@@ -133,14 +133,14 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .days-row{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0 4px}
 .dh{text-align:center;font-size:12px;font-weight:800;color:${theme.accent};padding:6px 0;text-transform:uppercase;letter-spacing:1.5px}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cell{border:1px solid #e5e7eb;min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;background:${theme.cellBg}}
+.cell{border:1px solid #e5e7eb;height:${ch};min-height:${ch};padding:3px 5px;display:flex;align-items:flex-start;background:${theme.cellBg}}
 .cell.empty{border-color:#f3f4f6;background:transparent}
 .cell.weekend{background:${theme.headerBg}66}
 .date{font-size:${dfs};font-weight:700;color:#1f2937}
 .notes{margin-top:12px;padding:0 4px;flex:0 0 auto}
 .spacer{flex:1 1 auto;min-height:8px}
-.notes-label{font-size:13px;font-weight:800;color:${theme.accent};margin-bottom:6px}
-.notes-line{border-bottom:1px solid #d1d5db;height:22px;margin-bottom:5px}
+.notes-label{font-size:13px;font-weight:800;color:${theme.accent};margin-bottom:3px}
+.notes-line{border-bottom:1px solid #d1d5db;height:18px;margin-bottom:4px}
 .footer{margin-top:auto;flex:0 0 auto;text-align:center;font-size:9px;color:#9ca3af;padding:16px 0 0}.footer p{margin:2px 0}.footer p:last-child{margin-bottom:0}
 </style></head><body>
 <div class="page">
@@ -554,9 +554,9 @@ ${notesHTML}
                   {/* Notes */}
                   {showNotes && (
                     <div className="px-5 pb-3">
-                      <p className="text-sm font-bold mb-2" style={{ color: theme.accent }}>{notesLabel}</p>
+                      <p className="text-sm font-bold mb-1" style={{ color: theme.accent }}>{notesLabel}</p>
                       {Array.from({ length: noteRows }).map((_, i) => (
-                        <div key={i} className="border-b border-gray-300 h-5 mb-2" />
+                        <div key={i} className="border-b border-gray-300 h-4 mb-1" />
                       ))}
                     </div>
                   )}
