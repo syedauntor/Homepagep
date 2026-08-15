@@ -69,6 +69,7 @@ export function MonthlyCalendarGenerator() {
 
   const cellHeight = cellSize === 'compact' ? '32px' : cellSize === 'regular' ? '48px' : '68px';
   const dateFontSize = cellSize === 'compact' ? '13px' : cellSize === 'regular' ? '15px' : '17px';
+  const printCellHeight = cellSize === 'compact' ? '8mm' : cellSize === 'regular' ? '11mm' : '14mm';
 
   const handleReset = () => {
     setYear(now.getFullYear());
@@ -112,17 +113,17 @@ export function MonthlyCalendarGenerator() {
       ${Array.from({ length: noteRows }).map(() => '<div class="notes-line"></div>').join('')}
     </div>` : '';
 
-    const ch = cellHeight;
+    const ch = printCellHeight;
     const dfs = dateFontSize;
     const numRows = cells.length / 7;
 
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${displayTitle}</title>
 <style>
 @page{size:A4 portrait;margin:10mm}
-@media print{html,body{width:190mm;height:277mm;overflow:hidden}.page{page-break-inside:avoid}}
+@media print{html,body{width:190mm;min-height:277mm}.page{page-break-inside:avoid}}
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;direction:ltr}
-.page{width:190mm;height:277mm;min-height:277mm;display:flex;flex-direction:column;background:#fff;overflow:hidden;direction:ltr}
+.page{width:190mm;min-height:277mm;display:flex;flex-direction:column;background:#fff;direction:ltr}
 .photo-banner{height:90mm;flex:0 0 90mm;overflow:hidden;position:relative;background:${theme.headerBg}}
 .photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
 .photo-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 20px;background:linear-gradient(180deg,transparent 45%,rgba(17,24,39,.48))}
