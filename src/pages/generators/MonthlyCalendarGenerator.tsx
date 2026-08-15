@@ -69,7 +69,9 @@ export function MonthlyCalendarGenerator() {
 
   const cellHeight = cellSize === 'compact' ? '32px' : cellSize === 'regular' ? '48px' : '68px';
   const dateFontSize = cellSize === 'compact' ? '13px' : cellSize === 'regular' ? '15px' : '17px';
-  const printCellHeight = cellSize === 'compact' ? '8mm' : cellSize === 'regular' ? '11mm' : '14mm';
+  const printCellHeight = cellSize === 'compact' ? '9mm' : cellSize === 'regular' ? '13mm' : '18mm';
+  const printDateFontSize = cellSize === 'compact' ? '11px' : cellSize === 'regular' ? '13px' : '15px';
+  const printBannerHeight = cellSize === 'compact' ? '85mm' : cellSize === 'regular' ? '75mm' : '60mm';
 
   const handleReset = () => {
     setYear(now.getFullYear());
@@ -114,7 +116,7 @@ export function MonthlyCalendarGenerator() {
     </div>` : '';
 
     const ch = printCellHeight;
-    const dfs = dateFontSize;
+    const dfs = printDateFontSize;
     const numRows = cells.length / 7;
 
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${displayTitle}</title>
@@ -124,7 +126,7 @@ export function MonthlyCalendarGenerator() {
 *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;direction:ltr}
 .page{width:190mm;min-height:277mm;display:flex;flex-direction:column;background:#fff;direction:ltr}
-.photo-banner{height:90mm;flex:0 0 90mm;overflow:hidden;position:relative;background:${theme.headerBg}}
+.photo-banner{height:${printBannerHeight};flex:0 0 ${printBannerHeight};overflow:hidden;position:relative;background:${theme.headerBg}}
 .photo-banner img{width:100%;height:100%;object-fit:cover;display:block}
 .photo-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 20px;background:linear-gradient(180deg,transparent 45%,rgba(17,24,39,.48))}
 .photo-overlay span{font-size:10px;font-weight:800;letter-spacing:2px;color:#fff}
@@ -142,7 +144,7 @@ html,body{margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFon
 .notes{margin-top:12px;padding:0 4px;flex:0 0 auto}
 .spacer{flex:1 1 auto;min-height:8px}
 .notes-label{font-size:13px;font-weight:800;color:${theme.accent};margin-bottom:3px}
-.notes-line{border-bottom:1px solid #d1d5db;height:18px;margin-bottom:4px}
+.notes-line{border-bottom:1px solid #d1d5db;height:14px;margin-bottom:3px}
 .footer{margin-top:auto;flex:0 0 auto;text-align:center;font-size:9px;color:#9ca3af;padding:16px 0 0}.footer p{margin:2px 0}.footer p:last-child{margin-bottom:0}
 </style></head><body>
 <div class="page">
@@ -156,7 +158,6 @@ ${notesHTML}
 <div class="spacer"></div>
 <div class="footer"><p>Find more printable resources at PrintAndUse.com</p><p>Copyright &copy;2025 - www.printanduse.com | All rights reserved</p></div>
 </div>
-<script>window.onload=function(){window.print();window.onafterprint=function(){window.close()}}</script>
 </body></html>`;
   };
 
@@ -166,28 +167,33 @@ ${notesHTML}
     iframe.style.position = 'fixed';
     iframe.style.left = '-9999px';
     iframe.style.top = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
+    iframe.style.width = '1px';
+    iframe.style.height = '1px';
     iframe.style.border = 'none';
     document.body.appendChild(iframe);
+
     const doc = iframe.contentWindow?.document;
-    if (!doc) { document.body.removeChild(iframe); return; }
+    if (!doc) {
+      document.body.removeChild(iframe);
+      return;
+    }
+
+    let printStarted = false;
+    const cleanup = () => {
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+    };
+    const startPrint = () => {
+      if (printStarted) return;
+      printStarted = true;
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(cleanup, 1500);
+    };
+
+    iframe.onload = startPrint;
     doc.open();
     doc.write(html);
     doc.close();
-    iframe.onload = () => {
-      try {
-        iframe.contentWindow?.focus();
-        iframe.contentWindow?.print();
-      } catch {
-        const w = window.open('', '_blank');
-        if (w) { w.document.write(html); w.document.close(); }
-      }
-      setTimeout(() => document.body.removeChild(iframe), 1000);
-    };
-    if (iframe.contentWindow?.document?.readyState === 'complete') {
-      iframe.onload(null);
-    }
   };
 
   const downloadHTML = () => {
